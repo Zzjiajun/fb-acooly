@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>acooly-showcase-parent</artifactId>
+        <groupId>com.acooly.showcase</groupId>
+        <version>5.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>acooly-showcase-openapi</artifactId>
+    <packaging>pom</packaging>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- OpenApi报文模块 -->
+            <dependency>
+                <groupId>com.acooly.showcase</groupId>
+                <artifactId>acooly-showcase-openapi-message</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- OpenApi服务模块 -->
+            <dependency>
+                <groupId>com.acooly.showcase</groupId>
+                <artifactId>acooly-showcase-openapi-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <finalName>acooly-showcase</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <modules>
+        <module>acooly-showcase-openapi-service</module>
+        <module>acooly-showcase-openapi-message</module>
+    </modules>
+
+
+</project>

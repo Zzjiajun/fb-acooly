@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>acooly-showcase-openapi</artifactId>
+        <groupId>com.acooly.showcase</groupId>
+        <version>5.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>acooly-showcase-openapi-service</artifactId>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.acooly.showcase</groupId>
+            <artifactId>acooly-showcase-openapi-message</artifactId>
+        </dependency>
+
+<!--        &lt;!&ndash; showcase core &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly.showcase</groupId>-->
+<!--            <artifactId>acooly-showcase-v4</artifactId>-->
+<!--        </dependency>-->
+
+        <!-- OpenApi自动文档化 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>openapi-framework-apidoc</artifactId>
+        </dependency>
+
+        <!-- OpenApi核心框架 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>openapi-framework-core</artifactId>
+        </dependency>
+
+        <!-- OpenApi通知框架 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>openapi-framework-notify</artifactId>
+        </dependency>
+
+    </dependencies>
+    <build>
+        <finalName>acooly-showcase</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

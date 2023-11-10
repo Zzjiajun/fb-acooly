@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.member.dao.ShowcaseMemberProfileDao">
+
+    <resultMap id="showcaseMemberProfileResultMap" type="com.acooly.showcase.member.entity.ShowcaseMemberProfile">
+        <id property="id" column="showcaseMemberProfile_id"/>
+        <result property="memberNo" column="showcaseMemberProfile_member_no"/>
+        <result property="username" column="showcaseMemberProfile_username"/>
+        <result property="nickname" column="showcaseMemberProfile_nickname"/>
+        <result property="dailyWords" column="showcaseMemberProfile_daily_words"/>
+        <result property="profilePhoto" column="showcaseMemberProfile_profile_photo"/>
+        <result property="emailStatus" column="showcaseMemberProfile_email_status"/>
+        <result property="mobileNoStatus" column="showcaseMemberProfile_mobile_no_status"/>
+        <result property="realNameStatus" column="showcaseMemberProfile_real_name_status"/>
+        <result property="secretQaStatus" column="showcaseMemberProfile_secret_qa_status"/>
+        <result property="smsSendStatus" column="showcaseMemberProfile_sms_send_status"/>
+        <result property="manager" column="showcaseMemberProfile_manager"/>
+        <result property="broker" column="showcaseMemberProfile_broker"/>
+        <result property="inviter" column="showcaseMemberProfile_inviter"/>
+        <result property="createTime" column="showcaseMemberProfile_create_time"/>
+        <result property="updateTime" column="showcaseMemberProfile_update_time"/>
+        <result property="comments" column="showcaseMemberProfile_comments"/>
+    </resultMap>
+
+    <sql id="showcaseMemberProfileSqlSelect">
+            showcaseMemberProfile.id as showcaseMemberProfile_id,
+            showcaseMemberProfile.member_no as showcaseMemberProfile_member_no,
+            showcaseMemberProfile.username as showcaseMemberProfile_username,
+            showcaseMemberProfile.nickname as showcaseMemberProfile_nickname,
+            showcaseMemberProfile.daily_words as showcaseMemberProfile_daily_words,
+            showcaseMemberProfile.profile_photo as showcaseMemberProfile_profile_photo,
+            showcaseMemberProfile.email_status as showcaseMemberProfile_email_status,
+            showcaseMemberProfile.mobile_no_status as showcaseMemberProfile_mobile_no_status,
+            showcaseMemberProfile.real_name_status as showcaseMemberProfile_real_name_status,
+            showcaseMemberProfile.secret_qa_status as showcaseMemberProfile_secret_qa_status,
+            showcaseMemberProfile.sms_send_status as showcaseMemberProfile_sms_send_status,
+            showcaseMemberProfile.manager as showcaseMemberProfile_manager,
+            showcaseMemberProfile.broker as showcaseMemberProfile_broker,
+            showcaseMemberProfile.inviter as showcaseMemberProfile_inviter,
+            showcaseMemberProfile.create_time as showcaseMemberProfile_create_time,
+            showcaseMemberProfile.update_time as showcaseMemberProfile_update_time,
+            showcaseMemberProfile.comments as showcaseMemberProfile_comments
+    </sql>
+
+</mapper>

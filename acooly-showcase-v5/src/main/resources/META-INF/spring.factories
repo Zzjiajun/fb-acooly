@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.acooly.showcase.ShowcaseV5AutoConfig
+com.acooly.core.common.boot.component.ComponentInitializer=\
+com.acooly.showcase.ShowcaseV5ComponentInitializer

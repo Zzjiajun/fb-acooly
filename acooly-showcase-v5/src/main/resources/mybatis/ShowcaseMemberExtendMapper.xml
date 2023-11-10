@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.member.dao.ShowcaseMemberExtendDao">
+
+    <resultMap id="showcaseMemberExtendResultMap" type="com.acooly.showcase.member.entity.ShowcaseMemberExtend">
+        <id property="id" column="showcaseMemberExtend_id"/>
+        <result property="context" column="showcaseMemberExtend_context"/>
+        <result property="createTime" column="showcaseMemberExtend_create_time"/>
+        <result property="updateTime" column="showcaseMemberExtend_update_time"/>
+        <result property="comments" column="showcaseMemberExtend_comments"/>
+    </resultMap>
+
+    <sql id="showcaseMemberExtendSqlSelect">
+            showcaseMemberExtend.id as showcaseMemberExtend_id,
+            showcaseMemberExtend.context as showcaseMemberExtend_context,
+            showcaseMemberExtend.create_time as showcaseMemberExtend_create_time,
+            showcaseMemberExtend.update_time as showcaseMemberExtend_update_time,
+            showcaseMemberExtend.comments as showcaseMemberExtend_comments
+    </sql>
+
+</mapper>

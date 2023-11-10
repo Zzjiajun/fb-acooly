@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.member.dao.ShowcaseMemberContactDao">
+
+    <resultMap id="showcaseMemberContactResultMap" type="com.acooly.showcase.member.entity.ShowcaseMemberContact">
+        <id property="id" column="showcaseMemberContact_id"/>
+        <result property="memberNo" column="showcaseMemberContact_member_no"/>
+        <result property="username" column="showcaseMemberContact_username"/>
+        <result property="mobileNo" column="showcaseMemberContact_mobile_no"/>
+        <result property="phoneNo" column="showcaseMemberContact_phone_no"/>
+        <result property="email" column="showcaseMemberContact_email"/>
+        <result property="qq" column="showcaseMemberContact_qq"/>
+        <result property="wangwang" column="showcaseMemberContact_wangwang"/>
+        <result property="wechat" column="showcaseMemberContact_wechat"/>
+        <result property="facebeek" column="showcaseMemberContact_facebeek"/>
+        <result property="google" column="showcaseMemberContact_google"/>
+        <result property="province" column="showcaseMemberContact_province"/>
+        <result property="city" column="showcaseMemberContact_city"/>
+        <result property="district" column="showcaseMemberContact_district"/>
+        <result property="zip" column="showcaseMemberContact_zip"/>
+        <result property="address" column="showcaseMemberContact_address"/>
+        <result property="companyName" column="showcaseMemberContact_company_name"/>
+        <result property="career" column="showcaseMemberContact_career"/>
+        <result property="createTime" column="showcaseMemberContact_create_time"/>
+        <result property="updateTime" column="showcaseMemberContact_update_time"/>
+        <result property="comments" column="showcaseMemberContact_comments"/>
+    </resultMap>
+
+    <sql id="showcaseMemberContactSqlSelect">
+            showcaseMemberContact.id as showcaseMemberContact_id,
+            showcaseMemberContact.member_no as showcaseMemberContact_member_no,
+            showcaseMemberContact.username as showcaseMemberContact_username,
+            showcaseMemberContact.mobile_no as showcaseMemberContact_mobile_no,
+            showcaseMemberContact.phone_no as showcaseMemberContact_phone_no,
+            showcaseMemberContact.email as showcaseMemberContact_email,
+            showcaseMemberContact.qq as showcaseMemberContact_qq,
+            showcaseMemberContact.wangwang as showcaseMemberContact_wangwang,
+            showcaseMemberContact.wechat as showcaseMemberContact_wechat,
+            showcaseMemberContact.facebeek as showcaseMemberContact_facebeek,
+            showcaseMemberContact.google as showcaseMemberContact_google,
+            showcaseMemberContact.province as showcaseMemberContact_province,
+            showcaseMemberContact.city as showcaseMemberContact_city,
+            showcaseMemberContact.district as showcaseMemberContact_district,
+            showcaseMemberContact.zip as showcaseMemberContact_zip,
+            showcaseMemberContact.address as showcaseMemberContact_address,
+            showcaseMemberContact.company_name as showcaseMemberContact_company_name,
+            showcaseMemberContact.career as showcaseMemberContact_career,
+            showcaseMemberContact.create_time as showcaseMemberContact_create_time,
+            showcaseMemberContact.update_time as showcaseMemberContact_update_time,
+            showcaseMemberContact.comments as showcaseMemberContact_comments
+    </sql>
+
+</mapper>

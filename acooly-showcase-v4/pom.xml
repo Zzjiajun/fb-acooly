@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.acooly.showcase</groupId>
+        <artifactId>acooly-showcase-parent</artifactId>
+        <version>5.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>acooly-showcase-v4</artifactId>
+    <name>acooly-showcase-v4</name>
+
+    <properties>
+        <deploy.skip>true</deploy.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.acooly.showcase</groupId>
+            <artifactId>acooly-showcase-facade</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly.showcase</groupId>
+            <artifactId>acooly-showcase-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.acooly.showcase</groupId>
+            <artifactId>acooly-showcase-abc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly.showcase</groupId>
+            <artifactId>acooly-showcase-integration</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>acooly-showcase</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

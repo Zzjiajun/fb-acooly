@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.member.dao.ShowcaseMemberFileDao">
+
+    <resultMap id="showcaseMemberFileResultMap" type="com.acooly.showcase.member.entity.ShowcaseMemberFile">
+        <id property="id" column="showcaseMemberFile_id"/>
+        <result property="objectId" column="showcaseMemberFile_object_id"/>
+        <result property="memberNo" column="showcaseMemberFile_member_no"/>
+        <result property="username" column="showcaseMemberFile_username"/>
+        <result property="fileTitle" column="showcaseMemberFile_file_title"/>
+        <result property="fileName" column="showcaseMemberFile_file_name"/>
+        <result property="filePath" column="showcaseMemberFile_file_path"/>
+        <result property="fileExt" column="showcaseMemberFile_file_ext"/>
+        <result property="fileType" column="showcaseMemberFile_file_type"/>
+        <result property="createTime" column="showcaseMemberFile_create_time"/>
+        <result property="updateTime" column="showcaseMemberFile_update_time"/>
+        <result property="comments" column="showcaseMemberFile_comments"/>
+    </resultMap>
+
+    <sql id="showcaseMemberFileSqlSelect">
+            showcaseMemberFile.id as showcaseMemberFile_id,
+            showcaseMemberFile.object_id as showcaseMemberFile_object_id,
+            showcaseMemberFile.member_no as showcaseMemberFile_member_no,
+            showcaseMemberFile.username as showcaseMemberFile_username,
+            showcaseMemberFile.file_title as showcaseMemberFile_file_title,
+            showcaseMemberFile.file_name as showcaseMemberFile_file_name,
+            showcaseMemberFile.file_path as showcaseMemberFile_file_path,
+            showcaseMemberFile.file_ext as showcaseMemberFile_file_ext,
+            showcaseMemberFile.file_type as showcaseMemberFile_file_type,
+            showcaseMemberFile.create_time as showcaseMemberFile_create_time,
+            showcaseMemberFile.update_time as showcaseMemberFile_update_time,
+            showcaseMemberFile.comments as showcaseMemberFile_comments
+    </sql>
+
+</mapper>

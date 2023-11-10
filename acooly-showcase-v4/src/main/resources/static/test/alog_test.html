@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AlogJS集成测试</title>
+</head>
+<body>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="http://127.0.0.1:8080/acooly/alog/acooly.alog.js"></script>
+<script>
+    $(function () {
+        // 注意：被收集的网站的域名需要在后台配置注册
+        // 行为日志收集的服务器域名配置
+        $.acooly.alog.host = "http://mydomain.com:8080";
+        $.acooly.alog.log();
+    });
+</script>
+</body>
+</html>

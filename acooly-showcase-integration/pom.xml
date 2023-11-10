@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>acooly-showcase-parent</artifactId>
+        <groupId>com.acooly.showcase</groupId>
+        <version>5.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>acooly-showcase-integration</artifactId>
+
+    <properties>
+        <deploy.skip>true</deploy.skip>
+    </properties>
+
+    <dependencies>
+
+        <!-- 基础组件:mybatis: 关联依赖 -> acooly-component-ds -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-mybatis</artifactId>
+        </dependency>
+        <!-- 基础组件:JPA -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-jpa</artifactId>
+        </dependency>
+        <!-- 基础组件:web, 关联依赖 -> tomcat等组件 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-web</artifactId>
+        </dependency>
+        <!-- 基础组件通讯: dubbo -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-dubbo</artifactId>
+        </dependency>
+        <!-- 基础组件: appservice：代码自主包装 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-appservice</artifactId>
+        </dependency>
+        <!-- 基础组件: event：事件处理 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-event</artifactId>
+        </dependency>
+        <!-- 基础组件：参数配置管理 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-config</artifactId>
+        </dependency>
+
+
+        <!-- 应用组件：App通用功能-->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-app</artifactId>
+        </dependency>
+        <!-- 应用组件：验证码生成-->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-captcha</artifactId>
+        </dependency>
+        <!-- 应用组件：实名认证和银行卡认证 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-certification</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-chart</artifactId>
+        </dependency>
+        
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-chat</artifactId>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-data-region</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-data-ip</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-eav</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-ofile</artifactId>
+        </dependency>
+        <!-- 应用组件：分布式定时任务，mysql5.7-->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-scheduler</artifactId>
+        </dependency>
+        <!-- 应用组件：CMS-->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-cms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-treetype</artifactId>
+        </dependency>
+
+        <!-- 应用组件：邮件发送-->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-mail</artifactId>
+        </dependency>
+        <!-- 应用组件：短信发送 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-sms</artifactId>
+        </dependency>
+        <!-- 应用组件：管理系统框架 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-security</artifactId>
+        </dependency>
+        <!-- 应用组件：管理系统审计日志 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-olog</artifactId>
+        </dependency>
+
+
+        <!-- 业务组件：会员组件 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-member</artifactId>
+        </dependency>
+        <!-- 业务组件：账务组件 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-account</artifactId>
+        </dependency>
+        <!-- 业务组件：抽奖组件 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-lottery</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+        <!-- 业务组件：积分组件 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-point</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+
+
+        <!-- 门户组件库 -->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-feedback-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-feedback-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-feedback-openapi</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-fqa-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-fqa-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-fqa-openapi</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-comment-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-comment-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-comment-openapi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-siteconfig</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-alog-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-alog-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-alog-openapi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-alog-analysis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-portlets-successtory</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>acooly-showcase</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

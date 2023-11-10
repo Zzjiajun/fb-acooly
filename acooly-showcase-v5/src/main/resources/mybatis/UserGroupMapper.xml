@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.demo.usergroup.dao.UserGroupDao">
+
+    <resultMap id="userGroupResultMap" type="com.acooly.showcase.demo.usergroup.entity.UserGroup">
+        <id property="id" column="userGroup_id"/>
+        <result property="name" column="userGroup_name"/>
+        <result property="descn" column="userGroup_descn"/>
+        <result property="users" column="userGroup_users"/>
+        <result property="createTime" column="userGroup_create_time"/>
+        <result property="updateTime" column="userGroup_update_time"/>
+        <result property="comments" column="userGroup_comments"/>
+    </resultMap>
+
+    <sql id="userGroupSqlSelect">
+            userGroup.id as userGroup_id,
+            userGroup.name as userGroup_name,
+            userGroup.descn as userGroup_descn,
+            userGroup.users as userGroup_users,
+            userGroup.create_time as userGroup_create_time,
+            userGroup.update_time as userGroup_update_time,
+            userGroup.comments as userGroup_comments
+    </sql>
+
+</mapper>

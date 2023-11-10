@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.demo.roweditor.dao.RoweditorDao">
+
+    <resultMap id="roweditorResultMap" type="com.acooly.showcase.demo.roweditor.entity.Roweditor">
+        <id property="id" column="roweditor_id"/>
+        <result property="memberNo" column="roweditor_member_no"/>
+        <result property="username" column="roweditor_username"/>
+        <result property="realName" column="roweditor_real_name"/>
+        <result property="idcardNo" column="roweditor_idcard_no"/>
+        <result property="age" column="roweditor_age"/>
+        <result property="birthday" column="roweditor_birthday"/>
+        <result property="gender" column="roweditor_gender"/>
+        <result property="animal" column="roweditor_animal"/>
+        <result property="mobileNo" column="roweditor_mobile_no"/>
+        <result property="mail" column="roweditor_mail"/>
+        <result property="website" column="roweditor_website"/>
+        <result property="doneRatio" column="roweditor_done_ratio"/>
+        <result property="salary" column="roweditor_salary"/>
+        <result property="registryChannel" column="roweditor_registry_channel"/>
+        <result property="status" column="roweditor_status"/>
+        <result property="createTime" column="roweditor_create_time"/>
+        <result property="updateTime" column="roweditor_update_time"/>
+        <result property="comments" column="roweditor_comments"/>
+    </resultMap>
+
+    <sql id="roweditorSqlSelect">
+            roweditor.id as roweditor_id,
+            roweditor.member_no as roweditor_member_no,
+            roweditor.username as roweditor_username,
+            roweditor.real_name as roweditor_real_name,
+            roweditor.idcard_no as roweditor_idcard_no,
+            roweditor.age as roweditor_age,
+            roweditor.birthday as roweditor_birthday,
+            roweditor.gender as roweditor_gender,
+            roweditor.animal as roweditor_animal,
+            roweditor.mobile_no as roweditor_mobile_no,
+            roweditor.mail as roweditor_mail,
+            roweditor.website as roweditor_website,
+            roweditor.done_ratio as roweditor_done_ratio,
+            roweditor.salary as roweditor_salary,
+            roweditor.registry_channel as roweditor_registry_channel,
+            roweditor.status as roweditor_status,
+            roweditor.create_time as roweditor_create_time,
+            roweditor.update_time as roweditor_update_time,
+            roweditor.comments as roweditor_comments
+    </sql>
+
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.member.dao.ShowcaseMemberDao">
+
+    <resultMap id="showcaseMemberResultMap" type="com.acooly.showcase.member.entity.ShowcaseMember">
+        <id property="id" column="showcaseMember_id"/>
+        <result property="username" column="showcaseMember_username"/>
+        <result property="age" column="showcaseMember_age"/>
+        <result property="birthday" column="showcaseMember_birthday"/>
+        <result property="gender" column="showcaseMember_gender"/>
+        <result property="animal" column="showcaseMember_animal"/>
+        <result property="realName" column="showcaseMember_real_name"/>
+        <result property="idcardType" column="showcaseMember_idcard_type"/>
+        <result property="idcardNo" column="showcaseMember_idcard_no"/>
+        <result property="mobileNo" column="showcaseMember_mobile_no"/>
+        <result property="mail" column="showcaseMember_mail"/>
+        <result property="customerType" column="showcaseMember_customer_type"/>
+        <result property="subject" column="showcaseMember_subject"/>
+        <result property="content" column="showcaseMember_content"/>
+        <result property="doneRatio" column="showcaseMember_done_ratio"/>
+        <result property="salary" column="showcaseMember_salary"/>
+        <result property="registryChannel" column="showcaseMember_registry_channel"/>
+        <result property="pushAdv" column="showcaseMember_push_adv"/>
+        <result property="numStatus" column="showcaseMember_num_status"/>
+        <result property="status" column="showcaseMember_status"/>
+        <result property="createTime" column="showcaseMember_create_time"/>
+        <result property="updateTime" column="showcaseMember_update_time"/>
+        <result property="comments" column="showcaseMember_comments"/>
+        <result property="website" column="showcaseMember_website"/>
+    </resultMap>
+
+    <sql id="showcaseMemberSqlSelect">
+            showcaseMember.id as showcaseMember_id,
+            showcaseMember.username as showcaseMember_username,
+            showcaseMember.age as showcaseMember_age,
+            showcaseMember.birthday as showcaseMember_birthday,
+            showcaseMember.gender as showcaseMember_gender,
+            showcaseMember.animal as showcaseMember_animal,
+            showcaseMember.real_name as showcaseMember_real_name,
+            showcaseMember.idcard_type as showcaseMember_idcard_type,
+            showcaseMember.idcard_no as showcaseMember_idcard_no,
+            showcaseMember.mobile_no as showcaseMember_mobile_no,
+            showcaseMember.mail as showcaseMember_mail,
+            showcaseMember.customer_type as showcaseMember_customer_type,
+            showcaseMember.subject as showcaseMember_subject,
+            showcaseMember.content as showcaseMember_content,
+            showcaseMember.done_ratio as showcaseMember_done_ratio,
+            showcaseMember.salary as showcaseMember_salary,
+            showcaseMember.registry_channel as showcaseMember_registry_channel,
+            showcaseMember.push_adv as showcaseMember_push_adv,
+            showcaseMember.num_status as showcaseMember_num_status,
+            showcaseMember.status as showcaseMember_status,
+            showcaseMember.create_time as showcaseMember_create_time,
+            showcaseMember.update_time as showcaseMember_update_time,
+            showcaseMember.comments as showcaseMember_comments,
+            showcaseMember.website as showcaseMember_website
+    </sql>
+
+</mapper>
