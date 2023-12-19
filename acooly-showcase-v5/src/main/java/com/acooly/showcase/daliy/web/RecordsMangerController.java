@@ -1,6 +1,7 @@
 package com.acooly.showcase.daliy.web;
 
 import com.acooly.core.common.dao.support.PageInfo;
+import com.acooly.core.common.exception.BusinessException;
 import com.acooly.core.common.web.support.JsonEntityResult;
 import com.acooly.core.common.web.support.JsonListResult;
 import com.acooly.core.common.web.support.JsonResult;
@@ -26,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -79,6 +81,7 @@ public class RecordsMangerController extends AbstractShowcaseController<Records,
     @Override
     protected void referenceData(HttpServletRequest request, Map<String, Object> model) {
         ArrayList<String> list = new ArrayList<>();
+        list.add("养户");
         list.add("欧洲股");
         list.add("欧洲币");
         list.add("美国股");
@@ -106,6 +109,7 @@ public class RecordsMangerController extends AbstractShowcaseController<Records,
 
     @SneakyThrows
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JsonEntityResult<Records> saveJson(HttpServletRequest request, HttpServletResponse response) {
         User principal = (User) SecurityUtils.getSubject().getPrincipal();
         Map<String, Object> map = Maps.newHashMap();
@@ -113,39 +117,44 @@ public class RecordsMangerController extends AbstractShowcaseController<Records,
         List<Accounts> query = accountsService.query(map, null);
         query = query.stream().filter(s -> s.getStatus() == 1).collect(Collectors.toList());
         List<String> list = query.stream().map(Accounts::getAccountName).collect(Collectors.toList());
-        Map<String, Object> mapQuery = query.stream().collect(Collectors.toMap(Accounts::getAccountName, Accounts::getBalance));
-        Map<String, Long> mapById = query.stream().collect(Collectors.toMap(Accounts::getAccountName, Accounts::getId));
-        Map<String, String[]> parameterMap = new HashMap<String, String[]>(request.getParameterMap());
-        Map<String, Map<String, String[]>> accountNameMap = getAccountNameMap(new HashMap<String, String[]>(request.getParameterMap()));
-        float spending = 0;
-        for (String s : list) {
-            Accounts accounts = new Accounts();
-            accounts.setId(mapById.get(s));
-            accounts.setStatus(1);
-            //花销
-            float balance = Float.parseFloat(parameterMap.get(s)[0]);
-            //充值
-            float balanceRecharge = Float.parseFloat(parameterMap.get(s + "recharge")[0]);
-            //之前的余额
-            float balanceOld = (float) mapQuery.get(s);
-            accounts.setBalance(balanceOld - balance + balanceRecharge);
-            accountsService.update(accounts);
-            spending += (float) balance;
-//            parameterMap.remove(s);
+        try {
+            Map<String, Object> mapQuery = query.stream().collect(Collectors.toMap(Accounts::getAccountName, Accounts::getBalance));
+            Map<String, Long> mapById = query.stream().collect(Collectors.toMap(Accounts::getAccountName, Accounts::getId));
+            Map<String, String[]> parameterMap = new HashMap<String, String[]>(request.getParameterMap());
+            Map<String, Map<String, String[]>> accountNameMap = getAccountNameMap(new HashMap<String, String[]>(request.getParameterMap()));
+            float spending = 0;
+            for (String s : list) {
+                Accounts accounts = new Accounts();
+                accounts.setId(mapById.get(s));
+                accounts.setStatus(1);
+                //花销
+                float balance = Float.parseFloat(parameterMap.get(s)[0]);
+                //充值
+                float balanceRecharge = Float.parseFloat(parameterMap.get(s + "recharge")[0]);
+                //之前的余额
+                float balanceOld = (float) mapQuery.get(s);
+                accounts.setBalance(balanceOld - balance + balanceRecharge);
+                accountsService.update(accounts);
+                spending += (float) balance;
+    //            parameterMap.remove(s);
+            }
+            String accountInformation = mapToString(accountNameMap.get("accountInformation"));
+            String recharge = mapToString(accountNameMap.get("recharge"));
+            BigDecimal bigDecimal = new BigDecimal(Double.toString(spending));
+            bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
+            parameterMap.put("spending", new String[]{String.valueOf(bigDecimal.doubleValue())});
+            parameterMap.put("accountInformation", new String[]{accountInformation});
+            parameterMap.put("recharge", new String[]{recharge});
+            request = new ParameterRequestWrapper(request, parameterMap);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
-        String accountInformation = mapToString(accountNameMap.get("accountInformation"));
-        String recharge = mapToString(accountNameMap.get("recharge"));
-        BigDecimal bigDecimal = new BigDecimal(Double.toString(spending));
-        bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
-        parameterMap.put("spending", new String[]{String.valueOf(bigDecimal.doubleValue())});
-        parameterMap.put("accountInformation", new String[]{accountInformation});
-        parameterMap.put("recharge", new String[]{recharge});
-        request = new ParameterRequestWrapper(request, parameterMap);
         return super.saveJson(request, response);
 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JsonEntityResult<Records> updateJson(HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("id");
         Map<String, String[]> parameterMap = new HashMap<String, String[]>(request.getParameterMap());
@@ -154,32 +163,36 @@ public class RecordsMangerController extends AbstractShowcaseController<Records,
         map1.put("EQ_holder",records.getUserName());
         map1.put("EQ_status","0");
         List<Accounts> query = accountsService.query(map1, null);
-        List<String> collect = query.stream().map(Accounts::getAccountName).collect(Collectors.toList());
-        Map<String, Float> stringToMaps = getRemoveMap(collect,stringToMap(records.getAccountInformation()));
-        Map<String, Float> stringFloatMap = getRemoveMap(collect,stringRechargeToMap(records.getRecharge()));
-        Map<String, Map<String, String[]>> accountNameMap = getAccountNameMap(new HashMap<String, String[]>(request.getParameterMap()));
-        String accountInformation = mapToString(accountNameMap.get("accountInformation"));
-        String recharge = mapToString(accountNameMap.get("recharge"));
-        Map<String, Float> stringToMapsNew = stringToMap(accountInformation);
-        Map<String, Float> stringFloatMapNew = stringRechargeToMap(recharge);
-        Map<String, Object> map = Maps.newHashMap();
-        float spending = 0;
-        map.put("EQ_holder", request.getParameter("userName"));
-        for (Map.Entry<String, Float> entry : stringToMaps.entrySet()) {
-            map.put("EQ_accountName",entry.getKey());
-            Accounts accounts = accountsService.query(map, null).get(0);
-            accounts.setBalance(accounts.getBalance()-stringFloatMap.get(entry.getKey())+entry.getValue()-stringToMapsNew.get(entry.getKey())+stringFloatMapNew.get(entry.getKey()));
-            accountsService.update(accounts);
-            spending +=stringToMapsNew.get(entry.getKey());
-            parameterMap.remove(entry.getKey());
-            parameterMap.remove(entry.getKey()+ "recharge");
+        try {
+            List<String> collect = query.stream().map(Accounts::getAccountName).collect(Collectors.toList());
+            Map<String, Float> stringToMaps = getRemoveMap(collect,stringToMap(records.getAccountInformation()));
+            Map<String, Float> stringFloatMap = getRemoveMap(collect,stringRechargeToMap(records.getRecharge()));
+            Map<String, Map<String, String[]>> accountNameMap = getAccountNameMap(new HashMap<String, String[]>(request.getParameterMap()));
+            String accountInformation = mapToString(accountNameMap.get("accountInformation"));
+            String recharge = mapToString(accountNameMap.get("recharge"));
+            Map<String, Float> stringToMapsNew = stringToMap(accountInformation);
+            Map<String, Float> stringFloatMapNew = stringRechargeToMap(recharge);
+            Map<String, Object> map = Maps.newHashMap();
+            float spending = 0;
+            map.put("EQ_holder", request.getParameter("userName"));
+            for (Map.Entry<String, Float> entry : stringToMaps.entrySet()) {
+                map.put("EQ_accountName",entry.getKey());
+                Accounts accounts = accountsService.query(map, null).get(0);
+                accounts.setBalance(accounts.getBalance()-stringFloatMap.get(entry.getKey())+entry.getValue()-stringToMapsNew.get(entry.getKey())+stringFloatMapNew.get(entry.getKey()));
+                accountsService.update(accounts);
+                spending +=stringToMapsNew.get(entry.getKey());
+                parameterMap.remove(entry.getKey());
+                parameterMap.remove(entry.getKey()+ "recharge");
+            }
+            BigDecimal bigDecimal = new BigDecimal(Double.toString(spending));
+            bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
+            parameterMap.put("spending", new String[]{String.valueOf(bigDecimal.doubleValue())});
+            parameterMap.put("accountInformation", new String[]{accountInformation});
+            parameterMap.put("recharge", new String[]{recharge});
+            request = new ParameterRequestWrapper(request, parameterMap);
+        } catch (BusinessException e) {
+            e.printStackTrace();
         }
-        BigDecimal bigDecimal = new BigDecimal(Double.toString(spending));
-        bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
-        parameterMap.put("spending", new String[]{String.valueOf(bigDecimal.doubleValue())});
-        parameterMap.put("accountInformation", new String[]{accountInformation});
-        parameterMap.put("recharge", new String[]{recharge});
-        request = new ParameterRequestWrapper(request, parameterMap);
         return super.updateJson(request, response);
     }
 
@@ -318,6 +331,19 @@ public class RecordsMangerController extends AbstractShowcaseController<Records,
             performanceDto.setRegion(entry.getKey());
             permissionsList.add(performanceDto);
         }
+        permissionsList.forEach(s->{
+            BigDecimal bigNum1 = new BigDecimal(s.getSpending());
+            BigDecimal bigNum2 = new BigDecimal(String.valueOf(s.getGrades()));
+            if (s.getGrades()==0){
+                s.setPrice(s.getSpending());
+            }else {
+                BigDecimal divide = bigNum1.divide(bigNum2, 2, RoundingMode.HALF_UP);
+                s.setPrice(String.valueOf(divide));
+            }
+            if ("养户".equals(s.getRegion())){
+                s.setPrice("0.00");
+            }
+        });
         Pagination pagination = new Pagination(permissionsList.size(), page,rows,permissionsList);
         pagination.calculatePagination();
         result.setPageNo(pagination.getCurrentPage());

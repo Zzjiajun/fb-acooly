@@ -93,12 +93,15 @@ public class PhoneMangerController extends AbstractShowcaseController<Phone, Pho
                 phone1.setPhoneNumber(cleanedPart);
                 phoneList.add(phone1);
             }
+            if (!(phoneList.size()>0)){
+                jsonResult.setSuccess(false);
+            }
+            this.getEntityService().saves(phoneList);
         } catch (Exception e) {
             String message = e.getMessage();
             jsonResult.setMessage(message);
             jsonResult.setSuccess(false);
         }
-        this.getEntityService().saves(phoneList);
         return jsonResult;
     }
 }

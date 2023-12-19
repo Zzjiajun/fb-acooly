@@ -29,8 +29,8 @@
                 </th>
                 <th field="username">用户</th>
                 <th field="realName">姓名</th>
-                <th field="spending">充值</th>
-                <th field="email">E-mail</th>
+                <th field="spending">总充值</th>
+<#--                <th field="email">E-mail</th>-->
             </tr>
             </thead>
         </table>
@@ -101,8 +101,9 @@
                         </th>
                         <th field="region" formatter="mappingFormatter">地区</th>
                         <th field="spending" formatter="mappingFormatter">花费</th>
-                        <th field="recharge" formatter="mappingFormatter">充值</th>
+<#--                        <th field="recharge" formatter="mappingFormatter">充值</th>-->
                         <th field="grades" formatter="mappingFormatter">业绩</th>
+                        <th field="price" formatter="mappingFormatter">单价</th>
                     </tr>
                     </thead>
                 </table>

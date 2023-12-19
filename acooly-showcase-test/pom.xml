@@ -7,7 +7,6 @@
         <artifactId>acooly-showcase-parent</artifactId>
         <version>5.0.0-SNAPSHOT</version>
     </parent>
-
     <artifactId>acooly-showcase-test</artifactId>
     <properties>
         <deploy.skip>true</deploy.skip>

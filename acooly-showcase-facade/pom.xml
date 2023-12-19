@@ -9,7 +9,6 @@
     </parent>
     <artifactId>acooly-showcase-facade</artifactId>
     <name>acooly-showcase-facade</name>
-
     <dependencies>
         <dependency>
             <groupId>com.acooly.showcase</groupId>

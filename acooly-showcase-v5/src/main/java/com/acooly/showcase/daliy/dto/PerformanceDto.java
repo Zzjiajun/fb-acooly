@@ -13,5 +13,6 @@ public class PerformanceDto extends InfoBase {
     private String spending;
     private String recharge;
     private Integer grades;
+    private String price;
     private Date createTime;
 }
