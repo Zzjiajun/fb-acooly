@@ -54,41 +54,41 @@
 
 
         <!-- 应用组件：App通用功能-->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-app</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-app</artifactId>-->
+<!--        </dependency>-->
         <!-- 应用组件：验证码生成-->
         <dependency>
             <groupId>com.acooly</groupId>
             <artifactId>acooly-component-captcha</artifactId>
         </dependency>
         <!-- 应用组件：实名认证和银行卡认证 -->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-certification</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-chart</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-certification</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-chart</artifactId>-->
+<!--        </dependency>-->
         
 <!--        <dependency>-->
 <!--            <groupId>com.acooly</groupId>-->
 <!--            <artifactId>acooly-component-chat</artifactId>-->
 <!--        </dependency>-->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-data-region</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-data-ip</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-eav</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-data-region</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-data-ip</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-eav</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.acooly</groupId>
             <artifactId>acooly-component-ofile</artifactId>
@@ -99,125 +99,125 @@
             <artifactId>acooly-component-scheduler</artifactId>
         </dependency>
         <!-- 应用组件：CMS-->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-cms</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-treetype</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-cms</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-treetype</artifactId>-->
+<!--        </dependency>-->
 
         <!-- 应用组件：邮件发送-->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-mail</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-mail</artifactId>-->
+<!--        </dependency>-->
         <!-- 应用组件：短信发送 -->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-sms</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-sms</artifactId>-->
+<!--        </dependency>-->
         <!-- 应用组件：管理系统框架 -->
         <dependency>
             <groupId>com.acooly</groupId>
             <artifactId>acooly-component-security</artifactId>
         </dependency>
         <!-- 应用组件：管理系统审计日志 -->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-olog</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-olog</artifactId>-->
+<!--        </dependency>-->
 
 
         <!-- 业务组件：会员组件 -->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-member</artifactId>
-        </dependency>
-        <!-- 业务组件：账务组件 -->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-account</artifactId>
-        </dependency>
-        <!-- 业务组件：抽奖组件 -->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-lottery</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
-        </dependency>
-        <!-- 业务组件：积分组件 -->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-point</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-member</artifactId>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; 业务组件：账务组件 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-account</artifactId>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; 业务组件：抽奖组件 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-lottery</artifactId>-->
+<!--            <version>5.0.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; 业务组件：积分组件 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-point</artifactId>-->
+<!--            <version>5.0.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
 
 
         <!-- 门户组件库 -->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-feedback-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-feedback-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-feedback-openapi</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-feedback-client</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-feedback-core</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-feedback-openapi</artifactId>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-fqa-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-fqa-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-fqa-openapi</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-fqa-client</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-fqa-core</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-fqa-openapi</artifactId>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-comment-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-comment-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-comment-openapi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-siteconfig</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-comment-client</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-comment-core</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-comment-openapi</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-siteconfig</artifactId>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-alog-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-alog-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-alog-openapi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-alog-analysis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-portlets-successtory</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-alog-client</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-alog-core</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-alog-openapi</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-alog-analysis</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-portlets-successtory</artifactId>-->
+<!--        </dependency>-->
 
     </dependencies>
 

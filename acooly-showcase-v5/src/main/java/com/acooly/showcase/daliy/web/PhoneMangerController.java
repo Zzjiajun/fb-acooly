@@ -1,7 +1,7 @@
 package com.acooly.showcase.daliy.web;
 
+
 import com.acooly.core.common.exception.BusinessException;
-import com.acooly.core.common.web.support.JsonListResult;
 import com.acooly.core.common.web.support.JsonResult;
 import com.acooly.module.security.domain.User;
 import com.acooly.showcase.base.AbstractShowcaseController;
@@ -9,6 +9,7 @@ import com.acooly.showcase.daliy.dto.PerformanceDto;
 import com.acooly.showcase.daliy.entity.Phone;
 import com.acooly.showcase.daliy.service.PhoneService;
 import com.acooly.showcase.member.entity.ShowcaseMember;
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,7 +38,7 @@ public class PhoneMangerController extends AbstractShowcaseController<Phone, Pho
 
     @RequestMapping({"createTest"})
     public String create(HttpServletRequest request, HttpServletResponse response, Model model) {
-        return StringUtils.isNotBlank(this.editView) ? this.editView : this.getRequestMapperValue() + "EditTest";
+        return StringUtils.isNotBlank(this.editView) ? this.editView : this.getRequestMapperValue() + "File";
     }
 
     @Override
@@ -55,6 +57,56 @@ public class PhoneMangerController extends AbstractShowcaseController<Phone, Pho
         List<String> groupName = this.getEntityService().getGroupName();
         model.put("groupName",groupName);
     }
+
+
+    @RequestMapping(value = "phoneFile")
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class)
+    public JsonResult phoneFile(HttpServletRequest request, HttpServletResponse response){
+        JsonResult jsonResult = new JsonResult();
+        String phoneNumber = request.getParameter("commentsFile");
+        String groupNumber = request.getParameter("groupNumber");
+        List<Phone> phoneList = null;
+        try {
+            String[] parts = phoneNumber.split(",");
+            List<String> list1 = new ArrayList<>(Arrays.asList(parts));
+            phoneList = new ArrayList<>();
+            Map<String, Object> mapQuery = Maps.newHashMap();
+            List<String> list = new ArrayList<>();
+            for (String number : parts) {
+                String deleteWhitespace = StringUtils.deleteWhitespace(number);
+                mapQuery.put("EQ_phoneNumber",deleteWhitespace);
+                list.add(deleteWhitespace);
+                List<Phone> query = this.getEntityService().query(mapQuery, null);
+                int i = 1;
+                Phone phone1 = new Phone();
+                if (!query.isEmpty()){
+                    for (Phone phone : query) {
+                        i = phone.getRepeatCount() + 1;
+                        phone.setRepeatCount(i);
+                        this.getEntityService().update(phone);
+                    }
+                    phone1.setRepeatCount(i);
+                }else {
+                    phone1.setRepeatCount(1);
+                }
+                phone1.setGroupName(groupNumber);
+                phone1.setPhoneNumber(deleteWhitespace);
+                phoneList.add(phone1);
+            }
+            if (!(phoneList.size()>0)){
+                jsonResult.setSuccess(false);
+            }
+        } catch (BusinessException e) {
+            String message = e.getMessage();
+            jsonResult.setMessage(message);
+            jsonResult.setSuccess(false);
+        }
+        this.getEntityService().saves(phoneList);
+        return jsonResult;
+    }
+
+
 
     @RequestMapping(value = "phoneParse")
     @ResponseBody

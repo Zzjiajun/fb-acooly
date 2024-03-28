@@ -18,6 +18,10 @@ import com.acooly.showcase.daliy.dto.TotalFromDto;
 import com.acooly.showcase.daliy.dto.UserSpending;
 import com.acooly.showcase.daliy.entity.*;
 import com.acooly.showcase.daliy.service.*;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.baidu.aip.util.Base64Util;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Result;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
@@ -162,7 +167,36 @@ public class AccountsMangerController extends AbstractShowcaseController<Account
         return result;
     }
 
-
+    @RequestMapping("filePh")
+    @ResponseBody
+    public JsonResult filePh(HttpServletRequest request, MultipartFile file) throws Exception {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            byte[] bytes = file.getBytes();
+            String imgStr = Base64Util.encode(bytes);
+            // 请求url
+            String url = "https://aip.baidubce.com/rest/2.0/ocr/v1/numbers";
+            String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+            String param = "image=" + imgParam;
+            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+            String accessToken = "24.a35efca5336cbe04e8a8009375183fea.2592000.1712137983.282335-55093663";
+            String result = com.acooly.showcase.daliy.Utils.HttpUtil.post(url, accessToken, param);
+            JSONObject jsonObject = JSON.parseObject(result);
+            JSONArray wordsResult = jsonObject.getJSONArray("words_result");
+            List<String> wordsList = wordsResult.stream()
+                    .map(obj -> ((JSONObject) obj).getString("words"))
+                    .collect(Collectors.toList());
+            Map<Object, Object> map = Maps.newHashMap();
+            map.put("list",wordsList);
+            jsonResult.setData(map);
+            jsonResult.setMessage("识别成功");
+        } catch (Exception e) {
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage(e.getMessage());
+            jsonResult.setCode("500");
+        }
+        return jsonResult;
+    }
 
     @RequestMapping("file1")
     @ResponseBody

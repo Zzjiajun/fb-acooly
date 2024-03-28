@@ -1,4 +1,13 @@
 <#assign jodd=JspTaglibs["http://www.springside.org.cn/jodd_form"] />
+<style>
+	.pixel-id-container {
+		display: inline-block;
+		margin: 5px;
+		padding: 5px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+	}
+</style>
 <div>
     <form id="manage_regname_editform" class="form-horizontal" action="/manage/showcase/daily/regname/<#if action=='create'>saveJson<#else>updateJson</#if>.html" method="post" >
 		<@jodd.form bean="regname" scope="request">
@@ -19,10 +28,26 @@
 			<div class="form-group row">
 				<label class="col-sm-3 col-form-label">域名</label>
 				<div class="col-sm-9">
-					<textarea rows="3" cols="40" placeholder="请输入region_name..." name="regionName" class="easyui-validatebox form-control" ></textarea>
+					<textarea rows="3"  id="inputTextArea" cols="40" placeholder="请输入region_name..." name="regionName" class="easyui-validatebox form-control" ></textarea>
 				</div>
 			</div>
         </div>
       </@jodd.form>
     </form>
+
+
+	<script>
+		// function formatInput() {
+		// 	var inputTextArea = document.getElementById('inputTextArea');
+		// 	var inputValue = inputTextArea.value.replace(/\D/g, ''); // 移除非数字字符
+		// 	var formattedValue = '';
+		// 	for (var i = 0; i < inputValue.length; i++) {
+		// 		formattedValue += inputValue[i];
+		// 		if ((i + 1) % 15 === 0) { // 每15个数字添加换行符
+		// 			formattedValue += ","+'\n';
+		// 		}
+		// 	}
+		// 	inputTextArea.value = formattedValue;
+		// }
+	</script>
 </div>

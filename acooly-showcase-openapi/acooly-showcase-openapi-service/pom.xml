@@ -24,22 +24,22 @@
 <!--        </dependency>-->
 
         <!-- OpenApi自动文档化 -->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>openapi-framework-apidoc</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>openapi-framework-apidoc</artifactId>-->
+<!--        </dependency>-->
 
-        <!-- OpenApi核心框架 -->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>openapi-framework-core</artifactId>
-        </dependency>
+<!--        &lt;!&ndash; OpenApi核心框架 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>openapi-framework-core</artifactId>-->
+<!--        </dependency>-->
 
-        <!-- OpenApi通知框架 -->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>openapi-framework-notify</artifactId>
-        </dependency>
+<!--        &lt;!&ndash; OpenApi通知框架 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>openapi-framework-notify</artifactId>-->
+<!--        </dependency>-->
 
     </dependencies>
     <build>

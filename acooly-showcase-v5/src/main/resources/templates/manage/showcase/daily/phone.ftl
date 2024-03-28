@@ -25,7 +25,7 @@
     <div data-options="region:'center',border:false">
         <table id="manage_phone_datagrid" class="easyui-datagrid" url="/manage/showcase/daily/phone/listJson.html"
                toolbar="#manage_phone_toolbar" fit="true" border="false" fitColumns="false"
-               pagination="true" idField="id" pageSize="20" pageList="[ 10, 20, 30, 40, 50 ]" sortName="id"
+               pagination="true" idField="id" pageSize="20" pageList="[ 10, 20, 30, 40, 50, 6000]" sortName="id"
                sortOrder="asc" checkOnSelect="true" selectOnCheck="true" singleSelect="false">
             <thead>
             <tr>
@@ -109,8 +109,8 @@
                     ajaxLoading();
                     $.ajax({
                         type: 'POST',
-                        url: '/manage/showcase/daily/phone/phoneParse.html', // 替换为你的服务器URL
-                        data: $('#manage_phoneTest_searchform').serialize(),
+                        url: '/manage/showcase/daily/phone/phoneFile.html', // 替换为你的服务器URL
+                        data: $('#manage_phoneFile_searchform').serialize(),
                         success: function (result) {
                             ajaxLoadEnd();
                             $.acooly.messager('提示', result.message, result.success ? 'success' : 'danger');

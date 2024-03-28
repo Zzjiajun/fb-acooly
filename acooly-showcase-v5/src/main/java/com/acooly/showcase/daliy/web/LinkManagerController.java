@@ -22,6 +22,7 @@ import com.acooly.core.common.web.support.JsonResult;
 import com.acooly.module.security.domain.User;
 import com.acooly.module.security.service.UserService;
 import com.acooly.showcase.daliy.Utils.FTPUploader;
+import com.acooly.showcase.daliy.Utils.RemoteFileOperationsUtil;
 import com.acooly.showcase.daliy.entity.Regname;
 import com.acooly.showcase.daliy.service.PermissionsService;
 import com.acooly.showcase.daliy.service.RegnameService;
@@ -116,23 +117,32 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			result.setEntity(this.doSave(request, response, (Model)null, true));
 			String domain = result.getEntity().getDomain();
 			String regionName = result.getEntity().getRegionName();
-			String ftp = FTPUploader.createFtp("/" + regionName + "/" + domain);
-			switch (ftp){
-				case "文件夹创建成功":
-					result.setSuccess(true);
-					result.setMessage("二级域名创建成功");
-					break;
-				case "文件夹创建失败":
-					result.setSuccess(false);
-					result.setMessage("二级域名创建失败");
-					break;
-				case "文件夹已存在":
-					result.setSuccess(false);
-					result.setMessage("二级域名存在");
-				default:
-					result.setSuccess(false);
-					result.setMessage("系统错误，联系管理员");
+
+
+
+
+
+			boolean directory = RemoteFileOperationsUtil.createDirectory("/www/wwwroot/" + regionName + "/" + domain);
+			if (!directory){
+				throw new NullPointerException("新建二级域名失败");
 			}
+//			String ftp = FTPUploader.createFtp("/" + regionName + "/" + domain);
+//			switch (ftp){
+//				case "文件夹创建成功":
+//					result.setSuccess(true);
+//					result.setMessage("二级域名创建成功");
+//					break;
+//				case "文件夹创建失败":
+//					result.setSuccess(false);
+//					result.setMessage("二级域名创建失败");
+//					break;
+//				case "文件夹已存在":
+//					result.setSuccess(false);
+//					result.setMessage("二级域名存在");
+//				default:
+//					result.setSuccess(false);
+//					result.setMessage("系统错误，联系管理员");
+//			}
 		} catch (Exception var5) {
 			this.handleException(result, "新增", var5);
 		}
@@ -155,25 +165,33 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			String regionName = entity.getRegionName();
 			String domain = entity.getDomain();
 			String newRemoteDir = "/" + regionName + "/" + domain;
-			if (!(newRemoteDir.equals(remoteDir))){
-				String fTp = FTPUploader.updateFTp(remoteDir, newRemoteDir);
-				switch (fTp){
-					case "文件夹名称修改成功":
-						result.setSuccess(true);
-						result.setMessage("二级域名修改成功");
-						break;
-					case "文件夹名称修改失败":
-						result.setSuccess(false);
-						result.setMessage("二级域名修改失败");
-						break;
-					case "文件夹不存在":
-						result.setSuccess(false);
-						result.setMessage("服务器上，二级域名不存在");
-					default:
-						result.setSuccess(false);
-						result.setMessage("系统错误，联系管理员");
-				}
+
+
+			boolean b = RemoteFileOperationsUtil.renameDirectory("/www/wwwroot/" + oldLinkRegionName + "/" + oldLinkDomain,
+					"/www/wwwroot/" + regionName + "/" + domain);
+
+			if (!b){
+				throw new NullPointerException("修改二级域名失败");
 			}
+//			if (!(newRemoteDir.equals(remoteDir))){
+//				String fTp = FTPUploader.updateFTp(remoteDir, newRemoteDir);
+//				switch (fTp){
+//					case "文件夹名称修改成功":
+//						result.setSuccess(true);
+//						result.setMessage("二级域名修改成功");
+//						break;
+//					case "文件夹名称修改失败":
+//						result.setSuccess(false);
+//						result.setMessage("二级域名修改失败");
+//						break;
+//					case "文件夹不存在":
+//						result.setSuccess(false);
+//						result.setMessage("服务器上，二级域名不存在");
+//					default:
+//						result.setSuccess(false);
+//						result.setMessage("系统错误，联系管理员");
+//				}
+//			}
 		} catch (Exception var5) {
 			this.handleException(result, "更新", var5);
 		}
@@ -190,19 +208,23 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			Link link = this.getEntityService().get(id);
 			String regionName = link.getRegionName();
 			String domain = link.getDomain();
-			String fTp = FTPUploader.deleteFTp("/" + regionName + "/" + domain);
-			switch (fTp) {
-				case "文件夹已删除":
-					result.setSuccess(true);
-					result.setMessage("域名删除成功");
-					break;
-				case "文件夹不存在":
-					result.setSuccess(false);
-					result.setMessage("服务器，二级域名不存在");
-				default:
-					result.setSuccess(false);
-					result.setMessage("系统错误，联系管理员");
+			boolean b = RemoteFileOperationsUtil.deleteDirectory("/www/wwwroot/" + regionName + "/" + domain);
+			if (!b){
+				throw new NullPointerException("删除二级域名失败");
 			}
+//			String fTp = FTPUploader.deleteFTp("/" + regionName + "/" + domain);
+//			switch (fTp) {
+//				case "文件夹已删除":
+//					result.setSuccess(true);
+//					result.setMessage("域名删除成功");
+//					break;
+//				case "文件夹不存在":
+//					result.setSuccess(false);
+//					result.setMessage("服务器，二级域名不存在");
+//				default:
+//					result.setSuccess(false);
+//					result.setMessage("系统错误，联系管理员");
+//			}
 		}
 		return result;
 	}

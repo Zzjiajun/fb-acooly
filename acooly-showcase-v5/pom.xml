@@ -41,6 +41,20 @@
             <version>3.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.baidu.aip</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>4.16.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version> <!-- 版本号请根据最新版本进行调整 -->
+        </dependency>
+
+
+
 
     </dependencies>
     <build>

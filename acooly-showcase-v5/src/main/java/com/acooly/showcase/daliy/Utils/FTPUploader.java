@@ -15,7 +15,8 @@ import java.util.List;
 
 @Slf4j
 public class FTPUploader {
-    private static final String SERVER = "47.245.40.246";
+//    private static final String SERVER = "47.245.40.246";
+    private static final String SERVER = "47.236.70.169";
     private static final int PORT = 21;
     private static final String USERNAME = "user";
     private static final String PASSWORD = "123";
