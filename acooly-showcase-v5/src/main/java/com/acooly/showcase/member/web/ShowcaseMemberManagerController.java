@@ -155,7 +155,7 @@ public class ShowcaseMemberManagerController extends AbstractShowcaseController<
             Map<String, UploadResult> uploadResultMap = doUpload(request);
             UploadResult uploadResult = Collections3.getFirst(uploadResultMap.values());
             result.put("error", 0);
-            result.put("url", oFileProperties.getServerRoot() + uploadResult.getRelativeFile());
+//            result.put("url", oFileProperties.getServerRoot() + uploadResult.getRelativeFile());
         } catch (Exception e) {
             result.put("error", 1);
             result.put("message", "文件上传失败:" + e.getMessage());

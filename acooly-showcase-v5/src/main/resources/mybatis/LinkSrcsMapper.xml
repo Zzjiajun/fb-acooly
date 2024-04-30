@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.link.dao.LinkSrcsDao">
+
+    <resultMap id="linkSrcsResultMap" type="com.acooly.showcase.link.entity.LinkSrcs">
+        <id property="id" column="linkSrcs_id"/>
+        <result property="linkSrc" column="linkSrcs_link_src"/>
+        <result property="userName" column="linkSrcs_user_name"/>
+        <result property="domain" column="linkSrcs_domain"/>
+        <result property="createTime" column="linkSrcs_create_time"/>
+        <result property="updateTime" column="linkSrcs_update_time"/>
+    </resultMap>
+
+    <sql id="linkSrcsSqlSelect">
+            linkSrcs.id as linkSrcs_id,
+            linkSrcs.link_src as linkSrcs_link_src,
+            linkSrcs.user_name as linkSrcs_user_name,
+            linkSrcs.domain as linkSrcs_domain,
+            linkSrcs.create_time as linkSrcs_create_time,
+            linkSrcs.update_time as linkSrcs_update_time
+    </sql>
+
+</mapper>

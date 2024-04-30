@@ -71,7 +71,7 @@
 				<div class="form-group row">
 					<label class="col-sm-3 col-form-label">像素代码</label>
 					<div id="pixelId" class="col-sm-9">
-						<textarea rows="3"   id="inputTextArea"  cols="40" oninput="formatInput()"  placeholder="请输入像素代码..." name="pixel" class="easyui-validatebox form-control" ></textarea>
+						<textarea rows="3"   id="inputTextArea"  cols="40" oninput="formatInput()"  placeholder="请输入像素id,如果多个像素id请在每个像素id结尾后面输入英文,它会自动换行..." name="pixel" class="easyui-validatebox form-control" ></textarea>
 					</div>
 				</div>
 
@@ -173,12 +173,13 @@
 
 		function formatInput() {
 			var inputTextArea = document.getElementById('inputTextArea');
-			var inputValue = inputTextArea.value.replace(/\D/g, ''); // 移除非数字字符
+			var inputValue = inputTextArea.value;
 			var formattedValue = '';
 			for (var i = 0; i < inputValue.length; i++) {
-				formattedValue += inputValue[i];
-				if ((i + 1) % 15 === 0) { // 每15个数字添加换行符
-					formattedValue +='\n';
+				if (inputValue[i] === ',') {
+					formattedValue += '\n';
+				} else {
+					formattedValue += inputValue[i];
 				}
 			}
 			inputTextArea.value = formattedValue;
@@ -274,6 +275,43 @@
 			// 	});
 			// })
 		}
+
+
+		$(document).ready(function() {
+			// 定义处理程序函数
+			function handleButtonClick() {
+				var loadingIndex = layer.load(2, {
+					shade: [0.5, '#fff'], // 加载遮罩背景颜色和透明度
+					content: '加载中...',
+					success: function (layero) {
+						layero.find('.layui-layer-content').css({
+							'padding-top': '39px',
+							'width': '60px'
+						});
+					}
+				});
+
+				// 模拟一个异步操作，例如发送 AJAX 请求
+				// setTimeout(function() {
+				// 	// 这里可以替换成你的实际业务逻辑
+				//
+				// 	// 隐藏加载动画
+				// 	layer.close(loadingIndex);
+				// }, 7000); // 假设 2 秒后完成操作
+				// 监控对话框销毁事件
+				$(document).ajaxStop(function() {
+					// 在这里可以添加 loading 层的关闭逻辑
+					layer.close(loadingIndex);
+				});
+			}
+
+			// 绑定点击事件处理程序到编辑按钮
+			$('#acooly-framework-edit-btn').click(handleButtonClick);
+
+			// // 绑定点击事件处理程序到新增按钮
+			$('#acooly-framework-add-btn').click(handleButtonClick);
+		});
+
 
 	</script>
 </div>

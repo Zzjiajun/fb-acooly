@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.daliy.dao.DmShowDao">
+
+    <resultMap id="dmShowResultMap" type="com.acooly.showcase.daliy.entity.DmShow">
+        <id property="id" column="dmShow_id"/>
+        <result property="region" column="dmShow_region"/>
+        <result property="serialNumber" column="dmShow_serial_number"/>
+        <result property="remark" column="dmShow_remark"/>
+        <result property="createTime" column="dmShow_create_time"/>
+        <result property="updateTime" column="dmShow_update_time"/>
+        <result property="domain" column="dmShow_domain"/>
+    </resultMap>
+
+    <sql id="dmShowSqlSelect">
+            dmShow.id as dmShow_id,
+            dmShow.region as dmShow_region,
+            dmShow.serial_number as dmShow_serial_number,
+            dmShow.remark as dmShow_remark,
+            dmShow.create_time as dmShow_create_time,
+            dmShow.update_time as dmShow_update_time,
+            dmShow.domain as dmShow_domain
+    </sql>
+
+</mapper>

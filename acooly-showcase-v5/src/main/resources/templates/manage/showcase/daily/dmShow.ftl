@@ -14,34 +14,33 @@
             </div>
             <div class="form-group">
                 <label class="col-form-label">模版编号：</label>
-                <option value=""></option>
-
                 <select name="search_EQ_serialNumber"  class="form-control select2bs4" data-options="required:true">
+                    <option value=""></option>
                     <#list collected as k,v >
                         <option value="${v}">${k}</option>
                     </#list>
                 </select>
             </div>
-<#--            <div class="form-group">-->
-<#--                <label class="col-form-label">添加时间：</label>-->
-<#--                <input type="text" class="form-control form-control-sm" id="search_GTE_createTime" name="search_GTE_createTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
-<#--                <span class="mr-1 ml-1">至</span> <input type="text" class="form-control form-control-sm" id="search_LTE_createTime" name="search_LTE_createTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
-<#--            </div>-->
-<#--            <div class="form-group">-->
-<#--                <label class="col-form-label">修改时间：</label>-->
-<#--                <input type="text" class="form-control form-control-sm" id="search_GTE_updateTime" name="search_GTE_updateTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
-<#--                <span class="mr-1 ml-1">至</span> <input type="text" class="form-control form-control-sm" id="search_LTE_updateTime" name="search_LTE_updateTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
-<#--            </div>-->
+            <#--            <div class="form-group">-->
+            <#--                <label class="col-form-label">添加时间：</label>-->
+            <#--                <input type="text" class="form-control form-control-sm" id="search_GTE_createTime" name="search_GTE_createTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
+            <#--                <span class="mr-1 ml-1">至</span> <input type="text" class="form-control form-control-sm" id="search_LTE_createTime" name="search_LTE_createTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
+            <#--            </div>-->
+            <#--            <div class="form-group">-->
+            <#--                <label class="col-form-label">修改时间：</label>-->
+            <#--                <input type="text" class="form-control form-control-sm" id="search_GTE_updateTime" name="search_GTE_updateTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
+            <#--                <span class="mr-1 ml-1">至</span> <input type="text" class="form-control form-control-sm" id="search_LTE_updateTime" name="search_LTE_updateTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
+            <#--            </div>-->
             <div class="form-group">
                 <button class="btn btn-sm btn-primary" type="button" onclick="$.acooly.framework.search('manage_dmShow_searchform','manage_dmShow_datagrid');"><i class="fa fa-search fa-fw fa-col"></i> 查询</button>
             </div>
-    </form>
+        </form>
     </div>
 
     <!-- 列表和工具栏 -->
     <div data-options="region:'center',border:false">
         <table id="manage_dmShow_datagrid" class="easyui-datagrid" url="/manage/showcase/daily/dmShow/listJson.html" toolbar="#manage_dmShow_toolbar" fit="true" border="false" fitColumns="false"
-                pagination="true" idField="id" pageSize="20" pageList="[ 10, 20, 30, 40, 50 ]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
+               pagination="true" idField="id" pageSize="20" pageList="[ 10, 20, 30, 40, 50 ]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
             <thead>
             <tr>
                 <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
@@ -63,11 +62,11 @@
         <!-- 每行的Action动作模板 -->
         <div id="manage_dmShow_action" style="display: none;">
             <div class="btn-group btn-group-xs">
-<#--              <button onclick="$.acooly.framework.show('/manage/showcase/daily/dmShow/show.html?id={0}',500,500);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>-->
-              <button onclick="showLink('/manage/showcase/daily/dmShow/showLink.html','{0}','{1}',800,800);" class="btn btn-success btn-xs"  href="#" ><i class="fa fa-file-o fa-lg fa-fw fa-col"></i>预览</button>
-              <button onclick="$.acooly.framework.edit({url:'/manage/showcase/daily/dmShow/edit.html',id:'{0}',entity:'dmShow',width:500,height:500});" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
-              <button onclick="$.acooly.framework.remove('/manage/showcase/daily/dmShow/deleteJson.html','{0}','manage_dmShow_datagrid');" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>
-          </div>
+                <#--              <button onclick="$.acooly.framework.show('/manage/showcase/daily/dmShow/show.html?id={0}',500,500);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>-->
+                <button onclick="showLink('/manage/showcase/daily/dmShow/showLink.html','{0}','{1}',800,800);" class="btn btn-success btn-xs"  href="#" ><i class="fa fa-file-o fa-lg fa-fw fa-col"></i>预览</button>
+                <button onclick="$.acooly.framework.edit({url:'/manage/showcase/daily/dmShow/edit.html',id:'{0}',entity:'dmShow',width:500,height:500});" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
+                <button onclick="$.acooly.framework.remove('/manage/showcase/daily/dmShow/deleteJson.html','{0}','manage_dmShow_datagrid');" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>
+            </div>
         </div>
         <!-- 表格的工具栏 -->
         <div id="manage_dmShow_toolbar">
@@ -75,8 +74,8 @@
             <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.removes('/manage/showcase/daily/dmShow/deleteJson.html','manage_dmShow_datagrid')"><i class="fa fa-trash fa-fw fa-col"></i>批量删除</a>
             <a href="#" class="easyui-menubutton" data-options="menu:'#manage_dmShow_exports_menu'"><i class="fa fa-cloud-download fa-fw fa-col"></i>批量导出</a>
             <div id="manage_dmShow_exports_menu" style="width:150px;">
-              <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmShow/exportXls.html','manage_dmShow_searchform','dm_show')"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>
-              <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmShow/exportCsv.html','manage_dmShow_searchform','dm_show')"><i class="fa fa-file-text-o fa-lg fa-fw fa-col"></i>CSV</div>
+                <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmShow/exportXls.html','manage_dmShow_searchform','dm_show')"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>
+                <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmShow/exportCsv.html','manage_dmShow_searchform','dm_show')"><i class="fa fa-file-text-o fa-lg fa-fw fa-col"></i>CSV</div>
             </div>
             <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.imports({url:'/manage/showcase/daily/dmShow/importView.html',uploader:'manage_dmShow_import_uploader_file'});"><i class="fa fa-cloud-upload fa-fw fa-col"></i>批量导入</a>
         </div>
@@ -86,7 +85,7 @@
             $.acooly.framework.initPage('manage_dmShow_searchform', 'manage_dmShow_datagrid');
         });
     </script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
     <script>
         function showLink(url,Id,name, width, height, hideSaveBtn) {
             $('#manage_accounts_datagrid').datagrid('uncheckAll').datagrid('unselectAll').datagrid('clearSelections');
@@ -165,7 +164,7 @@
 
         function copyDomain(value){
 
-            return "<button class='btn btn-primary btn-xs' href='#' title='复制域名地址' onclick='copyLink("+JSON.stringify(value)+")' ><i class='fa fa-chain fa-lg fa-fw fa-col'></i>复制地址</button>";
+            return "<button class='btn btn-primary btn-xs' href='#' title='复制域名地址' onclick='copyToClipboard1("+JSON.stringify(value)+")' ><i class='fa fa-chain fa-lg fa-fw fa-col'></i>复制地址</button>";
         }
 
 
@@ -181,5 +180,70 @@
                     $.messager.show('复制失败',error);
                 });
         }
+
+
+
+
+
+
+
+
+
+
+        function copyToClipboard(text) {
+            // 创建临时的 textarea 元素
+            var textarea = document.createElement('textarea');
+            // 设置 textarea 的值为要复制的文本
+            textarea.value = text;
+            // 将 textarea 添加到 DOM 中
+            document.body.appendChild(textarea);
+            // 选中 textarea 中的文本
+            textarea.select();
+            // 尝试复制文本
+            try {
+                var successful = document.execCommand('copy');
+                if (successful) {
+                    $.messager.alert('复制成功xx', text);
+                } else {
+                    $.messager.alert('复制失败', '无法复制文本，请手动复制');
+                }
+            } catch (error) {
+                $.messager.alert('复制失败', error);
+            }
+            // 从 DOM 中移除 textarea 元素
+            document.body.removeChild(textarea);
+        }
+
+        // function domainClick(row) {
+        //     var textToCopy = row.domain + '/' + row.secondaryDomain;
+        //     copyToClipboard(textToCopy);
+        // }
+
+
+
+
+        function copyToClipboard1(text) {
+            var clipboard = new ClipboardJS('.btn', {
+                text: function() {
+                    return text;
+                }
+            });
+
+            clipboard.on('success', function(e) {
+                $.messager.alert('复制成功', e.text);
+                clipboard.destroy(); // 销毁 clipboard 实例
+            });
+
+            clipboard.on('error', function(e) {
+                $.messager.alert('复制失败', e.action);
+                // console.error('复制失败:', e.action);
+                // alert('复制失败，请手动复制！');
+                clipboard.destroy(); // 销毁 clipboard 实例
+            });
+
+            clipboard.onClick(event); // 手动触发复制操作
+        }
+
+
     </script>
 </div>

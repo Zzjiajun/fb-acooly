@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.link.dao.LinkIntDao">
+
+    <resultMap id="linkIntResultMap" type="com.acooly.showcase.link.entity.LinkInt">
+        <id property="id" column="linkInt_id"/>
+        <result property="countLink" column="linkInt_count_link"/>
+        <result property="userName" column="linkInt_user_name"/>
+        <result property="domain" column="linkInt_domain"/>
+        <result property="createTime" column="linkInt_create_time"/>
+        <result property="updateTime" column="linkInt_update_time"/>
+    </resultMap>
+
+    <sql id="linkIntSqlSelect">
+            linkInt.id as linkInt_id,
+            linkInt.count_link as linkInt_count_link,
+            linkInt.user_name as linkInt_user_name,
+            linkInt.domain as linkInt_domain,
+            linkInt.create_time as linkInt_create_time,
+            linkInt.update_time as linkInt_update_time
+    </sql>
+
+</mapper>

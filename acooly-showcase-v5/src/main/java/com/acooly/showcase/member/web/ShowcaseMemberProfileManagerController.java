@@ -106,7 +106,7 @@ public class ShowcaseMemberProfileManagerController extends AbstractShowcaseCont
         model.put("allMobileNoStatuss", MobileNoStatusEnum.mapping());
         model.put("allRealNameStatuss", RealNameStatusEnum.mapping());
         model.put("allSmsSendStatuss", SmsSendStatusEnum.mapping());
-        model.put("serverRoot", oFileProperties.getServerRoot());
+//        model.put("serverRoot", oFileProperties.getServerRoot());
     }
 
     private void loadUsers(Model model) {

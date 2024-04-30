@@ -21,7 +21,6 @@ import com.acooly.core.utils.Ids;
 import com.acooly.core.utils.Profiles;
 import com.acooly.core.utils.Servlets;
 import com.acooly.core.utils.Strings;
-import com.acooly.module.ofile.OFileProperties;
 import com.acooly.showcase.base.AbstractShowcaseController;
 import com.acooly.showcase.member.entity.ShowcaseMember;
 import com.acooly.showcase.member.service.ShowcaseMemberService;
@@ -111,10 +110,10 @@ public class ShowcaseMemberFileManagerController extends AbstractShowcaseControl
     @Override
     protected void onRemove(HttpServletRequest request, HttpServletResponse response, Model model, Serializable... ids) throws Exception {
         ShowcaseMemberFile memberFile = getEntityService().get(ids[0]);
-        if (memberFile != null && Strings.isNotBlank(memberFile.getFilePath())) {
-            File file = new File(oFileProperties.getStorageRoot() + memberFile.getFilePath());
-            FileUtils.deleteQuietly(file);
-        }
+//        if (memberFile != null && Strings.isNotBlank(memberFile.getFilePath())) {
+//            File file = new File(oFileProperties.getStorageRoot() + memberFile.getFilePath());
+//            FileUtils.deleteQuietly(file);
+//        }
     }
 
 
@@ -147,7 +146,7 @@ public class ShowcaseMemberFileManagerController extends AbstractShowcaseControl
     @Override
     protected void referenceData(HttpServletRequest request, Map<String, Object> model) {
         model.put("allFileTypes", FileTypeEnum.mapping());
-        model.put("serverRoot", oFileProperties.getServerRoot());
+//        model.put("serverRoot", oFileProperties.getServerRoot());
     }
 
     private void loadMember(Model model) {

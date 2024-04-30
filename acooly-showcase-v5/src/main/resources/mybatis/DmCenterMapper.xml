@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.daliy.dao.DmCenterDao">
+
+    <resultMap id="dmCenterResultMap" type="com.acooly.showcase.daliy.entity.DmCenter">
+        <id property="id" column="dmCenter_id"/>
+        <result property="userName" column="dmCenter_user_name"/>
+        <result property="region" column="dmCenter_region"/>
+        <result property="pixel" column="dmCenter_pixel"/>
+        <result property="link" column="dmCenter_link"/>
+        <result property="domain" column="dmCenter_domain"/>
+        <result property="secondaryDomain" column="dmCenter_secondary_domain"/>
+        <result property="serialNumber" column="dmCenter_serial_number"/>
+        <result property="visitsNumber" column="dmCenter_visits_number"/>
+        <result property="clicksNumber" column="dmCenter_clicks_number"/>
+        <result property="createTime" column="dmCenter_create_time"/>
+        <result property="updateTime" column="dmCenter_update_time"/>
+    </resultMap>
+
+    <sql id="dmCenterSqlSelect">
+            dmCenter.id as dmCenter_id,
+            dmCenter.user_name as dmCenter_user_name,
+            dmCenter.region as dmCenter_region,
+            dmCenter.pixel as dmCenter_pixel,
+            dmCenter.link as dmCenter_link,
+            dmCenter.domain as dmCenter_domain,
+            dmCenter.secondary_domain as dmCenter_secondary_domain,
+            dmCenter.
+serial_number as dmCenter_
+serial_number,
+            dmCenter.visits_number as dmCenter_visits_number,
+            dmCenter.clicks_number as dmCenter_clicks_number,
+            dmCenter.create_time as dmCenter_create_time,
+            dmCenter.update_time as dmCenter_update_time
+    </sql>
+
+</mapper>

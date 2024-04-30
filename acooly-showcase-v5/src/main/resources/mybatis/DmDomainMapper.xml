@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.daliy.dao.DmDomainDao">
+
+    <resultMap id="dmDomainResultMap" type="com.acooly.showcase.daliy.entity.DmDomain">
+        <id property="id" column="dmDomain_id"/>
+        <result property="domainName" column="dmDomain_domain_name"/>
+        <result property="link" column="dmDomain_link"/>
+        <result property="userName" column="dmDomain_user_name"/>
+        <result property="createTime" column="dmDomain_create_time"/>
+        <result property="updateTime" column="dmDomain_update_time"/>
+    </resultMap>
+
+    <sql id="dmDomainSqlSelect">
+            dmDomain.id as dmDomain_id,
+            dmDomain.domain_name as dmDomain_domain_name,
+            dmDomain.link as dmDomain_link,
+            dmDomain.user_name as dmDomain_user_name,
+            dmDomain.create_time as dmDomain_create_time,
+            dmDomain.update_time as dmDomain_update_time
+    </sql>
+
+</mapper>

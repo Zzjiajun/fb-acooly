@@ -16,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.acooly.core.common.dao.support.PageInfo;
 import com.acooly.module.security.domain.User;
 import com.acooly.showcase.daliy.entity.DmDomain;
+import com.acooly.showcase.daliy.entity.DmPixel;
 import com.acooly.showcase.daliy.entity.Link;
 import com.acooly.showcase.daliy.service.DmDomainService;
+import com.acooly.showcase.daliy.service.DmPixelService;
 import com.acooly.showcase.daliy.service.PermissionsService;
 import com.acooly.showcase.link.entity.LinkInt;
 import org.apache.shiro.SecurityUtils;
@@ -53,7 +55,7 @@ public class LinkSrcsManagerController extends AbstractJsonEntityController<Link
 	@Autowired
 	private PermissionsService permissionsService;
 	@Autowired
-	private DmDomainService dmDomainService;
+	private DmPixelService dmPixelService;
 
 
 	@Override
@@ -82,8 +84,8 @@ public class LinkSrcsManagerController extends AbstractJsonEntityController<Link
 		User principal = (User) SecurityUtils.getSubject().getPrincipal();
 		Map<String, Object> mapQuery = Maps.newHashMap();
 		mapQuery.put("EQ_userName", principal.getUsername());
-		List<DmDomain> query = dmDomainService.query(mapQuery, null);
-		List<String> list = query.stream().map(DmDomain::getDomainName).collect(Collectors.toList());
+		List<DmPixel> query = dmPixelService.query(mapQuery, null);
+		List<String> list = query.stream().map(DmPixel::getDomain).collect(Collectors.toList());
 		model.put("list" ,list);
 	}
 }

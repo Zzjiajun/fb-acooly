@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.daliy.dao.DmPixelDao">
+
+    <resultMap id="dmPixelResultMap" type="com.acooly.showcase.daliy.entity.DmPixel">
+        <id property="id" column="dmPixel_id"/>
+        <result property="domain" column="dmPixel_domain"/>
+        <result property="pixelId" column="dmPixel_pixel_id"/>
+        <result property="createTime" column="dmPixel_create_time"/>
+        <result property="updateTime" column="dmPixel_update_time"/>
+    </resultMap>
+
+    <sql id="dmPixelSqlSelect">
+            dmPixel.id as dmPixel_id,
+            dmPixel.domain as dmPixel_domain,
+            dmPixel.pixel_id as dmPixel_pixel_id,
+            dmPixel.create_time as dmPixel_create_time,
+            dmPixel.update_time as dmPixel_update_time
+    </sql>
+
+</mapper>

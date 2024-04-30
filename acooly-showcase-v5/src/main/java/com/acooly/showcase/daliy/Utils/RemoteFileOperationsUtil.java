@@ -15,9 +15,9 @@ public class RemoteFileOperationsUtil {
     private static final String PASSWORD = "123456Qwe";
 
     //创建
-    public static boolean createDirectory(String directoryPath) {
+    public static boolean createDirectory(String directoryPath,String username,String password,String ip) {
         try {
-            executeCommand("mkdir -p " + directoryPath);
+            executeCommand("mkdir -p " + directoryPath,username,password,ip);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -26,9 +26,9 @@ public class RemoteFileOperationsUtil {
     }
 
     // 清空
-    public static boolean clearDirectory(String directoryPath) {
+    public static boolean clearDirectory(String directoryPath,String username,String password,String ip) {
         try {
-            executeCommand("rm -rf " + directoryPath + "/*");
+            executeCommand("rm -rf " + directoryPath + "/*",username,password,ip);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,10 +37,10 @@ public class RemoteFileOperationsUtil {
     }
 
     // 检查文件夹是否存在
-    public static boolean directoryExists(String directoryPath) {
+    public static boolean directoryExists(String directoryPath,String username,String password,String ip) {
         try {
             String command = "[ -d \"" + directoryPath + "\" ] && echo \"Directory exists\" || echo \"Directory does not exist\"";
-             executeCommand(command);
+             executeCommand(command,username,password,ip);
              return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,9 +49,9 @@ public class RemoteFileOperationsUtil {
     }
 
     //复制
-    public static boolean copyFiles(String sourceDirectoryPath, String destinationDirectoryPath) {
+    public static boolean copyFiles(String sourceDirectoryPath, String destinationDirectoryPath,String username,String password,String ip) {
         try {
-            executeCommand("cp -r " + sourceDirectoryPath + "/* " + destinationDirectoryPath);
+            executeCommand("cp -r " + sourceDirectoryPath + "/* " + destinationDirectoryPath,username,password,ip);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,9 +60,9 @@ public class RemoteFileOperationsUtil {
     }
 
     //删除 文件夹
-    public static boolean deleteDirectory(String directoryPath) {
+    public static boolean deleteDirectory(String directoryPath,String username,String password,String ip) {
         try {
-            executeCommand("rm -rf " + directoryPath);
+            executeCommand("rm -rf " + directoryPath,username,password,ip);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,9 +71,9 @@ public class RemoteFileOperationsUtil {
     }
 
     // 修改文件夹名称
-    public static boolean renameDirectory(String oldDirectoryPath, String newDirectoryName) {
+    public static boolean renameDirectory(String oldDirectoryPath,String newDirectoryName, String username,String password,String ip) {
         try {
-            executeCommand("mv " + oldDirectoryPath + " " + newDirectoryName);
+            executeCommand("mv " + oldDirectoryPath + " " + newDirectoryName,username,password,ip);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,10 +81,10 @@ public class RemoteFileOperationsUtil {
         }
     }
 
-    private static void executeCommand(String command) throws Exception {
+    private static void executeCommand(String command,String username,String password,String ip) throws Exception {
         JSch jsch = new JSch();
-        Session session = jsch.getSession(USERNAME, HOST, 22);
-        session.setPassword(PASSWORD);
+        Session session = jsch.getSession(username, ip, 22);
+        session.setPassword(password);
         session.setConfig("StrictHostKeyChecking", "no");
         session.connect();
 
@@ -102,9 +102,5 @@ public class RemoteFileOperationsUtil {
 
         channelExec.disconnect();
         session.disconnect();
-    }
-
-    public static void main(String[] args) {
-        copyFiles("/www/wwwroot/projectgame.top/in01","/www/wwwroot/jdxcn.top/1");
     }
 }

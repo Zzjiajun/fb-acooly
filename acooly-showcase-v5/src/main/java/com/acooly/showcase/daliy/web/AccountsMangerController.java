@@ -3,18 +3,15 @@ package com.acooly.showcase.daliy.web;
 
 import com.acooly.core.common.dao.support.PageInfo;
 import com.acooly.core.common.exception.BusinessException;
-import com.acooly.core.common.web.support.JsonEntityResult;
 import com.acooly.core.common.web.support.JsonListResult;
 import com.acooly.core.common.web.support.JsonResult;
 import com.acooly.module.security.domain.User;
 import com.acooly.module.security.service.UserService;
 import com.acooly.showcase.base.AbstractShowcaseController;
 import com.acooly.showcase.daliy.Pagination;
-import com.acooly.showcase.daliy.Utils.FTPTools;
+import com.acooly.showcase.daliy.Utils.AuthService;
 import com.acooly.showcase.daliy.Utils.FTPUploader;
-import com.acooly.showcase.daliy.Utils.FtpUtils;
-import com.acooly.showcase.daliy.dto.PerformanceDto;
-import com.acooly.showcase.daliy.dto.TotalFromDto;
+import com.acooly.showcase.daliy.Utils.HttpUtil;
 import com.acooly.showcase.daliy.dto.UserSpending;
 import com.acooly.showcase.daliy.entity.*;
 import com.acooly.showcase.daliy.service.*;
@@ -30,17 +27,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.Result;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -68,6 +63,7 @@ public class AccountsMangerController extends AbstractShowcaseController<Account
     private RegnameService regnameService;
     @Autowired
     private LinkService linkService;
+    @Autowired TonckService tonckService;
 
 
     @Override
@@ -180,7 +176,7 @@ public class AccountsMangerController extends AbstractShowcaseController<Account
             String param = "image=" + imgParam;
             // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
             String accessToken = "24.a35efca5336cbe04e8a8009375183fea.2592000.1712137983.282335-55093663";
-            String result = com.acooly.showcase.daliy.Utils.HttpUtil.post(url, accessToken, param);
+            String result = HttpUtil.post(url, accessToken, param);
             JSONObject jsonObject = JSON.parseObject(result);
             JSONArray wordsResult = jsonObject.getJSONArray("words_result");
             List<String> wordsList = wordsResult.stream()
@@ -197,6 +193,69 @@ public class AccountsMangerController extends AbstractShowcaseController<Account
         }
         return jsonResult;
     }
+
+    @RequestMapping("fileSelect")
+    @ResponseBody
+    public JsonResult fileSelect(HttpServletRequest request) throws Exception {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            String id = request.getParameter("id");
+            Tonck tonck = tonckService.get(Long.valueOf(id));
+            String auth = AuthService.getAuth();
+            tonck.setTonck(auth);
+            tonckService.update(tonck);
+        } catch (BusinessException e) {
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage(e.getMessage());
+            throw new RuntimeException(e);
+        }
+        return jsonResult;
+    }
+
+
+
+
+    @RequestMapping("filePh1")
+    @ResponseBody
+    public JsonResult filePh1(HttpServletRequest request,@RequestParam("files") MultipartFile[] files) throws Exception {
+        JsonResult jsonResult = new JsonResult();
+        try {
+            List<String> wordsList = new ArrayList<>();
+            Tonck tonck = tonckService.get(Long.valueOf("1"));
+            String accessToken = tonck.getTonck();
+            String url = "https://aip.baidubce.com/rest/2.0/ocr/v1/numbers";
+            // 遍历文件数组，对每个文件进行识别
+            for (MultipartFile file : files) {
+                byte[] bytes = file.getBytes();
+                String imgStr = Base64Util.encode(bytes);
+                // 请求url
+                String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+                String param = "image=" + imgParam;
+                // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+                String result = HttpUtil.post(url, accessToken, param);
+                JSONObject jsonObject = JSON.parseObject(result);
+                JSONArray wordsResult = jsonObject.getJSONArray("words_result");
+                List<String> wordsList1 = wordsResult.stream()
+                        .map(obj -> ((JSONObject) obj).getString("words"))
+                        .collect(Collectors.toList());
+                wordsList.addAll(wordsList1);
+            }
+            // 返回识别结果
+            Map<Object, Object> map = Maps.newHashMap();
+            map.put("list",wordsList);
+            jsonResult.setData(map);
+            jsonResult.setMessage("识别成功");
+        } catch (Exception e) {
+            jsonResult.setSuccess(false);
+            jsonResult.setMessage(e.getMessage());
+            jsonResult.setCode("500");
+        }
+
+        return jsonResult;
+    }
+
+
+
 
     @RequestMapping("file1")
     @ResponseBody

@@ -74,7 +74,6 @@
         <module>acooly-showcase-assemble</module>
         <module>acooly-showcase-v4</module>
         <module>acooly-showcase-facade</module>
-        <module>acooly-showcase-test</module>
         <module>acooly-showcase-common</module>
         <module>acooly-showcase-abc</module>
         <module>acooly-showcase-openapi</module>

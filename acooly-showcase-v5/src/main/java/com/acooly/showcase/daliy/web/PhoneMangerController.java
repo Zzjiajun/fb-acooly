@@ -3,18 +3,13 @@ package com.acooly.showcase.daliy.web;
 
 import com.acooly.core.common.exception.BusinessException;
 import com.acooly.core.common.web.support.JsonResult;
-import com.acooly.module.security.domain.User;
 import com.acooly.showcase.base.AbstractShowcaseController;
-import com.acooly.showcase.daliy.dto.PerformanceDto;
 import com.acooly.showcase.daliy.entity.Phone;
 import com.acooly.showcase.daliy.service.PhoneService;
-import com.acooly.showcase.member.entity.ShowcaseMember;
-import com.google.common.base.CharMatcher;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -27,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/manage/showcase/daily/phone")

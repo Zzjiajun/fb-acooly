@@ -2,8 +2,9 @@
     <div data-options="region:'north',border:false" style="padding:5px; overflow: hidden; width: 100%" align="left" >
         <div class="form-group">
             <label class="col-form-label">图片进行分析</label>
-            <input type="file" name="phtFile" id="phtFile" required>
-            <button class="btn btn-sm btn-success" type="button" onclick="startPhoneClick3()"><i class="fa fa-search fa-lg fa-fw fa-col"></i>图片识别</button>
+            <#--            <input type="file" name="phtFile" id="phtFile" required>-->
+            <input type="file" name="folderInput" id="folderInput"  multiple>
+            <button class="btn btn-sm btn-success"  type="button" onclick="startPhoneClick3()"><i class="fa fa-search fa-lg fa-fw fa-col"></i>图片识别</button>
         </div>
         <form id="manage_phoneFile_searchform" class="form-inline ac-form-search" onsubmit="return false">
             <div class="card-body">
@@ -34,10 +35,17 @@
     function startPhoneClick3(){
         ajaxLoading()
         var formData = new FormData();
-        formData.append('file', $('#phtFile')[0].files[0]);
+        var folderInput = document.getElementById('folderInput');
+        var files = folderInput.files;
+        // 将文件夹中的所有文件添加到 FormData 对象中
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            formData.append('files', file);
+        }
+        // formData.append('file', $('#phtFile')[0].files[0]);
         $.ajax({
             type: 'POST',
-            url: '/manage/showcase/daily/accounts/filePh.html', // 替换为你的服务器URL
+            url: '/manage/showcase/daily/accounts/filePh1.html', // 替换为你的服务器URL
             data: formData,
             processData: false,
             contentType: false,

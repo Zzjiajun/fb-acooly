@@ -89,10 +89,10 @@
 <!--            <groupId>com.acooly</groupId>-->
 <!--            <artifactId>acooly-component-eav</artifactId>-->
 <!--        </dependency>-->
-        <dependency>
-            <groupId>com.acooly</groupId>
-            <artifactId>acooly-component-ofile</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly</groupId>-->
+<!--            <artifactId>acooly-component-ofile</artifactId>-->
+<!--        </dependency>-->
         <!-- 应用组件：分布式定时任务，mysql5.7-->
         <dependency>
             <groupId>com.acooly</groupId>

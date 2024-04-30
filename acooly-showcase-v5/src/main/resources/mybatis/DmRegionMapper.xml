@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.daliy.dao.DmRegionDao">
+
+    <resultMap id="dmRegionResultMap" type="com.acooly.showcase.daliy.entity.DmRegion">
+        <id property="id" column="dmRegion_id"/>
+        <result property="region" column="dmRegion_region"/>
+        <result property="createTime" column="dmRegion_create_time"/>
+        <result property="updateTime" column="dmRegion_update_time"/>
+    </resultMap>
+
+    <sql id="dmRegionSqlSelect">
+            dmRegion.id as dmRegion_id,
+            dmRegion.region as dmRegion_region,
+            dmRegion.create_time as dmRegion_create_time,
+            dmRegion.update_time as dmRegion_update_time
+    </sql>
+
+</mapper>

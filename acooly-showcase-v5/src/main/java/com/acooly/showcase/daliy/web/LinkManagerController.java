@@ -22,10 +22,14 @@ import com.acooly.core.common.web.support.JsonResult;
 import com.acooly.module.security.domain.User;
 import com.acooly.module.security.service.UserService;
 import com.acooly.showcase.daliy.Utils.FTPUploader;
+import com.acooly.showcase.daliy.Utils.RedisUtils;
 import com.acooly.showcase.daliy.Utils.RemoteFileOperationsUtil;
 import com.acooly.showcase.daliy.entity.Regname;
 import com.acooly.showcase.daliy.service.PermissionsService;
 import com.acooly.showcase.daliy.service.RegnameService;
+import com.acooly.showcase.link.entity.DmServer;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -63,6 +67,8 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 	private RegnameService regnameService;
 	@Autowired
 	private PermissionsService permissionsService;
+	@Autowired
+	private RedisUtils redisUtil;
 
 
 	@Override
@@ -117,12 +123,9 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			result.setEntity(this.doSave(request, response, (Model)null, true));
 			String domain = result.getEntity().getDomain();
 			String regionName = result.getEntity().getRegionName();
-
-
-
-
-
-			boolean directory = RemoteFileOperationsUtil.createDirectory("/www/wwwroot/" + regionName + "/" + domain);
+			DmServer dmServer = redisUtil.getDmServer();
+			boolean directory = RemoteFileOperationsUtil.createDirectory("/www/wwwroot/" + regionName + "/" + domain,dmServer.getUsername(),
+					dmServer.getPassword(),dmServer.getIp());
 			if (!directory){
 				throw new NullPointerException("新建二级域名失败");
 			}
@@ -164,11 +167,10 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			Link entity = (Link) result.getEntity();
 			String regionName = entity.getRegionName();
 			String domain = entity.getDomain();
-			String newRemoteDir = "/" + regionName + "/" + domain;
-
-
+//			String newRemoteDir = "/" + regionName + "/" + domain;
+			DmServer dmServer = redisUtil.getDmServer();
 			boolean b = RemoteFileOperationsUtil.renameDirectory("/www/wwwroot/" + oldLinkRegionName + "/" + oldLinkDomain,
-					"/www/wwwroot/" + regionName + "/" + domain);
+					"/www/wwwroot/" + regionName + "/" + domain,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
 
 			if (!b){
 				throw new NullPointerException("修改二级域名失败");
@@ -208,7 +210,9 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			Link link = this.getEntityService().get(id);
 			String regionName = link.getRegionName();
 			String domain = link.getDomain();
-			boolean b = RemoteFileOperationsUtil.deleteDirectory("/www/wwwroot/" + regionName + "/" + domain);
+			DmServer dmServer = redisUtil.getDmServer();
+			boolean b = RemoteFileOperationsUtil.deleteDirectory("/www/wwwroot/" + regionName + "/" + domain
+			,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
 			if (!b){
 				throw new NullPointerException("删除二级域名失败");
 			}

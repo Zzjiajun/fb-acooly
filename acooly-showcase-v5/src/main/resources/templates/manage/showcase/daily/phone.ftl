@@ -50,6 +50,7 @@
                title="查看"><i class="fa fa-file-o fa-lg fa-fw fa-col"></i></a>
             <a onclick="$.acooly.framework.remove('/manage/showcase/daily/phone/deleteJson.html','{0}','manage_phone_datagrid');"
                href="#" title="删除"><i class="fa fa-trash-o fa-lg fa-fw fa-col"></i></a>
+
         </div>
 
         <!-- 表格的工具栏 -->
@@ -57,6 +58,7 @@
             <a href="#" class="easyui-linkbutton" plain="true"
                onclick="createPhone('/manage/showcase/daily/phone/createTest.html',true,800,600)"><i
                         class="fa fa-plus-circle fa-lg fa-fw fa-col"></i>添加</a>
+
             <a href="#" class="easyui-menubutton" data-options="menu:'#manage_showcaseMember_exports_menu'"><i
                         class="fa fa-arrow-circle-o-down fa-lg fa-fw fa-col"></i>批量导出</a>
             <div id="manage_showcaseMember_exports_menu" style="width:150px;">
@@ -70,6 +72,8 @@
             <a href="#" class="easyui-linkbutton" plain="true"
                onclick="$.acooly.framework.removes('/manage/showcase/daily/phone/deleteJson.html','manage_phone_datagrid')"><i
                         class="fa fa-trash-o fa-lg fa-fw fa-col"></i>批量删除</a>
+            <a onclick="selectTonck('/manage/showcase/daily/accounts/fileSelect.html');"
+               href="#" title="更新tonck">如果出现处理错误，点击此按钮<i class="fa fa-wrench fa-lg fa-fw fa-col"></i></a>
         </div>
     </div>
     <script type="text/javascript">
@@ -163,5 +167,43 @@
                 }
             });
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function selectTonck  (url, id, confirmTitle, confirmMessage) {
+            var title = confirmTitle ? confirmTitle : '确定';
+            var message = confirmMessage ? confirmMessage : '您是否要提交该操作？';
+            $.messager.confirm(title, message, function (r) {
+                if (r) {
+                    $.ajax({
+                        url: contextPath + url,
+                        data: {
+                            id: 1
+                        },
+                        success: function (result) {
+                            if (result.success) {
+                            }
+                            if (result.message) {
+                                $.acooly.messager('提示', result.message, result.success ? 'success' : 'danger');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
     </script>
 </div>
