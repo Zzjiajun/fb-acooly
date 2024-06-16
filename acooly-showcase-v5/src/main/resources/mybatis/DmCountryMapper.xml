@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.link.dao.DmCountryDao">
+
+    <resultMap id="dmCountryResultMap" type="com.acooly.showcase.link.entity.DmCountry">
+        <id property="id" column="dmCountry_id"/>
+        <result property="country" column="dmCountry_country"/>
+        <result property="createTime" column="dmCountry_create_time"/>
+        <result property="updateTime" column="dmCountry_update_time"/>
+        <result property="name" column="dmCountry_name"/>
+    </resultMap>
+
+    <sql id="dmCountrySqlSelect">
+            dmCountry.id as dmCountry_id,
+            dmCountry.country as dmCountry_country,
+            dmCountry.create_time as dmCountry_create_time,
+            dmCountry.update_time as dmCountry_update_time,
+            dmCountry.name as dmCountry_name
+    </sql>
+
+</mapper>

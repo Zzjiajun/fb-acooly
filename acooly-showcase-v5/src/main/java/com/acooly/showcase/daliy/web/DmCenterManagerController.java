@@ -8,6 +8,7 @@ package com.acooly.showcase.daliy.web;
 
 import com.acooly.core.common.dao.support.PageInfo;
 import com.acooly.core.common.web.AbstractJsonEntityController;
+import com.acooly.core.common.web.support.JsonListResult;
 import com.acooly.core.common.web.support.JsonResult;
 import com.acooly.module.event.EventBus;
 import com.acooly.module.security.domain.User;
@@ -20,14 +21,8 @@ import com.acooly.showcase.daliy.entity.*;
 import com.acooly.showcase.daliy.service.*;
 import com.acooly.showcase.event.CreateCustomerEvent;
 import com.acooly.showcase.event.CreateCustomerTwoEvent;
-import com.acooly.showcase.link.entity.DmServer;
-import com.acooly.showcase.link.entity.DmStencil;
-import com.acooly.showcase.link.entity.LinkInt;
-import com.acooly.showcase.link.entity.LinkSrcs;
-import com.acooly.showcase.link.service.DmServerService;
-import com.acooly.showcase.link.service.DmStencilService;
-import com.acooly.showcase.link.service.LinkIntService;
-import com.acooly.showcase.link.service.LinkSrcsService;
+import com.acooly.showcase.link.entity.*;
+import com.acooly.showcase.link.service.*;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
@@ -40,6 +35,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -97,18 +93,11 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 	private DmStencilService dmStencilService;
 	@Autowired
 	private RedisUtils redisUtil;
+	@Autowired
+	private DmAccessService dmAccessService;
+	@Autowired
+	private DmClickService dmClickService;
 
-	@Override
-	protected PageInfo<DmCenter> doList(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		Map<String, Object> searchParams = this.getSearchParams(request);
-		User principal = (User) SecurityUtils.getSubject().getPrincipal();
-		Map<String, Object> mapQuery = Maps.newHashMap();
-		mapQuery.put("EQ_userName", principal.getUsername());
-		if (!(permissionsService.query(mapQuery, null).size() > 0)) {
-			searchParams.put("EQ_userName",principal.getUsername());
-		}
-		return this.getEntityService().query(this.getPageInfo(request), searchParams, this.getSortMap(request));
-	}
 
 
 
@@ -352,7 +341,7 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 				// 创建引流链接对象
 				//查看是否已经有了相同的域名
 				Map<String, Object> map1 = Maps.newHashMap();
-				map.put("EQ_domain",str);
+				map1.put("EQ_domain",str);
 				List<LinkInt> queryt = linkIntService.query(map1, null);
 				if (queryt.isEmpty()){
 					LinkInt linkInt = new LinkInt();
@@ -531,7 +520,88 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		dmCenter.setVisitsNumber(0);
 		dmCenter.setClicksNumber(0);
 		this.getEntityService().update(dmCenter);
+		Map<String, Object> mapQuery = Maps.newHashMap();
+		mapQuery.put("EQ_centerId", id);
+		List<DmAccess> accessList = dmAccessService.query(mapQuery, null);
+		accessList.forEach(s->{
+			dmAccessService.removeById(s.getId());
+		});
+		List<DmClick> clickList = dmClickService.query(mapQuery, null);
+		clickList.forEach(s->{
+			dmClickService.removeById(s.getId());
+		});
 		jsonResult.setMessage("清除浏览记录成功");
 		return jsonResult;
+	}
+
+
+
+	@RequestMapping(value = "buildCanonicalUrl")
+	public String buildCanonicalUrl(HttpServletRequest request, HttpServletResponse response ,Model model) {
+		String displayOption = request.getParameter("displayOption");
+		model.addAttribute("k",displayOption);
+		return "manage/showcase/daily/displayOption";
+	}
+
+	@RequestMapping({"listDisplayOption"})
+	@ResponseBody
+	public JsonListResult<DmCenter> listDisplayOption(HttpServletRequest request, HttpServletResponse response, @RequestParam String type) throws Exception {
+		JsonListResult<DmCenter> result = new JsonListResult();
+		Map<String, Object> searchParams = this.getSearchParams(request);
+		if (type.equals("1")){
+			searchParams.put("EQ_displayOption","1");
+		} else if (type.equals("2")){
+			searchParams.put("EQ_displayOption","2");
+		}else {
+			searchParams.put("EQ_diversion","1");
+		}
+		User principal = (User) SecurityUtils.getSubject().getPrincipal();
+		Map<String, Object> mapQuery = Maps.newHashMap();
+		mapQuery.put("EQ_userName", principal.getUsername());
+		if (!(permissionsService.query(mapQuery, null).size() > 0)) {
+			searchParams.put("EQ_userName",principal.getUsername());
+		}
+		PageInfo<DmCenter> pageInfo = this.getEntityService().query(this.getPageInfo(request), searchParams, this.getSortMap(request));
+		result.setTotal(pageInfo.getTotalCount());
+		List<DmCenter> rowList = pageInfo.getPageResults();
+		List<User> userList = userService.getAll();
+		Map<String, String> userMap = userList.stream()
+				.collect(Collectors.toMap(User::getUsername, User::getRealName));
+		rowList.forEach(s->{
+			s.setUserName(userMap.get(s.getUserName()));
+		});
+		result.setRows(rowList);
+		result.setHasNext(pageInfo.hasNext());
+		result.setPageNo(pageInfo.getCurrentPage());
+		result.setPageSize(pageInfo.getCountOfCurrentPage());
+		return result;
+	}
+
+
+	@Override
+	protected PageInfo<DmCenter> doList(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		Map<String, Object> searchParams = this.getSearchParams(request);
+		User principal = (User) SecurityUtils.getSubject().getPrincipal();
+		Map<String, Object> mapQuery = Maps.newHashMap();
+		mapQuery.put("EQ_userName", principal.getUsername());
+		if (!(permissionsService.query(mapQuery, null).size() > 0)) {
+			searchParams.put("EQ_userName",principal.getUsername());
+		}
+		return this.getEntityService().query(this.getPageInfo(request), searchParams, this.getSortMap(request));
+	}
+
+
+	@Override
+	public JsonListResult<DmCenter> listJson(HttpServletRequest request, HttpServletResponse response) {
+		JsonListResult<DmCenter> dmCenterJsonListResult = super.listJson(request, response);
+		List<DmCenter> rows = dmCenterJsonListResult.getRows();
+		List<User> userList = userService.getAll();
+		Map<String, String> userMap = userList.stream()
+				.collect(Collectors.toMap(User::getUsername, User::getRealName));
+		rows.forEach(s->{
+			s.setUserName(userMap.get(s.getUserName()));
+		});
+		dmCenterJsonListResult.setRows(rows);
+		return dmCenterJsonListResult;
 	}
 }

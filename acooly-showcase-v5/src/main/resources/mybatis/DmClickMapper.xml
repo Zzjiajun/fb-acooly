@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.link.dao.DmClickDao">
+
+    <resultMap id="dmClickResultMap" type="com.acooly.showcase.link.entity.DmClick">
+        <id property="id" column="dmClick_id"/>
+        <result property="centerId" column="dmClick_center_id"/>
+        <result property="ip" column="dmClick_ip"/>
+        <result property="region" column="dmClick_region"/>
+        <result property="clickDevice" column="dmClick_click_device"/>
+        <result property="clickType" column="dmClick_click_type"/>
+        <result property="createTime" column="dmClick_create_time"/>
+        <result property="updateTime" column="dmClick_update_time"/>
+    </resultMap>
+
+    <sql id="dmClickSqlSelect">
+            dmClick.id as dmClick_id,
+            dmClick.center_id as dmClick_center_id,
+            dmClick.ip as dmClick_ip,
+            dmClick.region as dmClick_region,
+            dmClick.click_device as dmClick_click_device,
+            dmClick.click_type as dmClick_click_type,
+            dmClick.create_time as dmClick_create_time,
+            dmClick.update_time as dmClick_update_time
+    </sql>
+
+</mapper>

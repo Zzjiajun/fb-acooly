@@ -53,8 +53,8 @@
                 <th field="link" formatter="domainFunction1" >链接地址</th>
                 <th field="domain" formatter="domainFunction">访问域名</th>
                 <#--                <th field="serialNumber" formatter="contentFormatter">模版地址</th>-->
-                <th field="visitsNumber" sortable="true" sum="true">域名访问量</th>
-                <th field="clicksNumber" formatter="domainNumberFunction" sortable="true" sum="true">按钮点击数量</th>
+                <th field="visitsNumber"  formatter="accessNumberFunction" sortable="true" sum="true">域名访问量</th>
+                <th field="clicksNumber" formatter="clickNumberFunction" sortable="true" sum="true">按钮点击数量</th>
                 <th field="diversion" formatter="displayOptionTwoFunction">是否轮询</th>
                 <th field="createTime" formatter="dateTimeFormatter">创建时间</th>
                 <th field="updateTime" formatter="dateTimeFormatter">修改时间</th>
@@ -299,6 +299,64 @@
                     });
                 }
             });
+        }
+
+
+
+
+        //点击按钮查看数据详情
+        function clickNumberFunction(value,row){
+            if(row.displayOption=='2'){
+                return "<span style='color: darkred;font-weight: bold;' </span>表单无按钮</span>";
+            }else {
+                return "<div style='text-align: center;'><button  onclick='showClick("+JSON.stringify(row)+")'  class='btn btn-primary'>" + value+ "点击</button></div>";
+            }
+        }
+
+        function accessNumberFunction(value,row){
+            return "<div style='text-align: center;'><button  onclick='showAccess("+JSON.stringify(row)+")'  class='btn btn-primary'>" + value+ "点击</button></div>";
+        }
+
+
+        function showClick(row) {
+            var url ='/manage/link/dmClick/buildClickUrl?centerId='+row.id;
+           console.log(url);
+            return this. showClickGet({
+                url: url
+            });
+        }
+
+        function showAccess(row) {
+            var url ='/manage/link/dmAccess/buildAccessUrl?centerId='+row.id;
+            return this.showClickGet({
+                url: url
+            });
+        }
+
+
+        function showClickGet(opts) {
+            var url = opts.url;
+            var width = opts.width != null ? opts.width : 1400;
+            var height = opts.height != null ? opts.height : 800;
+            var title = opts.title != null ? opts.title : '<i class="fa fa-file-o fa-lg fa-fw fa-col"></i>查看';
+            var buttonLabel = opts.buttonLabel != null ? opts.buttonLabel : '关闭';
+            var d = $('<div/>').dialog({
+                href: contextPath + url,
+                width: width,
+                height: height,
+                modal: true,
+                title: title,
+                buttons: [{
+                    text: '<i class="fa fa-times-circle fa-lg fa-fw fa-col"></i>关闭',
+                    handler: function () {
+                        d.dialog('close');
+                    }
+                }],
+                onClose: function () {
+                    $(this).dialog('destroy');
+                }
+            });
+            return d;
         }
 
     </script>

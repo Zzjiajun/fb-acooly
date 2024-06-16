@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.link.dao.DmStencilDao">
+
+    <resultMap id="dmStencilResultMap" type="com.acooly.showcase.link.entity.DmStencil">
+        <id property="id" column="dmStencil_id"/>
+        <result property="pathName" column="dmStencil_path_name"/>
+        <result property="reg" column="dmStencil_reg"/>
+        <result property="createTime" column="dmStencil_create_time"/>
+        <result property="updateTime" column="dmStencil_update_time"/>
+    </resultMap>
+
+    <sql id="dmStencilSqlSelect">
+            dmStencil.id as dmStencil_id,
+            dmStencil.path_name as dmStencil_path_name,
+            dmStencil.reg as dmStencil_reg,
+            dmStencil.create_time as dmStencil_create_time,
+            dmStencil.update_time as dmStencil_update_time
+    </sql>
+
+</mapper>

@@ -20,6 +20,7 @@ import com.acooly.showcase.daliy.entity.DmPixel;
 import com.acooly.showcase.daliy.entity.Link;
 import com.acooly.showcase.daliy.service.DmDomainService;
 import com.acooly.showcase.daliy.service.DmPixelService;
+import com.acooly.showcase.daliy.service.LinkService;
 import com.acooly.showcase.daliy.service.PermissionsService;
 import com.acooly.showcase.link.entity.LinkInt;
 import org.apache.shiro.SecurityUtils;
@@ -53,6 +54,8 @@ public class LinkSrcsManagerController extends AbstractJsonEntityController<Link
 	@Autowired
 	private LinkSrcsService linkSrcsService;
 	@Autowired
+	private LinkService linkService;
+	@Autowired
 	private PermissionsService permissionsService;
 	@Autowired
 	private DmPixelService dmPixelService;
@@ -83,9 +86,10 @@ public class LinkSrcsManagerController extends AbstractJsonEntityController<Link
 	protected void referenceData(HttpServletRequest request, Map<String, Object> model) {
 		User principal = (User) SecurityUtils.getSubject().getPrincipal();
 		Map<String, Object> mapQuery = Maps.newHashMap();
-		mapQuery.put("EQ_userName", principal.getUsername());
-		List<DmPixel> query = dmPixelService.query(mapQuery, null);
-		List<String> list = query.stream().map(DmPixel::getDomain).collect(Collectors.toList());
+		mapQuery.put("EQ_holder", principal.getUsername());
+		List<Link> query = linkService.query(mapQuery, null);
+		List<String> list = query.stream().map(Link::getAccessAddress).collect(Collectors.toList());
+//		List<String> list = query.stream().map(DmPixel::getDomain).collect(Collectors.toList());
 		model.put("list" ,list);
 	}
 }

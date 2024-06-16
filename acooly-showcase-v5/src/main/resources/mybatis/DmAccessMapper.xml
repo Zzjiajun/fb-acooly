@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.link.dao.DmAccessDao">
+
+    <resultMap id="dmAccessResultMap" type="com.acooly.showcase.link.entity.DmAccess">
+        <id property="id" column="dmAccess_id"/>
+        <result property="centerId" column="dmAccess_center_id"/>
+        <result property="ip" column="dmAccess_ip"/>
+        <result property="region" column="dmAccess_region"/>
+        <result property="accessPath" column="dmAccess_access_path"/>
+        <result property="accessDevice" column="dmAccess_access_device"/>
+        <result property="visitorType" column="dmAccess_visitor_type"/>
+        <result property="createTime" column="dmAccess_create_time"/>
+        <result property="updateTime" column="dmAccess_update_time"/>
+    </resultMap>
+
+    <sql id="dmAccessSqlSelect">
+            dmAccess.id as dmAccess_id,
+            dmAccess.center_id as dmAccess_center_id,
+            dmAccess.ip as dmAccess_ip,
+            dmAccess.region as dmAccess_region,
+            dmAccess.access_path as dmAccess_access_path,
+            dmAccess.access_device as dmAccess_access_device,
+            dmAccess.visitor_type as dmAccess_visitor_type,
+            dmAccess.create_time as dmAccess_create_time,
+            dmAccess.update_time as dmAccess_update_time
+    </sql>
+
+</mapper>

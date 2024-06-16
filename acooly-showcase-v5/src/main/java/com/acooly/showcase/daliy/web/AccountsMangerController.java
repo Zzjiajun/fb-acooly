@@ -255,6 +255,51 @@ public class AccountsMangerController extends AbstractShowcaseController<Account
     }
 
 
+    @RequestMapping("filePhTwo")
+    @ResponseBody
+    public JsonResult filePhTwo(HttpServletRequest request, @RequestParam("files") MultipartFile[] files) throws Exception {
+        JsonResult jsonResult = new JsonResult();
+        List<String> wordsList = new ArrayList<>();
+        Tonck tonck = tonckService.get(Long.valueOf("1"));
+        String accessToken = tonck.getTonck();
+        String url = "https://aip.baidubce.com/rest/2.0/ocr/v1/numbers";
+
+        for (int i = 0; i < files.length; i++) {
+            MultipartFile file = files[i];
+            try {
+                byte[] bytes = file.getBytes();
+                String imgStr = Base64Util.encode(bytes);
+                String imgParam = URLEncoder.encode(imgStr, "UTF-8");
+                String param = "image=" + imgParam;
+                String result = HttpUtil.post(url, accessToken, param);
+                JSONObject jsonObject = JSON.parseObject(result);
+                if (jsonObject.containsKey("words_result")) {
+                    JSONArray wordsResult = jsonObject.getJSONArray("words_result");
+                    List<String> wordsList1 = wordsResult.stream()
+                            .map(obj -> ((JSONObject) obj).getString("words"))
+                            .map(words -> {
+                                if (words.length() > 12) {
+                                    return words.substring(0, 12); // 如果长度大于12，截取前12个字符
+                                } else {
+                                    return words; // 否则保留原始字符串
+                                }
+                            })
+                            .collect(Collectors.toList());
+                    wordsList.addAll(wordsList1);
+                }
+            } catch (Exception e) {
+                // 处理异常，可以记录日志等
+                jsonResult.setMessage("识别成功第"+i+"张照片错误");
+                System.out.println("识别成功第"+i+"张照片错误");
+            }
+        }
+
+        Map<Object, Object> map = Maps.newHashMap();
+        map.put("list", wordsList);
+        jsonResult.setData(map);
+        return jsonResult;
+    }
+
 
 
     @RequestMapping("file1")

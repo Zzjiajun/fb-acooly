@@ -45,7 +45,7 @@
         // formData.append('file', $('#phtFile')[0].files[0]);
         $.ajax({
             type: 'POST',
-            url: '/manage/showcase/daily/accounts/filePh1.html', // 替换为你的服务器URL
+            url: '/manage/showcase/daily/accounts/filePhTwo.html', // 替换为你的服务器URL
             data: formData,
             processData: false,
             contentType: false,

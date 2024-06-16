@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.io.IOException;
 
-/** @author qiubo */
+/** @author qiubo  */
 // 设置应用名和tomcat端口，日志路径为/var/log/webapps/${sysName}
 @BootApp(sysName = "acooly-showcase", httpPort = 8083)
 public class Main {

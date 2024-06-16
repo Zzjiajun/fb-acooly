@@ -71,9 +71,10 @@
 				<div class="form-group row">
 					<label class="col-sm-3 col-form-label">像素代码</label>
 					<div id="pixelId" class="col-sm-9">
-						<textarea rows="3"   id="inputTextArea"  cols="40" oninput="formatInput()"  placeholder="请输入像素id,如果多个像素id请在每个像素id结尾后面输入英文,它会自动换行..." name="pixel" class="easyui-validatebox form-control" ></textarea>
+						<textarea rows="3"    id="inputTextArea"  cols="40" oninput="formatInput()"  placeholder="请输入像素id,如果多个像素id请在每个像素id结尾后面输入英文,它会自动换行..." name="pixel" class="easyui-validatebox form-control" ></textarea>
 					</div>
 				</div>
+
 
 				<div  class="form-group row">
 					<label class="col-sm-3 col-form-label">模版地址</label>

@@ -21,26 +21,23 @@ import com.acooly.core.common.web.support.JsonEntityResult;
 import com.acooly.core.common.web.support.JsonResult;
 import com.acooly.module.security.domain.User;
 import com.acooly.module.security.service.UserService;
-import com.acooly.showcase.daliy.Utils.FTPUploader;
 import com.acooly.showcase.daliy.Utils.RedisUtils;
 import com.acooly.showcase.daliy.Utils.RemoteFileOperationsUtil;
 import com.acooly.showcase.daliy.entity.Regname;
 import com.acooly.showcase.daliy.service.PermissionsService;
 import com.acooly.showcase.daliy.service.RegnameService;
+import com.acooly.showcase.link.entity.DmCondition;
 import com.acooly.showcase.link.entity.DmServer;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.acooly.showcase.link.service.DmConditionService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.acooly.core.common.web.AbstractJsonEntityController;
 import com.acooly.showcase.daliy.entity.Link;
 import com.acooly.showcase.daliy.service.LinkService;
-
 import com.google.common.collect.Maps;
 
 /**
@@ -69,6 +66,8 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 	private PermissionsService permissionsService;
 	@Autowired
 	private RedisUtils redisUtil;
+	@Autowired
+	private DmConditionService dmConditionService;
 
 
 	@Override
@@ -129,22 +128,6 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			if (!directory){
 				throw new NullPointerException("新建二级域名失败");
 			}
-//			String ftp = FTPUploader.createFtp("/" + regionName + "/" + domain);
-//			switch (ftp){
-//				case "文件夹创建成功":
-//					result.setSuccess(true);
-//					result.setMessage("二级域名创建成功");
-//					break;
-//				case "文件夹创建失败":
-//					result.setSuccess(false);
-//					result.setMessage("二级域名创建失败");
-//					break;
-//				case "文件夹已存在":
-//					result.setSuccess(false);
-//					result.setMessage("二级域名存在");
-//				default:
-//					result.setSuccess(false);
-//					result.setMessage("系统错误，联系管理员");
 //			}
 		} catch (Exception var5) {
 			this.handleException(result, "新增", var5);
@@ -205,9 +188,15 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 	public JsonResult deleteJson(HttpServletRequest request, HttpServletResponse response) {
 		JsonResult result = new JsonResult();
 		Serializable[] ids = this.getRequestIds(request);
-		result = super.deleteJson(request, response);
 		for (Serializable id : ids) {
 			Link link = this.getEntityService().get(id);
+			Map<String, Object> mapQuery = Maps.newHashMap();
+			mapQuery.put("EQ_accessAddress", link.getAccessAddress());
+			List<DmCondition> query = dmConditionService.query(mapQuery, null);
+			if (query.size() > 0){
+				DmCondition dmCondition = query.get(0);
+				dmConditionService.removeById(dmCondition.getId());
+			}
 			String regionName = link.getRegionName();
 			String domain = link.getDomain();
 			DmServer dmServer = redisUtil.getDmServer();
@@ -216,31 +205,58 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			if (!b){
 				throw new NullPointerException("删除二级域名失败");
 			}
-//			String fTp = FTPUploader.deleteFTp("/" + regionName + "/" + domain);
-//			switch (fTp) {
-//				case "文件夹已删除":
-//					result.setSuccess(true);
-//					result.setMessage("域名删除成功");
-//					break;
-//				case "文件夹不存在":
-//					result.setSuccess(false);
-//					result.setMessage("服务器，二级域名不存在");
-//				default:
-//					result.setSuccess(false);
-//					result.setMessage("系统错误，联系管理员");
-//			}
 		}
+
+		result = super.deleteJson(request, response);
 		return result;
 	}
 
 
 	@Override
 	protected Link onSave(HttpServletRequest request, HttpServletResponse response, Model model, Link entity, boolean isCreate) throws Exception {
+		User principal = (User) SecurityUtils.getSubject().getPrincipal();
 		if (isCreate){
-			User principal = (User) SecurityUtils.getSubject().getPrincipal();
 			entity.setHolder(principal.getUsername());
 			entity.setUserId(Math.toIntExact(principal.getId()));
 			entity.setAccessAddress(entity.getRegionName()+"/"+entity.getDomain());
+
+			DmCondition dmCondition = new DmCondition();
+			dmCondition.setUserName(principal.getUsername());
+			dmCondition.setIsIp(0);
+			dmCondition.setIsVpn(0);
+			dmCondition.setIsFbclid(0);
+			dmCondition.setIsChinese(0);
+			dmCondition.setIsMobile(0);
+			dmCondition.setTimeZone(0);
+			dmCondition.setIsSpecificDevice(0);
+			dmCondition.setAccessAddress(entity.getAccessAddress());
+			dmConditionService.save(dmCondition);
+		}else {
+			entity.setAccessAddress(entity.getRegionName()+"/"+entity.getDomain());
+			String accessAddress = this.getEntityService().get(entity.getId()).getAccessAddress();
+			if (!accessAddress.equals(entity.getAccessAddress())){
+				Map<String, Object> mapQuery = Maps.newHashMap();
+				mapQuery.put("EQ_accessAddress", accessAddress);
+				List<DmCondition> query = dmConditionService.query(mapQuery, null);
+				if (query.size() > 0){
+					DmCondition dmCondition = query.get(0);
+					dmCondition.setAccessAddress(entity.getAccessAddress());
+					dmConditionService.update(dmCondition);
+				}else {
+					DmCondition dmCondition = new DmCondition();
+					dmCondition.setUserName(principal.getUsername());
+					dmCondition.setIsIp(0);
+					dmCondition.setIsVpn(0);
+					dmCondition.setIsFbclid(0);
+					dmCondition.setIsChinese(0);
+					dmCondition.setIsMobile(0);
+					dmCondition.setTimeZone(0);
+					dmCondition.setIsSpecificDevice(0);
+					dmCondition.setAccessAddress(entity.getAccessAddress());
+					dmConditionService.save(dmCondition);
+				}
+			}
+
 		}
 		return super.onSave(request, response, model, entity, isCreate);
 	}

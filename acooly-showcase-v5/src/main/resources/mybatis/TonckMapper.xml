@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.daliy.dao.TonckDao">
+
+    <resultMap id="tonckResultMap" type="com.acooly.showcase.daliy.entity.Tonck">
+        <id property="id" column="tonck_id"/>
+        <result property="tonck" column="tonck_tonck"/>
+        <result property="createTime" column="tonck_create_time"/>
+        <result property="updateTime" column="tonck_update_time"/>
+    </resultMap>
+
+    <sql id="tonckSqlSelect">
+            tonck.id as tonck_id,
+            tonck.tonck as tonck_tonck,
+            tonck.create_time as tonck_create_time,
+            tonck.update_time as tonck_update_time
+    </sql>
+
+</mapper>

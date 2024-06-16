@@ -4,7 +4,7 @@
  * create by acooly
  * date:2024-03-26
  */
-package com.acooly.showcase.daliy.service.impl;
+package com.acooly.showcase.daliy.service.Impl;
 
 import org.springframework.stereotype.Service;
 

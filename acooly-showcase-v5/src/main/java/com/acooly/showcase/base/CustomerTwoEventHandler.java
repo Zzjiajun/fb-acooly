@@ -1,6 +1,7 @@
 package com.acooly.showcase.base;
 
 import com.acooly.module.event.EventHandler;
+import com.acooly.module.security.event.UserCreatedEvent;
 import com.acooly.showcase.event.CreateCustomerEvent;
 import com.acooly.showcase.event.CreateCustomerTwoEvent;
 import com.jcraft.jsch.ChannelSftp;
@@ -10,7 +11,6 @@ import net.engio.mbassy.listener.Handler;
 import net.engio.mbassy.listener.Invoke;
 
 import java.io.*;
-
 @EventHandler
 public class CustomerTwoEventHandler {
     @Handler(delivery = Invoke.Asynchronously)
@@ -59,5 +59,7 @@ public class CustomerTwoEventHandler {
         channelSftp.disconnect();
         session.disconnect();
     }
+
+
 
 }

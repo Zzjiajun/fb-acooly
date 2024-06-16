@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.link.dao.DmConditionDao">
+
+    <resultMap id="dmConditionResultMap" type="com.acooly.showcase.link.entity.DmCondition">
+        <id property="id" column="dmCondition_id"/>
+        <result property="userName" column="dmCondition_user_name"/>
+        <result property="accessAddress" column="dmCondition_access_address"/>
+        <result property="ipCountry" column="dmCondition_ip_country"/>
+        <result property="timeZone" column="dmCondition_time_zone"/>
+        <result property="timeContinent" column="dmCondition_time_continent"/>
+        <result property="isChinese" column="dmCondition_is_chinese"/>
+        <result property="isMobile" column="dmCondition_is_mobile"/>
+        <result property="isSpecificDevice" column="dmCondition_is_specific_device"/>
+        <result property="isFbclid" column="dmCondition_is_fbclid"/>
+        <result property="createTime" column="dmCondition_create_time"/>
+        <result property="updateTime" column="dmCondition_update_time"/>
+    </resultMap>
+
+    <sql id="dmConditionSqlSelect">
+            dmCondition.id as dmCondition_id,
+            dmCondition.user_name as dmCondition_user_name,
+            dmCondition.access_address as dmCondition_access_address,
+            dmCondition.ip_country as dmCondition_ip_country,
+            dmCondition.time_zone as dmCondition_time_zone,
+            dmCondition.time_continent as dmCondition_time_continent,
+            dmCondition.is_chinese as dmCondition_is_chinese,
+            dmCondition.is_mobile as dmCondition_is_mobile,
+            dmCondition.is_specific_device as dmCondition_is_specific_device,
+            dmCondition.is_fbclid as dmCondition_is_fbclid,
+            dmCondition.create_time as dmCondition_create_time,
+            dmCondition.update_time as dmCondition_update_time
+    </sql>
+
+</mapper>

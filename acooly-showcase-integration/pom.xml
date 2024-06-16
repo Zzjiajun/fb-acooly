@@ -124,10 +124,10 @@
             <artifactId>acooly-component-security</artifactId>
         </dependency>
         <!-- 应用组件：管理系统审计日志 -->
-<!--        <dependency>-->
-<!--            <groupId>com.acooly</groupId>-->
-<!--            <artifactId>acooly-component-olog</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-olog</artifactId>
+        </dependency>
 
 
         <!-- 业务组件：会员组件 -->

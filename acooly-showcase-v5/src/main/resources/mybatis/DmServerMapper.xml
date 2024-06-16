@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.link.dao.DmServerDao">
+
+    <resultMap id="dmServerResultMap" type="com.acooly.showcase.link.entity.DmServer">
+        <id property="id" column="dmServer_id"/>
+        <result property="ip" column="dmServer_ip"/>
+        <result property="username" column="dmServer_username"/>
+        <result property="password" column="dmServer_password"/>
+        <result property="host" column="dmServer_host"/>
+        <result property="reg" column="dmServer_reg"/>
+        <result property="createTime" column="dmServer_create_time"/>
+        <result property="updateTime" column="dmServer_update_time"/>
+    </resultMap>
+
+    <sql id="dmServerSqlSelect">
+            dmServer.id as dmServer_id,
+            dmServer.ip as dmServer_ip,
+            dmServer.username as dmServer_username,
+            dmServer.password as dmServer_password,
+            dmServer.host as dmServer_host,
+            dmServer.reg as dmServer_reg,
+            dmServer.create_time as dmServer_create_time,
+            dmServer.update_time as dmServer_update_time
+    </sql>
+
+</mapper>
