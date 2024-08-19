@@ -31,8 +31,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -300,6 +302,40 @@ public class AccountsMangerController extends AbstractShowcaseController<Account
         return jsonResult;
     }
 
+
+//    @RequestMapping("filePhFour")
+//    @ResponseBody
+//    public JsonResult filePhTwo(@RequestParam("files") MultipartFile[] files) {
+//        JsonResult jsonResult = new JsonResult();
+//        List<String> lines = new ArrayList<>();
+//        ITesseract tesseract = new Tesseract();
+//        // 设置 Tesseract 数据路径
+//        tesseract.setDatapath(getClass().getClassLoader().getResource("tessdata").getPath());
+//        // 设置语言
+//        tesseract.setLanguage("eng");
+//        Map<Object, Object> response = new HashMap<>();
+//        try {
+//            for (MultipartFile file : files) {
+//                BufferedImage image = ImageIO.read(file.getInputStream());
+//                String result = tesseract.doOCR(image);
+//
+//                String[] extractedLines = result.split("\n");
+//                for (String line : extractedLines) {
+//                    if (line.matches(".*\\d.*")) {
+//                        lines.add(line.trim());
+//                    }
+//                }
+//            }
+//
+//            jsonResult.setMessage("success");
+//        } catch (Exception e) {
+//            jsonResult.setSuccess(false);
+//            jsonResult.setMessage("message" + e.getMessage());
+//        }
+//        response.put("list", lines);
+//        jsonResult.setData(response);
+//        return jsonResult;
+//    }
 
 
     @RequestMapping("file1")

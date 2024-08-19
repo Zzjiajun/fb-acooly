@@ -18,6 +18,7 @@ public class RemoteFileOperationsUtil {
     public static boolean createDirectory(String directoryPath,String username,String password,String ip) {
         try {
             executeCommand("mkdir -p " + directoryPath,username,password,ip);
+//            executeCommand("mkdir -p " + directoryPath+"/01",username,password,ip);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

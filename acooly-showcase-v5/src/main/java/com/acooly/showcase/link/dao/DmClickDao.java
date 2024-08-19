@@ -8,6 +8,7 @@
 
 import com.acooly.module.mybatis.EntityMybatisDao;
 import com.acooly.showcase.link.entity.DmClick;
+import org.apache.ibatis.annotations.Delete;
 
 /**
  * dm_click Mybatis Dao
@@ -17,4 +18,6 @@ import com.acooly.showcase.link.entity.DmClick;
  */
 public interface DmClickDao extends EntityMybatisDao<DmClick> {
 
+    @Delete("DELETE FROM dm_click")
+    void deleteAll();
 }

@@ -8,6 +8,7 @@
 
 import com.acooly.module.mybatis.EntityMybatisDao;
 import com.acooly.showcase.link.entity.DmAccess;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 /**
@@ -21,5 +22,6 @@ public interface DmAccessDao extends EntityMybatisDao<DmAccess> {
 
  @Select("SELECT COUNT(DISTINCT ip) FROM dm_access")
  Integer countDistinctIp();
-
+ @Delete("DELETE FROM dm_access")
+ void deleteAll();
 }

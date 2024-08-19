@@ -63,4 +63,7 @@ public class Link extends AbstractEntity {
 
     @Size(max = 255)
     private String regional;
+
+    @Size(max = 255)
+    private String remark;
 }

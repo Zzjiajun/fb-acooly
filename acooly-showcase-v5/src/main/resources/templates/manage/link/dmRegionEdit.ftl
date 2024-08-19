@@ -10,6 +10,12 @@
 					<textarea rows="3" cols="40" placeholder="请输入地区..." name="region" class="easyui-validatebox form-control form-words" data-words="255" data-options="required:true"></textarea>
 				</div>
 			</div>
+			<div class="form-group row">
+				<label class="col-sm-3 col-form-label">代码</label>
+				<div class="col-sm-9">
+					<textarea rows="3" cols="40"  name="code" class="easyui-validatebox form-control form-words" data-words="255" data-options="required:true"></textarea>
+				</div>
+			</div>
         </div>
       </@jodd.form>
     </form>

@@ -1,8 +1,6 @@
 package com.acooly.showcase.base;
 
 import com.acooly.module.event.EventHandler;
-import com.acooly.module.security.event.UserCreatedEvent;
-import com.acooly.showcase.event.CreateCustomerEvent;
 import com.acooly.showcase.event.CreateCustomerTwoEvent;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;

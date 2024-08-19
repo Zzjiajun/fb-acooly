@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.acooly.core.common.dao.support.PageInfo;
 import com.acooly.module.security.domain.User;
 import com.acooly.showcase.daliy.service.PermissionsService;
-import com.acooly.showcase.link.entity.DmCondition;
-import com.acooly.showcase.link.service.DmConditionService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

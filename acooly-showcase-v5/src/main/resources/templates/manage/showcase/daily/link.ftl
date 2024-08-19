@@ -50,6 +50,7 @@
 			<th field="domain" formatter="contentFormatter">二级域名</th>
             <th field="accessAddress" style="width: 15%">访问地址</th>
             <th field="regional" formatter="contentFormatter">所属地区</th>
+            <th field="remark" formatter="contentFormatter">备注</th>
 		    <th field="createTime" formatter="dateTimeFormatter">创建时间</th>
 		    <th field="updateTime" formatter="dateTimeFormatter">修改时间</th>
           	<th field="rowActions" data-options="formatter:function(value, row, index){return formatAction('manage_link_action',value,row)}">动作</th>

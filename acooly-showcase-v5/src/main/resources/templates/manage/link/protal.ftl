@@ -1,4 +1,4 @@
-<#--<link rel="stylesheet" href="https://adminlte.io/themes/dev/AdminLTE/plugins/fontawesome-free/css/all.min.css"/>-->
+<link rel="stylesheet" href="https://adminlte.io/themes/dev/AdminLTE/plugins/fontawesome-free/css/all.min.css"/>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -8,8 +8,8 @@
 <body>
 <#--<!-- 引入 ECharts 库的主题 CSS 文件 &ndash;&gt;-->
 <#--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.css">-->
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" >
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/v4-shims.css">
+<#--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" >-->
+<#--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/v4-shims.css">-->
 <section class="content" style="min-height: 10px; padding-top: 5px">
 <#-- 显示总用例数 （分系统展示）-->
     <div class="container-fluid">

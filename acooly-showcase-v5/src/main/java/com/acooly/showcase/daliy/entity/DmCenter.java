@@ -97,4 +97,8 @@ public class DmCenter extends AbstractEntity {
     private Integer displayOption;
 
     private Integer diversion;
+
+    private Integer trolls;
+
+    private Integer protect;
 }

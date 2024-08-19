@@ -22,4 +22,8 @@ import com.acooly.showcase.link.entity.DmClick;
 @Service("dmClickService")
 public class DmClickServiceImpl extends EntityServiceImpl<DmClick, DmClickDao> implements DmClickService {
 
+    @Override
+    public void deleteAll() {
+        this.getEntityDao().deleteAll();
+    }
 }

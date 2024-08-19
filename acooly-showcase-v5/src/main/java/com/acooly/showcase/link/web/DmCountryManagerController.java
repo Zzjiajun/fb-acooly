@@ -70,7 +70,8 @@ public class DmCountryManagerController extends AbstractJsonEntityController<DmC
 		JsonResult jsonResult = null;
 		try {
 			jsonResult = new JsonResult();
-			URL url = new URL("https://xword.cyou/hotel/countryRedis");
+			URL url = new URL("https://xunpro.world/hotel/countryRedis");
+//			URL url = new URL("http://127.0.0.1:3031/hotel/countryRedis");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -99,9 +100,27 @@ public class DmCountryManagerController extends AbstractJsonEntityController<DmC
 //        jsonResult.setMessage("更新缓存成功");
 		return jsonResult;
 	}
-
-
-
-
+	@RequestMapping(value = "dmCenterRedis")
+	@ResponseBody
+	public JsonResult dmCenterRedis(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		JsonResult jsonResult = null;
+		try {
+			jsonResult = new JsonResult();
+			URL url = new URL("https://xunpro.world/hotel/countryRedis");
+//			URL url = new URL("http://127.0.0.1:3031/hotel/countryRedis");
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String ipAddress = reader.readLine();
+			JSONObject jsonObject = new JSONObject(ipAddress);
+			Map<String, Object> map = jsonObject.toMap();
+			jsonResult.setMessage((String) map.get("message"));
+			jsonResult.setSuccess((Boolean) map.get("success"));
+		} catch (IOException e) {
+			jsonResult.setMessage("更新失败");
+			jsonResult.setSuccess(false);
+		}
+		return jsonResult;
+	}
 
 }

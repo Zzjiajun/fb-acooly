@@ -87,7 +87,8 @@ public class LinkSrcsManagerController extends AbstractJsonEntityController<Link
 		User principal = (User) SecurityUtils.getSubject().getPrincipal();
 		Map<String, Object> mapQuery = Maps.newHashMap();
 		mapQuery.put("EQ_holder", principal.getUsername());
-		List<Link> query = linkService.query(mapQuery, null);
+//		List<Link> query = linkService.query(mapQuery, null);
+		List<Link> query = linkService.getAll();
 		List<String> list = query.stream().map(Link::getAccessAddress).collect(Collectors.toList());
 //		List<String> list = query.stream().map(DmPixel::getDomain).collect(Collectors.toList());
 		model.put("list" ,list);

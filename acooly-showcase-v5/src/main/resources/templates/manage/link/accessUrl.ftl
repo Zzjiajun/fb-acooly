@@ -46,7 +46,7 @@
                                 <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 500px;">
                                     <table  id="manage_accessUrl_datagrid" class="easyui-datagrid"
                                            url="/manage/link/dmAccess/listAccessUrl?centerId=${k}" fit="true" border="false" fitColumns="false"
-                                           pagination="true" idField="id" pageSize="20" pageList="[10, 20, 30, 40, 50]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
+                                           pagination="true" idField="id" pageSize="100" pageList="[10, 20, 30, 40, 50,100,1000]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
                                         <thead>
                                         <tr>
                                             <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>

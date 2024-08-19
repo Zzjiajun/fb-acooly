@@ -17,4 +17,5 @@ import com.acooly.showcase.link.entity.DmClick;
  */
 public interface DmClickService extends EntityService<DmClick> {
 
+    void deleteAll();
 }

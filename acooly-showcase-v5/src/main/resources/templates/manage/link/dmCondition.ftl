@@ -37,8 +37,8 @@
                 <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
                 <th field="id" sortable="true" >id</th>
                 <th field="userName" formatter="contentFormatter">用户名</th>
-                <th field="accessAddress" formatter="contentFormatter">二级域名</th>
-                <th field="isIp" formatter="statusFunction">IP</th>
+                <th field="accessAddress" style="width: 25%"  formatter="contidFunction">二级域名</th>
+                <th field="isIp" formatter="statusFunction">IP防护</th>
                 <th field="ipCountry" formatter="isIpFormatter">IP国家</th>
                 <th field="timeZone" formatter="statusFunction">是否添加时区</th>
                 <th field="timeContinent" formatter="conFormatter">时区洲</th>
@@ -59,14 +59,14 @@
         <!-- 每行的Action动作模板 -->
         <div id="manage_dmCondition_action" style="display: none;">
             <div class="btn-group btn-group-xs">
-              <button onclick="$.acooly.framework.show('/manage/link/dmCondition/show.html?id={0}',500,500);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>
+<#--              <button onclick="$.acooly.framework.show('/manage/link/dmCondition/show.html?id={0}',500,500);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>-->
               <button onclick="$.acooly.framework.edit({url:'/manage/link/dmCondition/edit.html',id:'{0}',entity:'dmCondition',width:500,height:500});" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
-              <button onclick="$.acooly.framework.remove('/manage/link/dmCondition/deleteJson.html','{0}','manage_dmCondition_datagrid');" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>
+<#--              <button onclick="$.acooly.framework.remove('/manage/link/dmCondition/deleteJson.html','{0}','manage_dmCondition_datagrid');" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>-->
           </div>
         </div>
         <!-- 表格的工具栏 -->
         <div id="manage_dmCondition_toolbar">
-            <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.create({url:'/manage/link/dmCondition/create.html',entity:'dmCondition',width:500,height:500})"><i class="fa fa-plus-circle fa-fw fa-col"></i>添加</a>
+<#--            <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.create({url:'/manage/link/dmCondition/create.html',entity:'dmCondition',width:500,height:500})"><i class="fa fa-plus-circle fa-fw fa-col"></i>添加</a>-->
 <#--            <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.removes('/manage/link/dmCondition/deleteJson.html','manage_dmCondition_datagrid')"><i class="fa fa-trash fa-fw fa-col"></i>批量删除</a>-->
             <a href="#" class="easyui-menubutton" data-options="menu:'#manage_dmCondition_exports_menu'"><i class="fa fa-cloud-download fa-fw fa-col"></i>批量导出</a>
             <div id="manage_dmCondition_exports_menu" style="width:150px;">
@@ -109,5 +109,11 @@
             return iptMap.get(value);
         }
 
+
+
+        function contidFunction(value){
+           return "<button   class='btn btn-link expandable'>" + value+ "</button>";
+
+        }
     </script>
 </div>

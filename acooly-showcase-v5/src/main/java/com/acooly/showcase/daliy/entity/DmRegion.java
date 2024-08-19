@@ -41,4 +41,7 @@ public class DmRegion extends AbstractEntity {
     @ExportColumn(header = "地区", order = 1)
     private String region;
 
+
+    private String code;
+
 }

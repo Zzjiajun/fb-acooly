@@ -51,8 +51,16 @@
 				</div>
 
 				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">表单是否防护</label>
+					<div class="  d-inline">
+						<input type="radio"  name="protect" value="0" checked>防护
+						<input type="radio" name="protect" value="1">不防护
+					</div>
+				</div>
+
+				<div class="form-group row">
 					<label class="col-sm-3 col-form-label">类型选择</label>
-					<div class="icheck-primary d-inline">
+					<div class="  d-inline">
 						<input type="radio"  name="displayOption" value="1" id="showRadio" checked> 落地页
 						<input type="radio" name="displayOption" value="2" id="hideRadio"> 表单
 					</div>
@@ -61,7 +69,7 @@
 
 				<div class="form-group row">
 					<label class="col-sm-3 col-form-label">是否分流</label>
-					<div class="icheck-primary d-inline">
+					<div class="  d-inline">
 						<input type="radio"  name="diversion" value="0" id="showRadio1" checked> 否
 						<input type="radio" name="diversion" value="1" id="hideRadio1"> 是
 					</div>
@@ -80,9 +88,9 @@
 					<label class="col-sm-3 col-form-label">模版地址</label>
 					<div id="serialNumberId" class="col-sm-6">
 						<select id="serialNumberValue" name="serialNumber"  class="form-control select2bs4" data-options="required:true">
-								<#list collected as k,v >
-									<option value="${v}">${k}</option>
-								</#list>
+							<#list collected as k,v >
+								<option value="${v}">${k}</option>
+							</#list>
 						</select>
 					</div>
 

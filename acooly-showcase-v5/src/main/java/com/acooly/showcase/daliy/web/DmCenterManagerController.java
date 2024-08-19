@@ -8,19 +8,20 @@ package com.acooly.showcase.daliy.web;
 
 import com.acooly.core.common.dao.support.PageInfo;
 import com.acooly.core.common.web.AbstractJsonEntityController;
+import com.acooly.core.common.web.support.JsonEntityResult;
 import com.acooly.core.common.web.support.JsonListResult;
 import com.acooly.core.common.web.support.JsonResult;
 import com.acooly.module.event.EventBus;
 import com.acooly.module.security.domain.User;
 import com.acooly.module.security.service.UserService;
-import com.acooly.showcase.base.CustomerEventHandler;
-import com.acooly.showcase.daliy.Utils.ModifyIndexHtml;
+
 import com.acooly.showcase.daliy.Utils.RedisUtils;
 import com.acooly.showcase.daliy.Utils.RemoteFileOperationsUtil;
 import com.acooly.showcase.daliy.entity.*;
 import com.acooly.showcase.daliy.service.*;
 import com.acooly.showcase.event.CreateCustomerEvent;
-import com.acooly.showcase.event.CreateCustomerTwoEvent;
+
+import com.acooly.showcase.event.CreateCustomerThreeEvent;
 import com.acooly.showcase.link.entity.*;
 import com.acooly.showcase.link.service.*;
 import com.google.common.base.Preconditions;
@@ -29,17 +30,18 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -97,9 +99,47 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 	private DmAccessService dmAccessService;
 	@Autowired
 	private DmClickService dmClickService;
+	@Autowired
+	private DmCountryService dmCountryService;
+	@Autowired
+	private DmConditionService dmConditionService;
 
 
+	@Override
+	public JsonEntityResult<DmCenter> updateJson(HttpServletRequest request, HttpServletResponse response) {
 
+		JsonEntityResult<DmCenter> result = super.updateJson(request, response);
+		//更新redis缓存
+		try {
+			dmCountryService.dmCenterRedis();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		try {
+			dmCountryService.dmConditionRedis();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return result;
+	}
+
+	@Override
+	public JsonEntityResult<DmCenter> saveJson(HttpServletRequest request, HttpServletResponse response) {
+
+		JsonEntityResult<DmCenter> result = super.saveJson(request, response);
+		//更新redis缓存
+		try {
+			dmCountryService.dmCenterRedis();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		try {
+			dmCountryService.dmConditionRedis();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return result;
+	}
 
 	@Override
 	protected void referenceData(HttpServletRequest request, Map<String, Object> model) {
@@ -159,7 +199,17 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 
 	}
 
-	public void linuxCopyFile(DmCenter entity,String str,String pathNameCil,String string){
+	@Override
+	protected void onCreate(HttpServletRequest request, HttpServletResponse response, Model model) {
+        try {
+            dmCountryService.dmCenterRedis();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        super.onCreate(request, response, model);
+	}
+
+	public void linuxCopyFile(DmCenter entity, String str, String pathNameCil, String string){
 		DmServer dmServer = redisUtil.getDmServer();
 		if (entity.getDisplayOption()==1) {
 			Preconditions.checkNotNull(entity.getSerialNumber(), "落地页模版不能为空"); // 检查落地页模版是否为空
@@ -185,14 +235,34 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		List<String> list = Arrays.asList(entity.getPixel().split("\n")); // 将像素id拆分为列表
 		User principal = (User) SecurityUtils.getSubject().getPrincipal(); // 获取当前用户
 		String str=entity.getDomain() + "/" + entity.getSecondaryDomain(); // 拼接域名
-		entity.setUserName(principal.getUsername()); // 设置实体的用户名为当前用户的用户名
+//		entity.setUserName(principal.getUsername()); // 设置实体的用户名为当前用户的用户名
 		String clearStr = "/www/wwwroot/"+str;
 		String filePath = "/www/wwwroot/"+str+"/index.html";
 		String builtKey = redisUtil.buildKey("acooly","pathNameCil");
 		String builtKey1 = redisUtil.buildKey("acooly","pathNameCil1");
+		String builtProtectKey = redisUtil.buildKey("acooly","protectCil");
+		String builtProtectKey1 = redisUtil.buildKey("acooly","protectCil1");
+		String builtFastKey = redisUtil.buildKey("acooly","fastCil");
+		String builtFastKey1 = redisUtil.buildKey("acooly","fastCil1");
 		String builtKeyIp = redisUtil.buildKey("acooly","Ip");
-		String pathNameCil=redisString(builtKey,1l);
-		String pathNameCil1=redisString(builtKey1,2l);
+		String pathNameCil;
+		String pathNameCil1;
+		Map<String, Object> mapCondition = Maps.newHashMap();
+		mapCondition.put("EQ_accessAddress",str);
+		DmCondition dmCondition = dmConditionService.query(mapCondition, null).get(0);
+		entity.setUserName(dmCondition.getUserName()); // 设置实体的用户名为当前用户的用户名
+		if (entity.getProtect()==0){
+			if (dmCondition.getIsVpn()==0 || dmCondition.getIsVpn()==null){
+				pathNameCil=redisString(builtFastKey,5l);
+				pathNameCil1=redisString(builtKey1,2l);
+			}else {
+				pathNameCil=redisString(builtKey,1l);
+				pathNameCil1=redisString(builtKey1,2l);
+			}
+		}else {
+			pathNameCil=redisString(builtProtectKey,3l);
+			pathNameCil1=redisString(builtProtectKey1,4l);
+		}
 		DmServer dmServer;
 		if (!redisUtil.exist(builtKeyIp)){
 			dmServer = dmServerService.get(1l);
@@ -204,27 +274,14 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 			List<DmServer> dmServers =new Gson().fromJson(string, new TypeToken<List<DmServer>>(){}.getType());
 			dmServer=dmServers.get(0);
 		}
+
 		if(isCreate){
+			entity.setTrolls(0); // 设置初始的骚扰数为0
 			entity.setClicksNumber(0); // 设置点击数初始值为0
 			entity.setVisitsNumber(0); // 设置访问数初始值为0
 			if (entity.getDiversion() == 1) {
 				RemoteFileOperationsUtil.clearDirectory(clearStr,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
 				//引流的落地页和表单模版不一样，需要复制新的模版
-//				if (entity.getDisplayOption()==1) {
-//					Preconditions.checkNotNull(entity.getSerialNumber(), "落地页模版不能为空"); // 检查落地页模版是否为空
-//					Preconditions.checkNotNull(entity.getPixel(), "像素Id不能为空"); // 检查像素id是否为空
-//					// 先清除落地页文件，并复制新的文件
-//					String string = entity.getSerialNumber() + "D";
-//					boolean b = RemoteFileOperationsUtil.copyFiles("/www/wwwroot/" + string, "/www/wwwroot/" + str);
-//					if (!b) {
-//						throw new NullPointerException("模版复制到" + str + "失败");
-//					}
-//				}else {
-//					boolean b=RemoteFileOperationsUtil.copyFiles("/www/wwwroot/"+pathNameCil1,"/www/wwwroot/" + str);
-//					if (!b){
-//						throw new NullPointerException("模版复制到"+ str+"失败");
-//					}
-//				}
 				linuxCopyFile(entity,str,pathNameCil1,entity.getSerialNumber() + "D");
 				// 创建引流链接对象
 				//查看是否已经有了相同的域名
@@ -256,28 +313,8 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 
 			}else {
 				RemoteFileOperationsUtil.clearDirectory(clearStr,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
-//				if (entity.getDisplayOption()==1) {
-//					Preconditions.checkNotNull(entity.getSerialNumber(), "落地页模版不能为空"); // 检查落地页模版是否为空
-//					Preconditions.checkNotNull(entity.getPixel(), "像素Id不能为空"); // 检查像素id是否为空
-//					// 先清除落地页文件，并复制新的文件
-//					boolean b = RemoteFileOperationsUtil.copyFiles("/www/wwwroot/" + entity.getSerialNumber(), "/www/wwwroot/" + str);
-//					if (!b) {
-//						throw new NullPointerException("模版复制到" + str + "失败");
-//					}
-//				}else {
-//					boolean b=RemoteFileOperationsUtil.copyFiles("/www/wwwroot/"+pathNameCil,"/www/wwwroot/" + str);
-//					if (!b){
-//						throw new NullPointerException("模版复制到"+ str+"失败");
-//					}
-//				}
 				linuxCopyFile(entity,str,pathNameCil,entity.getSerialNumber());
-				CreateCustomerEvent event=new CreateCustomerEvent();
-				event.setHost(dmServer.getIp());
-				event.setUsername(dmServer.getUsername());
-				event.setPassword(dmServer.getPassword());
-				event.setFilePath(filePath);
-				event.setNewLink(entity.getLink());
-				eventBus.publish(event);
+				eventChooseCreate(dmServer,filePath,entity,dmCondition);
 			}
 			//如果是落地页
 			if (entity.getDisplayOption()==1) {
@@ -301,10 +338,6 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 				dmPixelService.saves(dmPixelList);
 			}
 		}else {
-
-
-
-
 			// 修改时 当修改链接发送改变时
 			DmCenter dmCenterOld = this.getEntityService().get(entity.getId());
 			Map<String, Object> map = Maps.newHashMap();
@@ -371,13 +404,7 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 			if (entity.getDiversion() == 0 && !entity.getDiversion().equals(dmCenterOld.getDiversion())){
 				RemoteFileOperationsUtil.clearDirectory(clearStr,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
 				linuxCopyFile(entity,str,pathNameCil,entity.getSerialNumber());
-				CreateCustomerEvent event=new CreateCustomerEvent();
-				event.setHost(dmServer.getIp());
-				event.setUsername(dmServer.getUsername());
-				event.setPassword(dmServer.getPassword());
-				event.setFilePath(filePath);
-				event.setNewLink(entity.getLink());
-				eventBus.publish(event);
+				eventChooseCreate(dmServer,filePath,entity,dmCondition);
 			}
 
 
@@ -393,7 +420,7 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 							// 创建引流链接对象
 							//查看是否已经有了相同的域名
 							Map<String, Object> map1 = Maps.newHashMap();
-							map.put("EQ_domain",str);
+							map1.put("EQ_domain",str);
 							List<LinkInt> queryt = linkIntService.query(map1, null);
 							if (queryt.isEmpty()){
 								LinkInt linkInt = new LinkInt();
@@ -420,25 +447,13 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 					}else {
 						RemoteFileOperationsUtil.clearDirectory(clearStr,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
 						linuxCopyFile(entity,str,pathNameCil,entity.getSerialNumber());
-						CreateCustomerEvent event=new CreateCustomerEvent();
-						event.setHost(dmServer.getIp());
-						event.setUsername(dmServer.getUsername());
-						event.setPassword(dmServer.getPassword());
-						event.setFilePath(filePath);
-						event.setNewLink(entity.getLink());
-						eventBus.publish(event);
+						eventChooseCreate(dmServer,filePath,entity,dmCondition);
 					}
 				}else {
 					if (entity.getDiversion() != 1){
 						RemoteFileOperationsUtil.clearDirectory(clearStr,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
 						linuxCopyFile(entity,str,pathNameCil,entity.getSerialNumber());
-						CreateCustomerEvent event=new CreateCustomerEvent();
-						event.setHost(dmServer.getIp());
-						event.setUsername(dmServer.getUsername());
-						event.setPassword(dmServer.getPassword());
-						event.setFilePath(filePath);
-						event.setNewLink(entity.getLink());
-						eventBus.publish(event);
+						eventChooseCreate(dmServer,filePath,entity,dmCondition);
 					}
 				}
 			}
@@ -446,9 +461,45 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		}
 
 		// 在程序退出时关闭线程池
-
 		return super.onSave(request, response, model, entity, isCreate);
 	}
+
+
+	public void eventChooseCreate(DmServer dmServer,String filePath,DmCenter entity,DmCondition dmCondition){
+		if (dmCondition.getIsVpn()==0 || dmCondition.getIsVpn()==null || entity.getDisplayOption()==2){
+			CreateCustomerThreeEvent event = new CreateCustomerThreeEvent();
+			event.setHost(dmServer.getIp());
+			event.setUsername(dmServer.getUsername());
+			event.setPassword(dmServer.getPassword());
+			event.setFilePath(filePath);
+			event.setNewLink(entity.getLink());
+			if (StringUtils.isEmpty(dmCondition.getIpCountry())){
+				event.setIpCountry("US");
+			}else {
+				event.setIpCountry(dmCondition.getIpCountry());
+			}
+			event.setTimeZone(dmCondition.getTimeZone());
+			event.setTimeContinent(dmCondition.getTimeContinent());
+			event.setIsChinese(dmCondition.getIsChinese());
+			event.setIsMobile(dmCondition.getIsMobile());
+			event.setIsSpecificDevice(dmCondition.getIsSpecificDevice());
+			event.setIsFbclid(dmCondition.getIsFbclid());
+			event.setIsIp(dmCondition.getIsIp());
+			event.setIsVpn(dmCondition.getIsVpn());
+			event.setVpnCode(0);
+			eventBus.publish(event);
+		}else {
+			CreateCustomerEvent event=new CreateCustomerEvent();
+			event.setHost(dmServer.getIp());
+			event.setUsername(dmServer.getUsername());
+			event.setPassword(dmServer.getPassword());
+			event.setFilePath(filePath);
+			event.setNewLink(entity.getLink());
+			eventBus.publish(event);
+		}
+	}
+
+
 
 
 	@Override
@@ -519,6 +570,7 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		DmCenter dmCenter = this.getEntityService().get(Long.valueOf(id));
 		dmCenter.setVisitsNumber(0);
 		dmCenter.setClicksNumber(0);
+		dmCenter.setTrolls(0);
 		this.getEntityService().update(dmCenter);
 		Map<String, Object> mapQuery = Maps.newHashMap();
 		mapQuery.put("EQ_centerId", id);
@@ -534,6 +586,25 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		return jsonResult;
 	}
 
+	@RequestMapping(value = "eliminateAll")
+	@ResponseBody
+	public JsonResult eliminateAll(HttpServletRequest request, HttpServletResponse response) {
+		JsonResult jsonResult = new JsonResult();
+		dmAccessService.getAll().forEach(s->{
+			dmAccessService.removeById(s.getId());
+		});
+		dmClickService.getAll().forEach(s->{
+			dmClickService.removeById(s.getId());
+		});
+		dmCenterService.getAll().forEach(s->{
+			s.setVisitsNumber(0);
+			s.setClicksNumber(0);
+			s.setTrolls(0);
+			this.getEntityService().update(s);
+		});
+		jsonResult.setMessage("清除浏览记录成功");
+		return jsonResult;
+	}
 
 
 	@RequestMapping(value = "buildCanonicalUrl")
@@ -602,6 +673,12 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 			s.setUserName(userMap.get(s.getUserName()));
 		});
 		dmCenterJsonListResult.setRows(rows);
-		return dmCenterJsonListResult;
+        try {
+            dmCountryService.dmCenterRedis();
+			dmCountryService.dmConditionRedis();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return dmCenterJsonListResult;
 	}
 }

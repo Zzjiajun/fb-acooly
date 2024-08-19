@@ -19,4 +19,6 @@ public interface DmAccessService extends EntityService<DmAccess> {
 
     Integer countDistinctIp();
 
+    void deleteAll();
+
 }

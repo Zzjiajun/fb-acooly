@@ -45,7 +45,8 @@
             <thead>
             <tr>
                 <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
-                <th field="id" sortable="true" >id</th>
+<#--                <th field="id" sortable="true" >id</th>-->
+                <th field="protect" style="width: 5%" formatter="showProtect">防护</th>
                 <th field="userName" formatter="contentFormatter">用户名</th>
                 <th field="region" formatter="contentFormatter">地区</th>
                 <th field="displayOption" formatter="displayOptionFunction">广告类型</th>
@@ -54,6 +55,7 @@
                 <th field="domain" formatter="domainFunction">访问域名</th>
                 <#--                <th field="serialNumber" formatter="contentFormatter">模版地址</th>-->
                 <th field="visitsNumber"  formatter="accessNumberFunction" sortable="true" sum="true">域名访问量</th>
+                <th field="trolls"  formatter="tollsNumberFunction" >跳转水军群数量</th>
                 <th field="clicksNumber" formatter="clickNumberFunction" sortable="true" sum="true">按钮点击数量</th>
                 <th field="diversion" formatter="displayOptionTwoFunction">是否轮询</th>
                 <th field="createTime" formatter="dateTimeFormatter">创建时间</th>
@@ -84,11 +86,14 @@
                 <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmCenter/exportXls.html','manage_dmCenter_searchform','dm_center')"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>
                 <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmCenter/exportCsv.html','manage_dmCenter_searchform','dm_center')"><i class="fa fa-file-text-o fa-lg fa-fw fa-col"></i>CSV</div>
             </div>
+            <a href="#" class="btn btn-outline-danger" plain="true" onclick="confirmSubmit1('/manage/showcase/daily/dmCenter/eliminateAll.html','1','manage_dmCenter_datagrid')"><i class="fa fa-plus-circle fa-fw fa-col"></i>清除全部记录</a>
             <#--            <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.imports({url:'/manage/showcase/daily/dmCenter/importView.html',uploader:'manage_dmCenter_import_uploader_file'});"><i class="fa fa-cloud-upload fa-fw fa-col"></i>批量导入</a>-->
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
-    <link href="//unpkg.com/layui@2.9.8/dist/css/layui.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/layui@2.8.18/dist/css/layui.css">
+    <script src="https://unpkg.com/layui@2.8.18/dist/layui.js"></script>
+
     <script type="text/javascript">
         $(function () {
             $.acooly.framework.initPage('manage_dmCenter_searchform', 'manage_dmCenter_datagrid');
@@ -159,7 +164,7 @@
             if (row.diversion=='1'){
                 return "<button    onclick='manage_showcase_dmCenter_add()' class='btns' style=''>跳转到轮询链接</button>";
             }else {
-                return "<button  onclick='copyToClipboard2("+JSON.stringify(value)+")'  class='btn btn-link'>" + value+ "</button>";
+                return "<button   onclick='copyToClipboard2("+JSON.stringify(value)+")'  class='btn btn-link expandable'>" + value+ "</button>";
             }
             // return '<span class="btn btn-outline-info">'+value+' / '+row.secondaryDomain+'</span>'
         }
@@ -188,8 +193,13 @@
             clipboard.onClick(event); // 手动触发复制操作
         }
 
-
-
+        function showProtect(value,row){
+            if(row.protect=='0'){
+                return "<span style='color: green;font-weight: bold;' </span>防护</span>";
+            }else {
+                return "<span style='color: darkred;font-weight: bold;' </span>无防护</span>";
+            }
+        }
 
 
         function copyToClipboard3(row) {
@@ -317,6 +327,10 @@
             return "<div style='text-align: center;'><button  onclick='showAccess("+JSON.stringify(row)+")'  class='btn btn-primary'>" + value+ "点击</button></div>";
         }
 
+        function tollsNumberFunction(value){
+            return "<div style='text-align: center; color: slateblue; font-weight: bold;'><p>" + value+ "</p></div>";
+        }
+
 
         function showClick(row) {
             var url ='/manage/link/dmClick/buildClickUrl?centerId='+row.id;
@@ -359,6 +373,24 @@
             return d;
         }
 
+
+        // JavaScript实现按钮伸缩效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const expandableButtons = document.querySelectorAll('.expandable');
+
+            expandableButtons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transition = 'width 0.3s ease';
+                    this.style.width = '200px'; // 鼠标移入时扩展到指定宽度
+                });
+
+                button.addEventListener('mouseleave', function() {
+                    this.style.transition = 'width 0.3s ease';
+                    this.style.width = ''; // 鼠标移出时恢复初始宽度
+                });
+            });
+        });
+
     </script>
     <style>
         .btns {
@@ -387,6 +419,15 @@
             background-image: -o-linear-gradient( #2079b0, #eb94d0);
             background-image: linear-gradient(to bottom, #2079b0, #eb94d0);
             text-decoration: none;
+        }
+
+        .expandable {
+            width: 450px; /* 初始宽度 */
+            overflow: hidden; /* 当内容超出宽度时隐藏 */
+            white-space: nowrap; /* 不换行 */
+            text-overflow: ellipsis; /* 当内容超出宽度时显示省略号 */
+            text-align: left; /* 内容左对齐 */
+            transition: width 0.3s ease; /* 定义过渡效果 */
         }
     </style>
 </div>

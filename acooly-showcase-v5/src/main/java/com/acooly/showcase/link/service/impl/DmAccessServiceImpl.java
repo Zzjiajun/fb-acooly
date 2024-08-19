@@ -26,4 +26,9 @@ public class DmAccessServiceImpl extends EntityServiceImpl<DmAccess, DmAccessDao
     public Integer countDistinctIp() {
         return this.getEntityDao().countDistinctIp();
     }
+
+    @Override
+    public void deleteAll() {
+        this.getEntityDao().deleteAll();
+    }
 }

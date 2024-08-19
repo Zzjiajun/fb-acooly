@@ -27,7 +27,13 @@
 			<div class="form-group row">
 				<label class="col-sm-3 col-form-label">二级域名或更长的域名</label>
 				<div class="col-sm-9">
-					<textarea rows="3" cols="40"  placeholder="三级域名创建时写为：xxx/xxxx" name="domain" class="easyui-validatebox form-control" ></textarea>
+					<textarea rows="3" cols="40"  placeholder="三级域名创建时写为：xxx/xxxx" required="required" name="domain" class="easyui-validatebox form-control" ></textarea>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-sm-3 col-form-label">备注</label>
+				<div class="col-sm-9">
+					<textarea rows="2" cols="20"  placeholder="域名备注" name="remark" class="easyui-validatebox form-control" ></textarea>
 				</div>
 			</div>
         </div>

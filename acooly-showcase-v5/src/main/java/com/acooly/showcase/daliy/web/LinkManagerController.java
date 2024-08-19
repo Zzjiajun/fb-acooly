@@ -6,6 +6,7 @@
 */
 package com.acooly.showcase.daliy.web;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import com.acooly.showcase.daliy.service.RegnameService;
 import com.acooly.showcase.link.entity.DmCondition;
 import com.acooly.showcase.link.entity.DmServer;
 import com.acooly.showcase.link.service.DmConditionService;
+import com.acooly.showcase.link.service.DmCountryService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -68,6 +70,8 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 	private RedisUtils redisUtil;
 	@Autowired
 	private DmConditionService dmConditionService;
+	@Autowired
+	private DmCountryService dmCountryService;
 
 
 	@Override
@@ -197,7 +201,7 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 				DmCondition dmCondition = query.get(0);
 				dmConditionService.removeById(dmCondition.getId());
 			}
-			String regionName = link.getRegionName();
+            String regionName = link.getRegionName();
 			String domain = link.getDomain();
 			DmServer dmServer = redisUtil.getDmServer();
 			boolean b = RemoteFileOperationsUtil.deleteDirectory("/www/wwwroot/" + regionName + "/" + domain
@@ -205,6 +209,11 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			if (!b){
 				throw new NullPointerException("删除二级域名失败");
 			}
+		}
+		try {
+			dmCountryService.dmConditionRedis();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 
 		result = super.deleteJson(request, response);
@@ -231,6 +240,7 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			dmCondition.setIsSpecificDevice(0);
 			dmCondition.setAccessAddress(entity.getAccessAddress());
 			dmConditionService.save(dmCondition);
+
 		}else {
 			entity.setAccessAddress(entity.getRegionName()+"/"+entity.getDomain());
 			String accessAddress = this.getEntityService().get(entity.getId()).getAccessAddress();
@@ -253,11 +263,11 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 					dmCondition.setTimeZone(0);
 					dmCondition.setIsSpecificDevice(0);
 					dmCondition.setAccessAddress(entity.getAccessAddress());
-					dmConditionService.save(dmCondition);
 				}
 			}
 
 		}
+		dmCountryService.dmConditionRedis();
 		return super.onSave(request, response, model, entity, isCreate);
 	}
 }
