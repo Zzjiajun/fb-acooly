@@ -34,7 +34,7 @@ public class DmCountryServiceImpl extends EntityServiceImpl<DmCountry, DmCountry
     @Override
     @Async
     public void dmCenterRedis() throws IOException {
-        URL url = new URL("https://xunpro.world/hotel/dmCenterRedis");
+        URL url = new URL("http://127.0.1:3031/hotel/dmCenterRedis");
 //        URL url = new URL("https://xunwor.top/hotel/dmCenterRedis");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
@@ -44,7 +44,7 @@ public class DmCountryServiceImpl extends EntityServiceImpl<DmCountry, DmCountry
     @Override
     @Async
     public void dmConditionRedis() throws IOException {
-        URL url = new URL("https://xunpro.world/hotel/dmConditionRedis");
+        URL url = new URL("http://127.0.1:3031/hotel/dmConditionRedis");
 //        URL url = new URL("https://xunwor.top/hotel/dmConditionRedis");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");

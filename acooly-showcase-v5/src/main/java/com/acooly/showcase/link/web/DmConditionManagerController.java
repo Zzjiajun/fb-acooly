@@ -98,19 +98,6 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
         // 使用 Stream API 简化代码
         Map<String, String> ipMap = dmRegionService.getAll().stream()
                 .collect(Collectors.toMap(DmRegion::getRegion, DmRegion::getCode));
-//
-//
-//        ipMap.put("美国", "US");
-//        ipMap.put("泰国", "TH");
-//        ipMap.put("台湾", "TW");
-//        ipMap.put("加拿大","CA");
-//        ipMap.put("印度", "IN");
-//        ipMap.put("日本", "JP");
-//        ipMap.put("巴西", "BR");
-//        ipMap.put("澳大利亚","AU");
-//		ipMap.put("英国", "GB");
-//		ipMap.put("韩国","KR");
-//		ipMap.put("德国","DE");
         model.put("ipMap", ipMap);
 		Map<String, Object> mapQuery = Maps.newHashMap();
 		mapQuery.put("EQ_userType", "2");
@@ -122,6 +109,12 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
     @Override
     protected DmCondition onSave(HttpServletRequest request, HttpServletResponse response, Model model, DmCondition entity, boolean isCreate) throws Exception {
         dmCountryService.dmConditionRedis();
+        dmCountryService.dmCenterRedis();
+        if (!isCreate) {
+            Map<String, String> map = dmRegionService.getAll().stream().
+                    collect(Collectors.toMap(DmRegion::getCode, DmRegion::getTimeZone));
+            entity.setTimeContinent(map.get(entity.getIpCountry()));
+        }
         return super.onSave(request, response, model, entity, isCreate);
     }
 

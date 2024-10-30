@@ -96,5 +96,16 @@ public class DmCondition extends AbstractEntity {
     private Integer isVpn;
 
     private Integer vpnCode;
-
+    /**
+     * ip限制
+     */
+    private Integer ipLimits;
+    /**
+     * 白名单开关
+     */
+    private Integer ipWhite;
+    /**
+     * 白名单
+     */
+    private String whiteList;
 }

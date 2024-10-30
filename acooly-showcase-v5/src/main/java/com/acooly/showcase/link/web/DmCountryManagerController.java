@@ -70,7 +70,7 @@ public class DmCountryManagerController extends AbstractJsonEntityController<DmC
 		JsonResult jsonResult = null;
 		try {
 			jsonResult = new JsonResult();
-			URL url = new URL("https://xunpro.world/hotel/countryRedis");
+			URL url = new URL("http://127.0.1:3031/hotel/countryRedis");
 //			URL url = new URL("http://127.0.0.1:3031/hotel/countryRedis");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
@@ -106,7 +106,7 @@ public class DmCountryManagerController extends AbstractJsonEntityController<DmC
 		JsonResult jsonResult = null;
 		try {
 			jsonResult = new JsonResult();
-			URL url = new URL("https://xunpro.world/hotel/countryRedis");
+			URL url = new URL("https://xuntwo.top/hotel/countryRedis");
 //			URL url = new URL("http://127.0.0.1:3031/hotel/countryRedis");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");

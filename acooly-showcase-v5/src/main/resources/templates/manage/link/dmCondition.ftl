@@ -46,6 +46,8 @@
                 <th field="isMobile" formatter="statusFunction">移动设备</th>
                 <th field="isSpecificDevice" formatter="statusFunction">指定设备</th>
                 <th field="isVpn" formatter="statusFunction">VPN检测</th>
+                <th field="ipWhite" formatter="statusFunction">白名单开关</th>
+                <th field="ipLimits" formatter="statusFunction">ip点击限制</th>
                 <th field="createTime" formatter="dateTimeFormatter">创建时间</th>
                 <th field="updateTime" formatter="dateTimeFormatter">修改时间</th>
             </tr>
@@ -60,7 +62,7 @@
         <div id="manage_dmCondition_action" style="display: none;">
             <div class="btn-group btn-group-xs">
 <#--              <button onclick="$.acooly.framework.show('/manage/link/dmCondition/show.html?id={0}',500,500);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>-->
-              <button onclick="$.acooly.framework.edit({url:'/manage/link/dmCondition/edit.html',id:'{0}',entity:'dmCondition',width:500,height:500});" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
+              <button id="myCondition_edit" onclick="$.acooly.framework.edit({url:'/manage/link/dmCondition/edit.html',id:'{0}',entity:'dmCondition',width:500,height:500});" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
 <#--              <button onclick="$.acooly.framework.remove('/manage/link/dmCondition/deleteJson.html','{0}','manage_dmCondition_datagrid');" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>-->
           </div>
         </div>
@@ -80,6 +82,29 @@
         $(function () {
             $.acooly.framework.initPage('manage_dmCondition_searchform', 'manage_dmCondition_datagrid');
         });
+
+
+        // $(document).ready(function() {
+        //     $('#myCondition_edit').hide();
+        //
+        //     // 发送AJAX请求到后端接口
+        //     $.ajax({
+        //         url: '/manage/showcase/daily/records/centerPermissions.html',
+        //         type: 'GET',
+        //         dataType: 'json',
+        //         success: function(data) {
+        //             // 根据返回的数据控制<a>标签的显示
+        //             if (data.length>0) {
+        //                 $('#myCondition_edit').hide();
+        //             } else {
+        //                 $('#myCondition_edit').show();
+        //             }
+        //         },
+        //         error: function() {
+        //             console.log('请求失败');
+        //         },
+        //     });
+        // });
 
         function statusFunction (value) {
             if (value == 1) {

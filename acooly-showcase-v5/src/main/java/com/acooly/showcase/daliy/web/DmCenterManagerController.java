@@ -103,6 +103,8 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 	private DmCountryService dmCountryService;
 	@Autowired
 	private DmConditionService dmConditionService;
+	@Autowired
+	private DmTrollsService dmTrollsService;
 
 
 	@Override
@@ -251,17 +253,18 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		mapCondition.put("EQ_accessAddress",str);
 		DmCondition dmCondition = dmConditionService.query(mapCondition, null).get(0);
 		entity.setUserName(dmCondition.getUserName()); // 设置实体的用户名为当前用户的用户名
-		if (entity.getProtect()==0){
-			if (dmCondition.getIsVpn()==0 || dmCondition.getIsVpn()==null){
-				pathNameCil=redisString(builtFastKey,5l);
-				pathNameCil1=redisString(builtKey1,2l);
-			}else {
-				pathNameCil=redisString(builtKey,1l);
-				pathNameCil1=redisString(builtKey1,2l);
+		if (entity.getProtect() == 0) {
+			if ((dmCondition.getIsVpn() == 0 || dmCondition.getIsVpn() == null) &&
+					(dmCondition.getIpLimits() == 0 || dmCondition.getIpLimits() == null)) {
+				pathNameCil = redisString(builtFastKey, 5L);
+				pathNameCil1 = redisString(builtKey1, 2L);
+			} else {
+				pathNameCil = redisString(builtKey, 1L);
+				pathNameCil1 = redisString(builtKey1, 2L);
 			}
-		}else {
-			pathNameCil=redisString(builtProtectKey,3l);
-			pathNameCil1=redisString(builtProtectKey1,4l);
+		} else {
+			pathNameCil = redisString(builtProtectKey, 3L);
+			pathNameCil1 = redisString(builtProtectKey1, 4L);
 		}
 		DmServer dmServer;
 		if (!redisUtil.exist(builtKeyIp)){
@@ -487,6 +490,8 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 			event.setIsIp(dmCondition.getIsIp());
 			event.setIsVpn(dmCondition.getIsVpn());
 			event.setVpnCode(0);
+			event.setIpWhite(dmCondition.getIpWhite());
+			event.setWhiteList(dmCondition.getWhiteList());
 			eventBus.publish(event);
 		}else {
 			CreateCustomerEvent event=new CreateCustomerEvent();
@@ -582,6 +587,10 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		clickList.forEach(s->{
 			dmClickService.removeById(s.getId());
 		});
+		List<DmTrolls> trollsList = dmTrollsService.query(mapQuery, null);
+		trollsList.forEach(s->{
+			dmTrollsService.removeById(s.getId());
+		});
 		jsonResult.setMessage("清除浏览记录成功");
 		return jsonResult;
 	}
@@ -595,6 +604,9 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		});
 		dmClickService.getAll().forEach(s->{
 			dmClickService.removeById(s.getId());
+		});
+		dmTrollsService.getAll().forEach(s->{
+			dmTrollsService.removeById(s.getId());
 		});
 		dmCenterService.getAll().forEach(s->{
 			s.setVisitsNumber(0);

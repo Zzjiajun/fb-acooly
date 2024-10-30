@@ -20,4 +20,12 @@ public class CreateCustomerThreeEvent {
     private Integer isIp;
     private Integer isVpn;
     private Integer vpnCode;
+    /**
+     * 白名单开关
+     */
+    private Integer ipWhite;
+    /**
+     * 白名单
+     */
+    private String whiteList;
 }

@@ -6,6 +6,8 @@ import com.acooly.core.common.web.support.JsonEntityResult;
 import com.acooly.core.common.web.support.JsonListResult;
 import com.acooly.core.common.web.support.JsonResult;
 import com.acooly.module.security.domain.User;
+
+import com.acooly.module.security.dto.UserRole;
 import com.acooly.module.security.service.UserService;
 import com.acooly.showcase.base.AbstractShowcaseController;
 import com.acooly.showcase.daliy.Pagination;
@@ -13,7 +15,7 @@ import com.acooly.showcase.daliy.ParameterRequestWrapper;
 import com.acooly.showcase.daliy.dto.PerformanceDto;
 import com.acooly.showcase.daliy.dto.TotalFromDto;
 import com.acooly.showcase.daliy.entity.Accounts;
-import com.acooly.showcase.daliy.entity.Permissions;
+
 import com.acooly.showcase.daliy.entity.Records;
 import com.acooly.showcase.daliy.entity.Transactionss;
 import com.acooly.showcase.daliy.service.AccountsService;
@@ -59,6 +61,7 @@ public class RecordsMangerController extends AbstractShowcaseController<Records,
     private UserService userService;
     @Autowired
     private TransactionsService transactionsService;
+
 
     @Override
     protected PageInfo<Records> doList(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
@@ -291,6 +294,27 @@ public class RecordsMangerController extends AbstractShowcaseController<Records,
         if (permissionsService.query(mapQuery,null).size() >0){
             userArrayList.add(principal);
         }
+        return userArrayList;
+    }
+
+
+    /**
+     * 获取用户的权限返回让前端展示按钮影藏还是显示
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "centerPermissions")
+    @ResponseBody
+    public List<User> centerPermissions(HttpServletRequest request, HttpServletResponse response){
+        ArrayList<User> userArrayList = new ArrayList<>();
+        User principal = (User) SecurityUtils.getSubject().getPrincipal();
+        List<UserRole> userRoles = userService.getRoleIdsByUserId(principal.getId());
+        userRoles.forEach(s->{
+            if (s.getRoleId()==2){
+                userArrayList.add(principal);
+            }
+        });
         return userArrayList;
     }
 

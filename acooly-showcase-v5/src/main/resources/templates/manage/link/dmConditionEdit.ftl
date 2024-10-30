@@ -104,6 +104,34 @@
 					</select>
 				</div>
 			</div>
+			<div class="form-group row">
+				<label class="col-sm-3 col-form-label">ip限制</label>
+				<div class="col-sm-9">
+					<select name="ipLimits"  class="form-control select2bs4" data-options="required:true" required>
+						<option value=" "> </option>
+						<#list statusMap as k,v >
+							<option value="${v}">${k}</option>
+						</#list>
+					</select>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-sm-3 col-form-label">白名单开关</label>
+				<div class="col-sm-9">
+					<select name="ipWhite"  class="form-control select2bs4" data-options="required:true" required>
+						<option value=" "> </option>
+						<#list statusMap as k,v >
+							<option value="${v}">${k}</option>
+						</#list>
+					</select>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-sm-3 col-form-label">白名单ip</label>
+				<div class="col-sm-9">
+					<textarea rows="1" cols="20" placeholder="请输入ip地址..." name="whiteList" class="easyui-validatebox form-control form-words" data-words="255" ></textarea>
+				</div>
+			</div>
         </div>
       </@jodd.form>
     </form>

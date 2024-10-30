@@ -72,9 +72,9 @@
         <div id="manage_dmCenter_action" style="display: none;">
             <div class="btn-group btn-group-xs">
                 <button onclick="$.acooly.framework.show('/manage/showcase/daily/dmCenter/show.html?id={0}',600,600);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>
-                <button onclick="confirmSubmit1('/manage/showcase/daily/dmCenter/eliminate.html','{0}','manage_dmCenter_datagrid');" class="btn btn-outline-secondary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>清除记录</button>
-                <button onclick="$.acooly.framework.edit({url:'/manage/showcase/daily/dmCenter/edit.html',id:'{0}',entity:'dmCenter',width:800,height:700});" class="btn btn-outline-success btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
-                <button onclick="deleteDmCenter('/manage/showcase/daily/dmCenter/deleteJson.html','{0}','manage_dmCenter_datagrid');" class="btn btn-outline-danger btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>
+                <button id="myCenter_edit1" onclick="confirmSubmit1('/manage/showcase/daily/dmCenter/eliminate.html','{0}','manage_dmCenter_datagrid');" class="btn btn-outline-secondary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>清除记录</button>
+                <button id="myCenter_edit2" onclick="$.acooly.framework.edit({url:'/manage/showcase/daily/dmCenter/edit.html',id:'{0}',entity:'dmCenter',width:800,height:700});" class="btn btn-outline-success btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
+                <button id="myCenter_edit3" onclick="deleteDmCenter('/manage/showcase/daily/dmCenter/deleteJson.html','{0}','manage_dmCenter_datagrid');" class="btn btn-outline-danger btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>
             </div>
         </div>
         <!-- 表格的工具栏 -->
@@ -86,7 +86,7 @@
                 <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmCenter/exportXls.html','manage_dmCenter_searchform','dm_center')"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>
                 <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmCenter/exportCsv.html','manage_dmCenter_searchform','dm_center')"><i class="fa fa-file-text-o fa-lg fa-fw fa-col"></i>CSV</div>
             </div>
-            <a href="#" class="btn btn-outline-danger" plain="true" onclick="confirmSubmit1('/manage/showcase/daily/dmCenter/eliminateAll.html','1','manage_dmCenter_datagrid')"><i class="fa fa-plus-circle fa-fw fa-col"></i>清除全部记录</a>
+            <a id="myCenter_edit4" href="#" class="btn btn-outline-danger" plain="true" onclick="confirmSubmit1('/manage/showcase/daily/dmCenter/eliminateAll.html','1','manage_dmCenter_datagrid')"><i class="fa fa-plus-circle fa-fw fa-col"></i>清除全部记录</a>
             <#--            <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.imports({url:'/manage/showcase/daily/dmCenter/importView.html',uploader:'manage_dmCenter_import_uploader_file'});"><i class="fa fa-cloud-upload fa-fw fa-col"></i>批量导入</a>-->
         </div>
     </div>
@@ -99,6 +99,35 @@
             $.acooly.framework.initPage('manage_dmCenter_searchform', 'manage_dmCenter_datagrid');
         });
 
+        // $(document).ready(function() {
+        //     $('#myCenter_edit1').hide();
+        //     $('#myCenter_edit2').hide();
+        //     $('#myCenter_edit3').hide();
+        //     $('#myCenter_edit4').hide();
+        //     // 发送AJAX请求到后端接口
+        //     $.ajax({
+        //         url: '/manage/showcase/daily/records/centerPermissions.html',
+        //         type: 'GET',
+        //         dataType: 'json',
+        //         success: function(data) {
+        //             // 根据返回的数据控制<a>标签的显示
+        //             if (data.length>0) {
+        //                 $('#myCenter_edit1').hide();
+        //                 $('#myCenter_edit2').hide();
+        //                 $('#myCenter_edit3').hide();
+        //                 $('#myCenter_edit4').hide();
+        //             } else {
+        //                 $('#myCenter_edit1').show();
+        //                 $('#myCenter_edit2').show();
+        //                 $('#myCenter_edit3').show();
+        //                 $('#myCenter_edit4').show();
+        //             }
+        //         },
+        //         error: function() {
+        //             console.log('请求失败');
+        //         },
+        //     });
+        // });
 
 
 
@@ -205,7 +234,7 @@
         function copyToClipboard3(row) {
             var clipboard = new ClipboardJS('.btn', {
                 text: function() {
-                    return row.domain+'/'+row.secondaryDomain;
+                    return 'https://'+row.domain+'/'+row.secondaryDomain;
                 }
             });
 
@@ -327,8 +356,8 @@
             return "<div style='text-align: center;'><button  onclick='showAccess("+JSON.stringify(row)+")'  class='btn btn-primary'>" + value+ "点击</button></div>";
         }
 
-        function tollsNumberFunction(value){
-            return "<div style='text-align: center; color: slateblue; font-weight: bold;'><p>" + value+ "</p></div>";
+        function tollsNumberFunction(value,row){
+            return "<div style='text-align: center;'><button  onclick='showTrolls("+JSON.stringify(row)+")'  class='btn btn-primary'>" + value+ "点击</button></div>";
         }
 
 
@@ -342,6 +371,14 @@
 
         function showAccess(row) {
             var url ='/manage/link/dmAccess/buildAccessUrl?centerId='+row.id;
+            return this.showClickGet({
+                url: url
+            });
+        }
+
+
+        function showTrolls(row) {
+            var url ='/manage/link/dmTrolls/buildTrollsUrl?centerId='+row.id;
             return this.showClickGet({
                 url: url
             });

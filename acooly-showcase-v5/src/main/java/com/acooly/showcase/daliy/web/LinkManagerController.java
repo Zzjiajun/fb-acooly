@@ -238,6 +238,8 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			dmCondition.setIsMobile(0);
 			dmCondition.setTimeZone(0);
 			dmCondition.setIsSpecificDevice(0);
+			dmCondition.setIpLimits(0);
+			dmCondition.setIpWhite(0);
 			dmCondition.setAccessAddress(entity.getAccessAddress());
 			dmConditionService.save(dmCondition);
 

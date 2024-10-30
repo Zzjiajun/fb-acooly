@@ -1,7 +1,7 @@
 <div class="easyui-layout" data-options="fit: true, border: false">
     <!-- 查询条件 -->
     <div data-options="region:'north', border: false" style="padding: 5px; overflow: hidden;">
-        <form id="manage_accessUrl_searchform" class="form-inline ac-form-search" onsubmit="return false">
+        <form id="manage_trollsUrl_searchform" class="form-inline ac-form-search" onsubmit="return false">
             <div class="form-group" style="display: none">
                 <input type="text" class="form-control form-control-sm" name="search_EQ_centerId" value='${k}' />
             </div>
@@ -12,7 +12,7 @@
                 <input type="text" class="form-control form-control-sm" id="search_LTE_createTime" name="search_LTE_createTime" onFocus="WdatePicker({readOnly:true, dateFmt:'yyyy-MM-dd'})" />
             </div>
             <div class="form-group">
-                <button class="btn btn-sm btn-primary" type="button" onclick="$.acooly.framework.search('manage_accessUrl_searchform', 'manage_accessUrl_datagrid');">
+                <button class="btn btn-sm btn-primary" type="button" onclick="$.acooly.framework.search('manage_trollsUrl_searchform', 'manage_trollsUrl_datagrid');">
                     <i class="fa fa-search fa-fw fa-col"></i> 查询
                 </button>
             </div>
@@ -44,9 +44,9 @@
                             <div class="tab-content p-0">
                                 <!-- Morris chart - Sales -->
                                 <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 500px;">
-                                    <table  id="manage_accessUrl_datagrid" class="easyui-datagrid"
-                                           url="/manage/link/dmAccess/listAccessUrl?centerId=${k}" fit="true" border="false" fitColumns="false"
-                                           pagination="true" idField="id" pageSize="100" pageList="[10, 20, 30, 40, 50,100,1000]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
+                                    <table  id="manage_trollsUrl_datagrid" class="easyui-datagrid"
+                                            url="/manage/link/dmTrolls/listTrollsUrl?centerId=${k}" fit="true" border="false" fitColumns="false"
+                                            pagination="true" idField="id" pageSize="100" pageList="[10, 20, 30, 40, 50,100,1000]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
                                         <thead>
                                         <tr>
                                             <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
@@ -54,8 +54,8 @@
                                             <th field="createTime" formatter="dateTimeFormatter">访问时间</th>
                                             <th field="ip" formatter="contentFormatter">IP地址</th>
                                             <th field="region" formatter="contentFormatter">访客地区</th>
-                                            <th field="accessPath" formatter="contentFormatter">访问路径</th>
-                                            <th field="accessDevice" formatter="clickDeviceFormatterFunction">访问设备</th>
+                                            <th field="trollsPath" formatter="contentFormatter">访问路径</th>
+                                            <th field="trollsDevice" formatter="clickDeviceFormatterFunction">访问设备</th>
                                             <th field="visitorType" formatter="clickTypeFormatterFunction">访客类型</th>
                                         </tr>
                                         </thead>
@@ -74,7 +74,7 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        $.acooly.framework.initPage('manage_accessUrl_searchform', 'manage_accessUrl_datagrid');
+        $.acooly.framework.initPage('manage_trollsUrl_searchform', 'manage_trollsUrl_datagrid');
 
         var chart = echarts.init(document.getElementById('chartContainer'));
 
@@ -139,9 +139,6 @@
                 totalRows[date]++;
             });
 
-            // 按日期升序排序
-            dates.sort();
-
             var ipCountData = dates.map(function (date) {
                 return ipCounts[date].size;
             });
@@ -167,7 +164,7 @@
             });
         }
 
-        $('#manage_accessUrl_datagrid').datagrid({
+        $('#manage_trollsUrl_datagrid').datagrid({
             onLoadSuccess: function (data) {
                 updateChart(data.rows);
             }

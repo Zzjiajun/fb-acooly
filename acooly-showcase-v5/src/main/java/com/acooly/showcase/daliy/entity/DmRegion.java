@@ -44,4 +44,6 @@ public class DmRegion extends AbstractEntity {
 
     private String code;
 
+    private String timeZone;
+
 }

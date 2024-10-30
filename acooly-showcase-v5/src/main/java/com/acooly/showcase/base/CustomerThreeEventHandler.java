@@ -36,9 +36,9 @@ public class CustomerThreeEventHandler {
         reader.close();
 
         // 构造替换后的 data 对象字符串
-        String newData = String.format("const data = { timeZone: %d, timeContinent: '%s', isChinese: %d, isMobile: %d, isSpecificDevice: %d, isFbclid: %d, isIp: %d, ipCountry: '%s', isVpn: %d, vpnCode: %d };",
+        String newData = String.format("const data = { timeZone: %d, timeContinent: '%s', isChinese: %d, isMobile: %d, isSpecificDevice: %d, isFbclid: %d, isIp: %d, ipCountry: '%s', isVpn: %d, vpnCode: %d, ipWhite: %d, whiteList: '%s'};",
                 event.getTimeZone(), event.getTimeContinent(), event.getIsChinese(), event.getIsMobile(), event.getIsSpecificDevice(),
-                event.getIsFbclid(), event.getIsIp(), event.getIpCountry(), event.getIsVpn(), event.getVpnCode());
+                event.getIsFbclid(), event.getIsIp(), event.getIpCountry(), event.getIsVpn(), event.getVpnCode() ,event.getIpWhite() ,event.getWhiteList());
 
         // 替换 data 对象的值
         String jsCode = htmlContent.toString();
