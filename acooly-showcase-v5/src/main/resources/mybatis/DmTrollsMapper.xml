@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.link.dao.DmTrollsDao">
+
+    <resultMap id="dmTrollsResultMap" type="com.acooly.showcase.link.entity.DmTrolls">
+        <id property="id" column="dmTrolls_id"/>
+        <result property="centerId" column="dmTrolls_center_id"/>
+        <result property="ip" column="dmTrolls_ip"/>
+        <result property="region" column="dmTrolls_region"/>
+        <result property="trollsPath" column="dmTrolls_trolls_path"/>
+        <result property="trollsDevice" column="dmTrolls_trolls_device"/>
+        <result property="visitorType" column="dmTrolls_visitor_type"/>
+        <result property="createTime" column="dmTrolls_create_time"/>
+        <result property="updateTime" column="dmTrolls_update_time"/>
+    </resultMap>
+
+    <sql id="dmTrollsSqlSelect">
+            dmTrolls.id as dmTrolls_id,
+            dmTrolls.center_id as dmTrolls_center_id,
+            dmTrolls.ip as dmTrolls_ip,
+            dmTrolls.region as dmTrolls_region,
+            dmTrolls.trolls_path as dmTrolls_trolls_path,
+            dmTrolls.trolls_device as dmTrolls_trolls_device,
+            dmTrolls.visitor_type as dmTrolls_visitor_type,
+            dmTrolls.create_time as dmTrolls_create_time,
+            dmTrolls.update_time as dmTrolls_update_time
+    </sql>
+
+</mapper>
