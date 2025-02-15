@@ -12,6 +12,11 @@
                 <div class="form-group">
                     <button class="btn btn-sm btn-primary" type="button" onclick="$.acooly.framework.search('manage_clickUrl_searchform','manage_clickUrl_datagrid');"><i class="fa fa-search fa-fw fa-col"></i> 查询</button>
                 </div>
+                <div class="form-group">
+                    <button class="btn btn-sm btn-success" type="button" onclick="exportsClickUrl('/manage/link/dmClick/exportXls.html','manage_clickUrl_searchform','${k}')">
+                        <i class="fa fa-file-excel-o fa-fw fa-col"></i> 导出Excel记录表
+                    </button>
+                </div>
             </form>
         </div>
 
@@ -52,6 +57,8 @@
                                             <th field="region" formatter="contentFormatter">地区</th>
                                             <th field="clickDevice" formatter="clickDeviceFormatterFunction">点击设备</th>
                                             <th field="clickType" formatter="clickTypeFormatterFunction">点击类型</th>
+                                            <th field="models" formatter="contentFormatter">机型</th>
+                                            <th field="source" formatter="contentFormatter">来源</th>
                                             <#--        <th field="updateTime" formatter="dateTimeFormatter">修改时间</th>-->
                                         </tr>
                                         </thead>
@@ -137,6 +144,9 @@
                     totalRows[date]++;
                 });
 
+                // 按日期升序排序
+                dates.sort();
+
                 var ipCountData = dates.map(function (date) {
                     return ipCounts[date].size;
                 });
@@ -184,6 +194,22 @@
             } else {
                 return '新点击访客<i class="fa  fa-user-plus fa-fw fa-col" style=" color: green ;align-items: center;" title="新访客"/>'
             }
+        }
+
+
+        function exportsClickUrl(url, searchForm, fileName, centerId){
+            var queryParams = $.acooly.framework.afterQueryParams[searchForm];
+            if (isEmptyObject(queryParams)) {
+                queryParams = serializeObject($('#' + searchForm));
+            }
+            if (fileName) {
+                $(queryParams).attr('exportFileName', fileName);
+            }
+            if (centerId) {
+                $(queryParams).attr('centerId', centerId);
+            }
+
+            $.acooly.framework.createAndSubmitForm(url, queryParams);
         }
 
     </script>

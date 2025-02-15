@@ -66,5 +66,21 @@ public class DmClick extends AbstractEntity {
 	@Size(max = 255)
     @ExportColumn(header = "点击类型", order = 5)
     private String clickType;
+    /**
+     * 点击机型
+     */
+    @Size(max = 255)
+    @ExportColumn(header = "点击机型", order = 6)
+    private String models;
+
+    /**
+     * 点击来源
+     */
+    @Size(max = 255)
+    @ExportColumn(header = "点击来源", order = 7)
+    private String source;
+
+
+
 
 }

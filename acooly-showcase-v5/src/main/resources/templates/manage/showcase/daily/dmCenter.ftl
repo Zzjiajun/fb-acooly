@@ -51,6 +51,7 @@
                 <th field="region" formatter="contentFormatter">地区</th>
                 <th field="displayOption" formatter="displayOptionFunction">广告类型</th>
                 <th field="pixel" formatter="contentFormatter">像素Id</th>
+                <th field="remark" formatter="contentFormatter">备注</th>
                 <th field="link" formatter="domainFunction1" >链接地址</th>
                 <th field="domain" formatter="domainFunction">访问域名</th>
                 <#--                <th field="serialNumber" formatter="contentFormatter">模版地址</th>-->

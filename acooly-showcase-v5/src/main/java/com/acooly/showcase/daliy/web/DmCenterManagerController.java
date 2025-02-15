@@ -43,10 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -167,14 +164,27 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		mapQuery.put("EQ_userType", "2");
 		List<User> query3 = userService.query(mapQuery, null);
 		Map<String, String> mapName = query3.stream().collect(Collectors.toMap(User::getUsername, User::getRealName));
-
+		List<DmCenter> all = this.getEntityService().getAll();
+		Map<String, List<String>> map = getMap(all, mapDomain);
 		model.put("mapName", mapName);
 		List<DmShow> showList = dmShowService.getAll();
 		Map<String, String> collected = showList.stream().collect(Collectors.toMap(user -> user.getRegion() + "  :  " + user.getSerialNumber()+"("+user.getRemark()+")", DmShow::getDomain));
 		model.put("collected" ,collected);
 		model.put("regionList",strings);
 		model.put("domainList", listRegionName);
-		model.put("mapDomain", mapDomain);
+//		model.put("mapDomain", mapDomain);
+		model.put("mapDomain", map);
+	}
+	private Map<String, List<String>> getMap(List<DmCenter> dmCenterList, Map<String, List<String>> mapDomain) {
+		Map<String, List<String>> filteredMapDomain = new HashMap<>();
+		for (Map.Entry<String, List<String>> entry : mapDomain.entrySet()) {
+			String key = entry.getKey(); // 主域名
+			List<String> filteredValues = entry.getValue().stream()
+					.filter(value -> dmCenterList.stream().noneMatch(dm -> dm.getDomain().equals(key) && dm.getSecondaryDomain().equals(value)))
+					.collect(Collectors.toList());
+			filteredMapDomain.put(key, filteredValues); // 直接放入 List<String>
+		}
+		return filteredMapDomain;
 	}
 
 	@Override
@@ -254,14 +264,16 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		DmCondition dmCondition = dmConditionService.query(mapCondition, null).get(0);
 		entity.setUserName(dmCondition.getUserName()); // 设置实体的用户名为当前用户的用户名
 		if (entity.getProtect() == 0) {
-			if ((dmCondition.getIsVpn() == 0 || dmCondition.getIsVpn() == null) &&
-					(dmCondition.getIpLimits() == 0 || dmCondition.getIpLimits() == null)) {
-				pathNameCil = redisString(builtFastKey, 5L);
-				pathNameCil1 = redisString(builtKey1, 2L);
-			} else {
-				pathNameCil = redisString(builtKey, 1L);
-				pathNameCil1 = redisString(builtKey1, 2L);
-			}
+			pathNameCil = redisString(builtKey, 1L);
+			pathNameCil1 = redisString(builtKey1, 2L);
+//			if ((dmCondition.getIsVpn() == 0 || dmCondition.getIsVpn() == null) &&
+//					(dmCondition.getIpLimits() == 0 || dmCondition.getIpLimits() == null)) {
+//				pathNameCil = redisString(builtFastKey, 5L);
+//				pathNameCil1 = redisString(builtKey1, 2L);
+//			} else {
+//				pathNameCil = redisString(builtKey, 1L);
+//				pathNameCil1 = redisString(builtKey1, 2L);
+//			}
 		} else {
 			pathNameCil = redisString(builtProtectKey, 3L);
 			pathNameCil1 = redisString(builtProtectKey1, 4L);
@@ -317,7 +329,7 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 			}else {
 				RemoteFileOperationsUtil.clearDirectory(clearStr,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
 				linuxCopyFile(entity,str,pathNameCil,entity.getSerialNumber());
-				eventChooseCreate(dmServer,filePath,entity,dmCondition);
+				eventTwoChooseCreate(dmServer,filePath,entity,dmCondition);
 			}
 			//如果是落地页
 			if (entity.getDisplayOption()==1) {
@@ -407,7 +419,7 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 			if (entity.getDiversion() == 0 && !entity.getDiversion().equals(dmCenterOld.getDiversion())){
 				RemoteFileOperationsUtil.clearDirectory(clearStr,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
 				linuxCopyFile(entity,str,pathNameCil,entity.getSerialNumber());
-				eventChooseCreate(dmServer,filePath,entity,dmCondition);
+				eventTwoChooseCreate(dmServer,filePath,entity,dmCondition);
 			}
 
 
@@ -450,13 +462,13 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 					}else {
 						RemoteFileOperationsUtil.clearDirectory(clearStr,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
 						linuxCopyFile(entity,str,pathNameCil,entity.getSerialNumber());
-						eventChooseCreate(dmServer,filePath,entity,dmCondition);
+						eventTwoChooseCreate(dmServer,filePath,entity,dmCondition);
 					}
 				}else {
 					if (entity.getDiversion() != 1){
 						RemoteFileOperationsUtil.clearDirectory(clearStr,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
 						linuxCopyFile(entity,str,pathNameCil,entity.getSerialNumber());
-						eventChooseCreate(dmServer,filePath,entity,dmCondition);
+						eventTwoChooseCreate(dmServer,filePath,entity,dmCondition);
 					}
 				}
 			}
@@ -502,6 +514,17 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 			event.setNewLink(entity.getLink());
 			eventBus.publish(event);
 		}
+	}
+
+
+	public void eventTwoChooseCreate(DmServer dmServer,String filePath,DmCenter entity,DmCondition dmCondition){
+		CreateCustomerEvent event=new CreateCustomerEvent();
+		event.setHost(dmServer.getIp());
+		event.setUsername(dmServer.getUsername());
+		event.setPassword(dmServer.getPassword());
+		event.setFilePath(filePath);
+		event.setNewLink(entity.getLink());
+		eventBus.publish(event);
 	}
 
 
@@ -591,6 +614,9 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		trollsList.forEach(s->{
 			dmTrollsService.removeById(s.getId());
 		});
+		String str=dmCenter.getDomain() + "/" + dmCenter.getSecondaryDomain();
+		String buildKey = redisUtil.buildKey("AoollyNumberIp", str);
+		redisUtil.del(buildKey);
 		jsonResult.setMessage("清除浏览记录成功");
 		return jsonResult;
 	}
@@ -613,6 +639,9 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 			s.setClicksNumber(0);
 			s.setTrolls(0);
 			this.getEntityService().update(s);
+			String str=s.getDomain() + "/" + s.getSecondaryDomain();
+			String buildKey = redisUtil.buildKey("AoollyNumberIp", str);
+			redisUtil.del(buildKey);
 		});
 		jsonResult.setMessage("清除浏览记录成功");
 		return jsonResult;

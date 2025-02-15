@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.stemp.dao.EmFiledsDao">
+
+    <resultMap id="emFiledsResultMap" type="com.acooly.showcase.stemp.entity.EmFileds">
+        <id property="id" column="emFileds_id"/>
+        <result property="name" column="emFileds_name"/>
+        <result property="remark" column="emFileds_remark"/>
+        <result property="createTime" column="emFileds_create_time"/>
+        <result property="updateTime" column="emFileds_update_time"/>
+    </resultMap>
+
+    <sql id="emFiledsSqlSelect">
+            emFileds.id as emFileds_id,
+            emFileds.name as emFileds_name,
+            emFileds.remark as emFileds_remark,
+            emFileds.create_time as emFileds_create_time,
+            emFileds.update_time as emFileds_update_time
+    </sql>
+
+</mapper>

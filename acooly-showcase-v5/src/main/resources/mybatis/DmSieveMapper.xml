@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.daliy.dao.DmSieveDao">
+
+    <resultMap id="dmSieveResultMap" type="com.acooly.showcase.daliy.entity.DmSieve">
+        <id property="id" column="dmSieve_id"/>
+        <result property="name" column="dmSieve_name"/>
+        <result property="business" column="dmSieve_business"/>
+        <result property="country" column="dmSieve_country"/>
+        <result property="remark" column="dmSieve_remark"/>
+        <result property="phone" column="dmSieve_phone"/>
+        <result property="decide" column="dmSieve_decide"/>
+        <result property="intent" column="dmSieve_intent"/>
+        <result property="createTime" column="dmSieve_create_time"/>
+        <result property="updateTime" column="dmSieve_update_time"/>
+    </resultMap>
+
+    <sql id="dmSieveSqlSelect">
+            dmSieve.id as dmSieve_id,
+            dmSieve.name as dmSieve_name,
+            dmSieve.business as dmSieve_business,
+            dmSieve.country as dmSieve_country,
+            dmSieve.remark as dmSieve_remark,
+            dmSieve.phone as dmSieve_phone,
+            dmSieve.decide as dmSieve_decide,
+            dmSieve.intent as dmSieve_intent,
+            dmSieve.create_time as dmSieve_create_time,
+            dmSieve.update_time as dmSieve_update_time
+    </sql>
+
+</mapper>

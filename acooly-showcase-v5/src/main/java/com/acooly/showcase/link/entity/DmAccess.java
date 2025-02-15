@@ -77,6 +77,28 @@ public class DmAccess extends AbstractEntity {
     @ExportColumn(header = "访客类型", order = 6)
     private String visitorType;
 
+    /**
+     * 机型
+     */
+    @Size(max = 255)
+    @ExportColumn(header = "机型", order = 7)
+    private String models;
+
+    /**
+     * 来源
+     */
+    @Size(max = 255)
+    @ExportColumn(header = "来源", order = 8)
+    private String source;
+    /**
+     * 是否通过
+     */
+    @Size(max = 255)
+    @ExportColumn(header = "是否通过", order = 9)
+    private String passed;
+
+
+
 //    /**
 //     * IP总和
 //     */

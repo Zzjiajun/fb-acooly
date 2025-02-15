@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.stemp.dao.EmSumdataDao">
+
+    <resultMap id="emSumdataResultMap" type="com.acooly.showcase.stemp.entity.EmSumdata">
+        <id property="id" column="emSumdata_id"/>
+        <result property="groupName" column="emSumdata_group_name"/>
+        <result property="business" column="emSumdata_business"/>
+        <result property="country" column="emSumdata_country"/>
+        <result property="remark" column="emSumdata_remark"/>
+        <result property="phone" column="emSumdata_phone"/>
+        <result property="share" column="emSumdata_share"/>
+        <result property="intent" column="emSumdata_intent"/>
+        <result property="createTime" column="emSumdata_create_time"/>
+        <result property="updateTime" column="emSumdata_update_time"/>
+    </resultMap>
+
+    <sql id="emSumdataSqlSelect">
+            emSumdata.id as emSumdata_id,
+            emSumdata.group_name as emSumdata_group_name,
+            emSumdata.business as emSumdata_business,
+            emSumdata.country as emSumdata_country,
+            emSumdata.remark as emSumdata_remark,
+            emSumdata.phone as emSumdata_phone,
+            emSumdata.share as emSumdata_share,
+            emSumdata.intent as emSumdata_intent,
+            emSumdata.create_time as emSumdata_create_time,
+            emSumdata.update_time as emSumdata_update_time
+    </sql>
+
+</mapper>

@@ -49,7 +49,12 @@
 						<textarea rows="2" cols="40" placeholder="请输入链接地址..." name="link" class="easyui-validatebox form-control form-words" data-words="255" data-options="required:true"></textarea>
 					</div>
 				</div>
-
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">备注</label>
+					<div class="col-sm-9">
+						<input type="text" name="remark" placeholder="可以输入群名，以便分别" class="easyui-validatebox form-control"/>
+					</div>
+				</div>
 				<div class="form-group row">
 					<label class="col-sm-3 col-form-label">表单是否防护</label>
 					<div class="  d-inline">

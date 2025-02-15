@@ -16,6 +16,11 @@
                     <i class="fa fa-search fa-fw fa-col"></i> 查询
                 </button>
             </div>
+            <div class="form-group">
+                <button class="btn btn-sm btn-success" type="button" onclick="$.acooly.framework.exports('/manage/link/dmTrolls/exportXls.html','manage_trollsUrl_searchform','dm_trolls','${k}')">
+                    <i class="fa fa-file-excel-o fa-fw fa-col"></i> 导出Excel记录表
+                </button>
+            </div>
         </form>
     </div>
 
@@ -55,8 +60,11 @@
                                             <th field="ip" formatter="contentFormatter">IP地址</th>
                                             <th field="region" formatter="contentFormatter">访客地区</th>
                                             <th field="trollsPath" formatter="contentFormatter">访问路径</th>
+                                            <th field="models" formatter="contentFormatter">机型</th>
+                                            <th field="source" formatter="contentFormatter">来源</th>
                                             <th field="trollsDevice" formatter="clickDeviceFormatterFunction">访问设备</th>
                                             <th field="visitorType" formatter="clickTypeFormatterFunction">访客类型</th>
+                                            <th field="details" formatter="showDetails">失败详情</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -139,6 +147,9 @@
                 totalRows[date]++;
             });
 
+            // 按日期升序排序
+            dates.sort();
+
             var ipCountData = dates.map(function (date) {
                 return ipCounts[date].size;
             });
@@ -186,4 +197,32 @@
             return '新点击访客<i class="fa fa-user-plus fa-fw fa-col" style="color: green; align-items: center;" title="新访客"></i>';
         }
     }
+
+    function showDetails(value,row) {
+        return '<button onclick="showDetailsList(' +row.id+ ')" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>';
+    }
+
+
+    function showDetailsList(id) {
+        var url ='/manage/link/dmTrolls/showTrollsUrl.html?id='+id;
+        $.acooly.framework.show(url,500,500);
+    }
+
+    function exportsTrolls(url, searchForm, fileName, centerId){
+        var queryParams = $.acooly.framework.afterQueryParams[searchForm];
+        if (isEmptyObject(queryParams)) {
+            queryParams = serializeObject($('#' + searchForm));
+        }
+        if (fileName) {
+            $(queryParams).attr('exportFileName', fileName);
+        }
+        if (centerId) {
+            $(queryParams).attr('centerId', centerId);
+        }
+
+        $.acooly.framework.createAndSubmitForm(url, queryParams);
+    }
+
+
+
 </script>

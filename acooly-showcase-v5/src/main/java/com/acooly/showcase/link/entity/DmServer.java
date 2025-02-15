@@ -66,5 +66,11 @@ public class DmServer extends AbstractEntity {
 	@Size(max = 255)
     @ExportColumn(header = "备注", order = 5)
     private String reg;
+    /**
+     * 域名
+     */
+    @Size(max = 255)
+    @ExportColumn(header = "域名", order = 6)
+    private String domain;
 
 }

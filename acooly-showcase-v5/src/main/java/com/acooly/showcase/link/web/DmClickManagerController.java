@@ -14,7 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.acooly.core.common.dao.support.PageInfo;
 import com.acooly.core.common.web.support.JsonListResult;
+import com.acooly.core.utils.Encodes;
 import com.acooly.showcase.daliy.entity.DmCenter;
+import com.acooly.showcase.daliy.service.DmCenterService;
+import com.acooly.showcase.link.entity.DmAccess;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,6 +51,8 @@ public class DmClickManagerController extends AbstractJsonEntityController<DmCli
 	@SuppressWarnings("unused")
 	@Autowired
 	private DmClickService dmClickService;
+	@Autowired
+	private DmCenterService dmCenterService;
 
 
 
@@ -71,6 +77,45 @@ public class DmClickManagerController extends AbstractJsonEntityController<DmCli
 		result.setPageNo(pageInfo.getCurrentPage());
 		result.setPageSize(pageInfo.getCountOfCurrentPage());
 		return result;
+	}
+
+	@Override
+	protected void doExportExcelHeader(HttpServletRequest request, HttpServletResponse response) {
+		String fileName = this.getExportFileName(request);
+		String centerId = request.getParameter("search_EQ_centerId");
+		DmCenter dmCenter = dmCenterService.get(Long.valueOf(centerId));
+		String domainName = dmCenter.getDomain()+"/"+dmCenter.getSecondaryDomain()+"的域名访问统计Excel数据";
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader("Content-Disposition", "attachment");
+		response.setHeader("Content-Disposition", "filename=\"" + Encodes.urlEncode(domainName) + ".xlsx\"");
+	}
+
+	@Override
+	protected List<String> getExportTitles() {
+		return Lists.newArrayList( "IP地址", "访问国家", "机型", "来源",
+				"访问设备", "访客类型");
+	}
+
+	@Override
+	protected List<Object> doExportRow(DmClick entity) {
+		String region ="";
+		if("0".equals(entity.getClickType())){
+			region="新点击访客";
+		}else if("1".equals(entity.getClickType())){
+			region="旧点击访客";
+		}else {
+			region="其他";
+		}
+		String deviceType ="";
+		if("0".equals(entity.getClickDevice())){
+			deviceType="手机";
+		}else if("1".equals(entity.getClickDevice())){
+			deviceType="PC";
+		}else {
+			deviceType="其他";
+		}
+		return Lists.newArrayList(entity.getIp(),entity.getRegion(),
+				entity.getModels(),entity.getSource(),deviceType,region);
 	}
 
 

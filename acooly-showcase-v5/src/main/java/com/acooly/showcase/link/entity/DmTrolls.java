@@ -75,4 +75,22 @@ public class DmTrolls extends AbstractEntity {
     @ExportColumn(header = "访客类型", order = 6)
     private String visitorType;
 
+    /**
+     * 机型
+     */
+    @Size(max = 255)
+    @ExportColumn(header = "机型", order = 7)
+    private String models;
+
+    /**
+     * 访客来源
+     */
+    @Size(max = 255)
+    @ExportColumn(header = "访客来源", order = 8)
+    private String source;
+    /**
+     * 失败明细
+     */
+    @ExportColumn(header = "失败明细", order = 6)
+    private String details;
 }

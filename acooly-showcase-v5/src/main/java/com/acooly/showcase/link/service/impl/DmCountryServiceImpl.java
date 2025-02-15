@@ -6,6 +6,9 @@
  */
 package com.acooly.showcase.link.service.impl;
 
+import com.acooly.showcase.link.entity.DmServer;
+import com.acooly.showcase.link.service.DmServerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +34,15 @@ import java.net.URL;
 @Service("dmCountryService")
 public class DmCountryServiceImpl extends EntityServiceImpl<DmCountry, DmCountryDao> implements DmCountryService {
 
+    @Autowired
+    private DmServerService dmServerService;
     @Override
     @Async
     public void dmCenterRedis() throws IOException {
-        URL url = new URL("http://127.0.1:3031/hotel/dmCenterRedis");
+        //更新redis缓存
+        DmServer dmServer = dmServerService.getAll().get(0);
+        String urls= dmServer.getDomain()+"/hotel/dmCenterRedis";
+        URL url = new URL(urls);
 //        URL url = new URL("https://xunwor.top/hotel/dmCenterRedis");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
@@ -44,7 +52,10 @@ public class DmCountryServiceImpl extends EntityServiceImpl<DmCountry, DmCountry
     @Override
     @Async
     public void dmConditionRedis() throws IOException {
-        URL url = new URL("http://127.0.1:3031/hotel/dmConditionRedis");
+        //更新redis缓存
+        DmServer dmServer = dmServerService.getAll().get(0);
+        String urls= dmServer.getDomain()+"/hotel/dmConditionRedis";
+        URL url = new URL(urls);
 //        URL url = new URL("https://xunwor.top/hotel/dmConditionRedis");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");

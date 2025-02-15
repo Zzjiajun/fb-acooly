@@ -101,4 +101,6 @@ public class DmCenter extends AbstractEntity {
     private Integer trolls;
 
     private Integer protect;
+
+    private String remark;
 }

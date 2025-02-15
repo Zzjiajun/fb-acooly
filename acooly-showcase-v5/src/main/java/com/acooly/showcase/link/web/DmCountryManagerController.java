@@ -26,6 +26,7 @@ import com.acooly.showcase.daliy.Utils.HttpUtil;
 import com.acooly.showcase.daliy.Utils.RedisUtils;
 import com.acooly.showcase.link.entity.DmServer;
 import com.acooly.showcase.link.entity.DmStencil;
+import com.acooly.showcase.link.service.DmServerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -62,6 +63,9 @@ public class DmCountryManagerController extends AbstractJsonEntityController<DmC
 	@Autowired
 	private RedisUtils redisUtil;
 
+	@Autowired
+	private DmServerService dmServerService;
+
 
 
 	@RequestMapping(value = "countryRedis")
@@ -70,7 +74,9 @@ public class DmCountryManagerController extends AbstractJsonEntityController<DmC
 		JsonResult jsonResult = null;
 		try {
 			jsonResult = new JsonResult();
-			URL url = new URL("http://127.0.1:3031/hotel/countryRedis");
+			DmServer dmServer = dmServerService.getAll().get(0);
+			String urls= dmServer.getDomain()+"/hotel/countryRedis";
+			URL url = new URL(urls);
 //			URL url = new URL("http://127.0.0.1:3031/hotel/countryRedis");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
@@ -107,6 +113,8 @@ public class DmCountryManagerController extends AbstractJsonEntityController<DmC
 		try {
 			jsonResult = new JsonResult();
 			URL url = new URL("https://xuntwo.top/hotel/countryRedis");
+			DmServer dmServer = dmServerService.getAll().get(0);
+//			String urls= dmServer.getDomain()+"hotel/countryRedis";
 //			URL url = new URL("http://127.0.0.1:3031/hotel/countryRedis");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");

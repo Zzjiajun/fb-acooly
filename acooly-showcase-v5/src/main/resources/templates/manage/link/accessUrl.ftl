@@ -11,9 +11,23 @@
                 <span class="mr-1 ml-1">至</span>
                 <input type="text" class="form-control form-control-sm" id="search_LTE_createTime" name="search_LTE_createTime" onFocus="WdatePicker({readOnly:true, dateFmt:'yyyy-MM-dd'})" />
             </div>
+            <br>
+            <div class="form-group">
+                <label class="col-form-label">是否通过</label>
+                <select name="search_EQ_passed" class="form-control select2bs4" data-options="required:true">
+                    <option value="">全部</option>
+                    <option value="0">通过</option>
+                    <option value="1">未通过</option>
+                </select>
+            </div>
             <div class="form-group">
                 <button class="btn btn-sm btn-primary" type="button" onclick="$.acooly.framework.search('manage_accessUrl_searchform', 'manage_accessUrl_datagrid');">
                     <i class="fa fa-search fa-fw fa-col"></i> 查询
+                </button>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-sm btn-success" type="button" onclick="exportsAccessUrl('/manage/link/dmAccess/exportXls.html','manage_accessUrl_searchform','dm_access','${k}')">
+                    <i class="fa fa-file-excel-o fa-fw fa-col"></i> 导出Excel记录表
                 </button>
             </div>
         </form>
@@ -45,7 +59,7 @@
                                 <!-- Morris chart - Sales -->
                                 <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 500px;">
                                     <table  id="manage_accessUrl_datagrid" class="easyui-datagrid"
-                                           url="/manage/link/dmAccess/listAccessUrl?centerId=${k}" fit="true" border="false" fitColumns="false"
+                                           url="/manage/link/dmAccess/listAccessUrl?centerId=${k}"  fit="true" border="false" fitColumns="false"
                                            pagination="true" idField="id" pageSize="100" pageList="[10, 20, 30, 40, 50,100,1000]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
                                         <thead>
                                         <tr>
@@ -56,7 +70,10 @@
                                             <th field="region" formatter="contentFormatter">访客地区</th>
                                             <th field="accessPath" formatter="contentFormatter">访问路径</th>
                                             <th field="accessDevice" formatter="clickDeviceFormatterFunction">访问设备</th>
+                                            <th field="models" formatter="contentFormatter">机型</th>
+                                            <th field="source" formatter="contentFormatter">来源</th>
                                             <th field="visitorType" formatter="clickTypeFormatterFunction">访客类型</th>
+                                            <th field="passed" formatter="displayPassedFunction">是否通过</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -189,4 +206,28 @@
             return '新点击访客<i class="fa fa-user-plus fa-fw fa-col" style="color: green; align-items: center;" title="新访客"></i>';
         }
     }
+
+    function displayPassedFunction (value){
+        if (value=='0'){
+            return ' <i class="fa fa-check fa-fw fa-col" style="color: cornflowerblue" />'
+        }else {
+            return '<i class="fa  fa-remove fa-fw fa-col" style="color: red"/>'
+        }
+    }
+    function exportsAccessUrl(url, searchForm, fileName, centerId){
+        var queryParams = $.acooly.framework.afterQueryParams[searchForm];
+        if (isEmptyObject(queryParams)) {
+            queryParams = serializeObject($('#' + searchForm));
+        }
+        if (fileName) {
+            $(queryParams).attr('exportFileName', fileName);
+        }
+        if (centerId) {
+            $(queryParams).attr('centerId', centerId);
+        }
+
+        $.acooly.framework.createAndSubmitForm(url, queryParams);
+    }
+
+
 </script>
