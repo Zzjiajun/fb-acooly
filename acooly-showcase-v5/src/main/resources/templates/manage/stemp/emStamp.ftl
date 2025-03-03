@@ -69,7 +69,7 @@
 
             <!-- 列表和工具栏 -->
             <div data-options="region:'center',border:false">
-                <table id="manage_emSumdata_datagrid" class="easyui-datagrid" url="/manage/stemp/emSumdata/listJson.html" toolbar="#manage_emSumdata_toolbar" fit="true" border="false" fitColumns="false"
+                <table id="manage_emSumdata_datagrid" class="easyui-datagrid"  toolbar="#manage_emSumdata_toolbar" fit="true" border="false" fitColumns="false"
                        pagination="true" idField="id" pageSize="20" pageList="[ 10, 20, 30, 40, 50 ]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
                     <thead>
                     <tr>
@@ -82,6 +82,8 @@
                         <th field="phone" formatter="contentFormatter">电话</th>
                         <th field="share" formatter="contentFormatter">股民</th>
                         <th field="intent" formatter="contentFormatter">意向</th>
+                        <th field="name" formatter="contentFormatter">姓名</th>
+                        <th field="email" formatter="contentFormatter">邮箱</th>
                         <th field="createTime" formatter="dateTimeFormatter">创建时间</th>
                         <th field="updateTime" formatter="dateTimeFormatter">修改时间</th>
                     </tr>
@@ -96,20 +98,21 @@
                 <div id="manage_emSumdata_action" style="display: none;">
                     <div class="btn-group btn-group-xs">
                         <button onclick="$.acooly.framework.show('/manage/stemp/emSumdata/show.html?id={0}',500,500);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>
-                        <button onclick="$.acooly.framework.edit({url:'/manage/stemp/emSumdata/edit.html',id:'{0}',entity:'emSumdata',width:500,height:500});" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
+                        <button onclick="editWithGather('{0}');" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
                         <button onclick="$.acooly.framework.remove('/manage/stemp/emSumdata/deleteJson.html','{0}','manage_emSumdata_datagrid');" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>
                     </div>
                 </div>
                 <!-- 表格的工具栏 -->
                 <div id="manage_emSumdata_toolbar">
-                    <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.create({url:'/manage/stemp/emSumdata/create.html',entity:'emSumdata',width:500,height:500})"><i class="fa fa-plus-circle fa-fw fa-col"></i>添加</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" onclick="createWithGather()"><i class="fa fa-plus-circle fa-fw fa-col"></i>添加</a>
                     <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.removes('/manage/stemp/emSumdata/deleteJson.html','manage_emSumdata_datagrid')"><i class="fa fa-trash fa-fw fa-col"></i>批量删除</a>
                     <a href="#" class="easyui-menubutton" data-options="menu:'#manage_emSumdata_exports_menu'"><i class="fa fa-cloud-download fa-fw fa-col"></i>批量导出</a>
                     <div id="manage_emSumdata_exports_menu" style="width:150px;">
-                        <div onclick="$.acooly.framework.exports('/manage/stemp/emSumdata/exportXls.html','manage_emSumdata_searchform','em_sumdata')"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>
-                        <div onclick="$.acooly.framework.exports('/manage/stemp/emSumdata/exportCsv.html','manage_emSumdata_searchform','em_sumdata')"><i class="fa fa-file-text-o fa-lg fa-fw fa-col"></i>CSV</div>
+<#--                        <div onclick="$.acooly.framework.exports('/manage/stemp/emSumdata/exportXls.html','manage_emSumdata_searchform','em_sumdata')"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>-->
+                        <div onclick="exportWithStampId()"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>
+<#--                        <div onclick="$.acooly.framework.exports('/manage/stemp/emSumdata/exportCsv.html','manage_emSumdata_searchform','em_sumdata')"><i class="fa fa-file-text-o fa-lg fa-fw fa-col"></i>CSV</div>-->
                     </div>
-                    <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.imports({url:'/manage/stemp/emSumdata/importView.html',uploader:'manage_emSumdata_import_uploader_file'});"><i class="fa fa-cloud-upload fa-fw fa-col"></i>批量导入</a>
+<#--                    <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.imports({url:'/manage/stemp/emSumdata/importView.html',uploader:'manage_emSumdata_import_uploader_file'});"><i class="fa fa-cloud-upload fa-fw fa-col"></i>批量导入</a>-->
                 </div>
             </div>
             <script type="text/javascript">
@@ -161,23 +164,100 @@
                 }
             },
             edit: {
-                enable: true,
+                enable: false,
                 showRemoveBtn: false,
-                showRenameBtn: false
+                showRenameBtn: false,
+                draggable: false // 取消节点可移动功能
             },
             callback: {
+                // 点击节点事件
+                // 点击节点事件
                 onClick: function (event, treeId, treeNode, clickFlag) {
-                    if (treeNode.isParent) {
-                        $.acooly.system.resource.formBind(treeNode);
-                    }
+                    var parentId = treeNode.parentId ? treeNode.parentId : treeNode.id;
+                    // 动态设置数据表格的URL
+                    updateDatagridUrlAndReload(parentId, treeNode.gather);
                 },
                 onDrop: function (event, treeId, treeNodes, targetNode, moveType) {
-                    if (treeNodes[0].isParent && targetNode.isParent) {
-                        $.acooly.system.resource.formMove(treeNodes[0], targetNode, moveType);
-                    }
+                    // 如果需要处理拖放事件，可以在这里添加逻辑
                 }
             }
         };
+
+
+        // 更新数据表格URL并刷新
+        function updateDatagridUrlAndReload(parentId, gather) {
+            $('#manage_emSumdata_datagrid').datagrid('options').url = '/manage/stemp/emSumdata/listJson.html?search_EQ_stampId=' + parentId
+                + '&search_EQ_isDelete=0';
+            $('#manage_emSumdata_datagrid').datagrid('reload');
+
+            // 获取gather字段值
+            var gatherFields = gather ? gather.split(',') : [];
+
+            // 定义需要根据gather显示的列
+            var columnsToToggle = ['groupName', 'business', 'country', 'remark', 'phone', 'share', 'intent','name','email'];
+
+            // 隐藏所有列
+            $.each(columnsToToggle, function (index, field) {
+                $('#manage_emSumdata_datagrid').datagrid('hideColumn', field);
+            });
+
+            // 显示根据gather字段指定的列
+            $.each(gatherFields, function (index, field) {
+                $('#manage_emSumdata_datagrid').datagrid('showColumn', field);
+            });
+        }
+
+
+
+        //添加按钮
+        function createWithGather() {
+            var zTree = $.fn.zTree.getZTreeObj("manage_resource1_tree");
+            var selectedNodes = zTree.getSelectedNodes();
+            if (selectedNodes.length > 0) {
+                var selectedNode = selectedNodes[0];
+                var gather = selectedNode.gather || '';
+                var stampId = selectedNode.parentId ? selectedNode.parentId : selectedNode.id;
+                var url = '/manage/stemp/emSumdata/create.html';
+                if (gather) {
+                    url += '?gather=' + gather;
+                }
+                if (stampId) {
+                    if (gather) {
+                        url += '&stampId=' + stampId;
+                    } else {
+                        url += '?stampId=' + stampId;
+                    }
+                }
+                $.acooly.framework.create({
+                    url: url,
+                    entity: 'emSumdata',
+                    width: 500,
+                    height: 500
+                });
+            } else {
+                $.acooly.messager("提示", "请先选择一个类型表", 'warning');
+            }
+        }
+
+        //编辑按钮
+        function editWithGather(id) {
+            var zTree = $.fn.zTree.getZTreeObj("manage_resource1_tree");
+            var selectedNodes = zTree.getSelectedNodes();
+            if (selectedNodes.length > 0) {
+                var selectedNode = selectedNodes[0];
+                var gather = selectedNode.gather || '';
+                $.acooly.framework.edit({
+                    url: '/manage/stemp/emSumdata/edit.html?' + (gather ? 'gather=' + gather : ''),
+                    id: id,
+                    entity: 'emSumdata',
+                    width: 500,
+                    height: 500
+                });
+            } else {
+                $.acooly.messager("提示", "请先选择一个父节点", 'warning');
+            }
+        }
+
 
         /**
          * 加载树
@@ -195,8 +275,16 @@
                         // 展开所有节点
                         zTree.expandAll(true);
                         // 选择默认节点
+
+                        // 如果没有指定默认节点，选择第一个父节点
+                        if (!defaultNode) {
+                            defaultNode = zTree.getNodes()[0];
+                        }
+
+                        // 选择默认节点
                         if (defaultNode) {
                             zTree.selectNode(defaultNode, true);
+                            updateDatagridUrlAndReload(defaultNode.id, defaultNode.gather);
                         }
                     } else {
                         console.error("Failed to load tree data:", data.message);
@@ -236,6 +324,46 @@
                     }
                 });
             })
+        }
+
+        //导出表方法
+        function exportWithStampId() {
+            var zTree = $.fn.zTree.getZTreeObj("manage_resource1_tree");
+            var selectedNodes = zTree.getSelectedNodes();
+            if (selectedNodes.length > 0) {
+                var selectedNode = selectedNodes[0];
+                var stampId = selectedNode.parentId ? selectedNode.parentId : selectedNode.id;
+                var stampName = selectedNode.name;
+                // 创建自定义参数对象
+                const extraParams = {
+                    search_EQ_stampId: stampId
+                    // 可以添加其他参数
+                }
+                // 合并表单参数和额外参数
+                const formParams = serializeObject($('#manage_emSumdata_searchform'));
+                const queryParams = $.extend({}, formParams, extraParams);
+
+                // 调用导出方法
+                exportsResource(
+                    '/manage/stemp/emSumdata/exportXls.html',
+                    queryParams,  // 直接传递参数对象
+                    stampName
+                );
+            } else {
+                $.acooly.messager("提示", "请先选择一个父节点", 'warning');
+            }
+        }
+
+
+        function exportsResource (url, queryParams, fileName, confirmTitle, confirmMessage) {
+            if (isEmptyObject(queryParams)) {
+                queryParams = serializeObject($('#' + searchForm));
+            }
+            if (fileName) {
+                $(queryParams).attr('exportFileName', fileName);
+            }
+
+            $.acooly.framework.createAndSubmitForm(url, queryParams);
         }
 
 

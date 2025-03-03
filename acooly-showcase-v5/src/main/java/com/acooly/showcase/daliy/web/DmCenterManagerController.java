@@ -102,6 +102,8 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 	private DmConditionService dmConditionService;
 	@Autowired
 	private DmTrollsService dmTrollsService;
+	@Autowired
+	private BoardService boardService;
 
 
 	@Override
@@ -155,6 +157,16 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 			query = linkService.query(map1, null);
 		} else {
 			query = linkService.getAll();
+		}
+		Map<String, Object> map1Query = Maps.newHashMap();
+		map1Query.put("EQ_manageName", principal.getUsername());
+		List<Board> boardList = boardService.query(map1Query, null);
+		if (boardList.size() > 0){
+			Map<String, Object> map2 = Maps.newHashMap();
+			String attachedName = boardList.get(0).getAttachedName();
+			List<String> gatherList = attachedName != null ? Arrays.asList(attachedName.split(",")) : new ArrayList<>();
+			map2.put("IN_holder", gatherList);
+			query=linkService.query(map2, null);
 		}
 		List<String> listRegionName = query.stream().map(Link::getRegionName).distinct().collect(Collectors.toList());
 		Map<String, List<String>> mapDomain = query.stream()
@@ -698,6 +710,16 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		mapQuery.put("EQ_userName", principal.getUsername());
 		if (!(permissionsService.query(mapQuery, null).size() > 0)) {
 			searchParams.put("EQ_userName",principal.getUsername());
+		}
+		Map<String, Object> map1Query = Maps.newHashMap();
+		map1Query.put("EQ_manageName", principal.getUsername());
+		List<Board> boardList = boardService.query(map1Query, null);
+		if (boardList.size() > 0){
+			String attachedName = boardList.get(0).getAttachedName();
+			List<String> gatherList = attachedName != null ? Arrays.asList(attachedName.split(",")) : new ArrayList<>();
+			// 删除键为 "EQ_userName" 的条目
+			searchParams.remove("EQ_userName");
+			searchParams.put("IN_userName", gatherList);
 		}
 		return this.getEntityService().query(this.getPageInfo(request), searchParams, this.getSortMap(request));
 	}

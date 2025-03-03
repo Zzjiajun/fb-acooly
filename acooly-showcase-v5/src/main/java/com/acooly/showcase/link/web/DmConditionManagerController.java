@@ -7,6 +7,8 @@
 package com.acooly.showcase.link.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,6 +25,8 @@ import com.acooly.showcase.daliy.entity.Regname;
 import com.acooly.showcase.daliy.service.DmRegionService;
 import com.acooly.showcase.daliy.service.PermissionsService;
 import com.acooly.showcase.daliy.service.RegnameService;
+import com.acooly.showcase.link.entity.Board;
+import com.acooly.showcase.link.service.BoardService;
 import com.acooly.showcase.link.service.DmCountryService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +67,8 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
     private PermissionsService permissionsService;
     @Autowired
     private DmRegionService dmRegionService;
+    @Autowired
+    private BoardService boardService;
 
 
     @Override
@@ -74,6 +80,17 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
         if (!(permissionsService.query(mapQuery, null).size() > 0)) {
             searchParams.put("EQ_userName",principal.getUsername());
         }
+        Map<String, Object> map1Query = Maps.newHashMap();
+        map1Query.put("EQ_manageName", principal.getUsername());
+        List<Board> boardList = boardService.query(map1Query, null);
+        if (boardList.size() > 0){
+            String attachedName = boardList.get(0).getAttachedName();
+            List<String> gatherList = attachedName != null ? Arrays.asList(attachedName.split(",")) : new ArrayList<>();
+            // 删除键为 "EQ_userName" 的条目
+            searchParams.remove("EQ_userName");
+            searchParams.put("IN_userName", gatherList);
+        }
+
         return this.getEntityService().query(this.getPageInfo(request), searchParams, this.getSortMap(request));
     }
 

@@ -23,7 +23,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label class="col-form-label">持有者：</label>
+            <label class="col-form-label">所属地区：</label>
             <select name="search_EQ_regional" class="form-control select2bs4" data-options="required:true">
                 <option value="">全部</option>
                 <#list list1 as list1 >

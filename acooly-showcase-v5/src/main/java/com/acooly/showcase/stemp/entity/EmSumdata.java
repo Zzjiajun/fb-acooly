@@ -18,6 +18,8 @@ import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import com.acooly.core.common.domain.AbstractEntity;
+
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -81,5 +83,20 @@ public class EmSumdata extends AbstractEntity {
 	@Size(max = 255)
     @ExportColumn(header = "意向", order = 7)
     private String intent;
+    /**
+     * 类型表id
+     */
+    @ExportColumn(header = "类型表id", order = 8)
+    private BigInteger stampId;
 
+    /**
+     * 是否删除
+     */
+    private Integer isDelete;
+
+    @ExportColumn(header = "姓名", order = 10)
+    private String name;
+
+    @ExportColumn(header = "邮箱", order = 11)
+    private String email;
 }

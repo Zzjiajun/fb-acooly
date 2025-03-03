@@ -41,7 +41,7 @@
     <!-- 列表和工具栏 -->
     <div data-options="region:'center',border:false">
         <table id="manage_dmCenter_datagrid" class="easyui-datagrid" url="/manage/showcase/daily/dmCenter/listJson.html" toolbar="#manage_dmCenter_toolbar" fit="true" border="false" fitColumns="false"
-               pagination="true" idField="id" pageSize="20" pageList="[ 10, 20, 30, 40, 50 ]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
+               border="true" pagination="true" idField="id" pageSize="20" pageList="[ 10, 20, 30, 40, 50 ]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
             <thead>
             <tr>
                 <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.link.dao.BoardDao">
+
+    <resultMap id="boardResultMap" type="com.acooly.showcase.link.entity.Board">
+        <id property="id" column="board_id"/>
+        <result property="manageName" column="board_manage_name"/>
+        <result property="attachedName" column="board_attached_name"/>
+        <result property="createTime" column="board_create_time"/>
+        <result property="updateTime" column="board_update_time"/>
+    </resultMap>
+
+    <sql id="boardSqlSelect">
+            board.id as board_id,
+            board.manage_name as board_manage_name,
+            board.attached_name as board_attached_name,
+            board.create_time as board_create_time,
+            board.update_time as board_update_time
+    </sql>
+
+</mapper>

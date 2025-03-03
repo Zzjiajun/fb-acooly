@@ -9,6 +9,7 @@ package com.acooly.showcase.daliy.web;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,8 +28,10 @@ import com.acooly.showcase.daliy.Utils.RemoteFileOperationsUtil;
 import com.acooly.showcase.daliy.entity.Regname;
 import com.acooly.showcase.daliy.service.PermissionsService;
 import com.acooly.showcase.daliy.service.RegnameService;
+import com.acooly.showcase.link.entity.Board;
 import com.acooly.showcase.link.entity.DmCondition;
 import com.acooly.showcase.link.entity.DmServer;
+import com.acooly.showcase.link.service.BoardService;
 import com.acooly.showcase.link.service.DmConditionService;
 import com.acooly.showcase.link.service.DmCountryService;
 import org.apache.shiro.SecurityUtils;
@@ -72,6 +75,8 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 	private DmConditionService dmConditionService;
 	@Autowired
 	private DmCountryService dmCountryService;
+	@Autowired
+	private BoardService boardService;
 
 
 	@Override
@@ -82,6 +87,16 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 		mapQuery.put("EQ_userName", principal.getUsername());
 		if (!(permissionsService.query(mapQuery, null).size() > 0)) {
 			searchParams.put("EQ_holder", principal.getUsername());
+		}
+		Map<String, Object> map1Query = Maps.newHashMap();
+		map1Query.put("EQ_manageName", principal.getUsername());
+		List<Board> boardList = boardService.query(map1Query, null);
+		if (boardList.size() > 0){
+			String attachedName = boardList.get(0).getAttachedName();
+			List<String> gatherList = attachedName != null ? Arrays.asList(attachedName.split(",")) : new ArrayList<>();
+			// 删除键为 "EQ_userName" 的条目
+			searchParams.remove("EQ_holder");
+			searchParams.put("IN_holder", gatherList);
 		}
 		return this.getEntityService().query(this.getPageInfo(request), searchParams, this.getSortMap(request));
 	}
@@ -111,6 +126,16 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			regnameList=regnameService.query(map, null);
 		}else {
 			regnameList=regnameService.getAll();
+		}
+		Map<String, Object> map1Query = Maps.newHashMap();
+		map1Query.put("EQ_manageName", principal.getUsername());
+		List<Board> boardList = boardService.query(map1Query, null);
+		if (boardList.size() > 0){
+			Map<String, Object> mapTwoQuery = Maps.newHashMap();
+			String attachedName = boardList.get(0).getAttachedName();
+			List<String> gatherList = attachedName != null ? Arrays.asList(attachedName.split(",")) : new ArrayList<>();
+			mapTwoQuery.put("IN_name", gatherList);
+			regnameList=regnameService.query(mapTwoQuery, null);
 		}
 		List<String> collect = regnameList.stream().map(Regname::getRegionName).collect(Collectors.toList());
 		model.put("collect",collect);
