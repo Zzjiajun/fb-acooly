@@ -112,7 +112,10 @@
                         <div onclick="exportWithStampId()"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>
 <#--                        <div onclick="$.acooly.framework.exports('/manage/stemp/emSumdata/exportCsv.html','manage_emSumdata_searchform','em_sumdata')"><i class="fa fa-file-text-o fa-lg fa-fw fa-col"></i>CSV</div>-->
                     </div>
-<#--                    <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.imports({url:'/manage/stemp/emSumdata/importView.html',uploader:'manage_emSumdata_import_uploader_file'});"><i class="fa fa-cloud-upload fa-fw fa-col"></i>批量导入</a>-->
+                    <a href="#" class="easyui-linkbutton" plain="true"
+                       onclick="handleImport()">
+                        <i class="fa fa-cloud-upload fa-fw fa-col"></i>批量导入
+                    </a>
                 </div>
             </div>
             <script type="text/javascript">
@@ -237,6 +240,27 @@
             } else {
                 $.acooly.messager("提示", "请先选择一个类型表", 'warning');
             }
+        }
+
+
+        function handleImport() {
+            // 获取当前选中的树节点
+            const zTree = $.fn.zTree.getZTreeObj("manage_resource1_tree");
+            const nodes = zTree.getSelectedNodes();
+
+            if (nodes.length === 0) {
+                $.acooly.messager("提示", "请先选择资源分类", "warning");
+                return;
+            }
+
+            var stampId = nodes[0].id;
+            let url = `/manage/stemp/emSumdata/importView.html`;
+            url += '?stampId=' + stampId;
+
+            $.acooly.framework.imports({
+                url: url,
+                uploader: 'manage_emSumdata_import_uploader_file'
+            });
         }
 
         //编辑按钮

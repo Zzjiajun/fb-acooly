@@ -2,7 +2,7 @@
 $(function() {
 	$.acooly.framework.createUploadify({
 				/** 上传导入的URL */
-				url:'/manage/stemp/emSumdata/importJson.html?_csrf=${_csrf.token}&splitKey=v',
+				url:'/manage/stemp/emSumdata/importJson.html?_csrf=${_csrf.token}&splitKey=v&stampId=${stampId}',
 				/** 导入操作消息容器 */
 				messager:'manage_emSumdata_import_uploader_message',
 				/** 上传导入文件表单ID */
@@ -16,7 +16,7 @@ $(function() {
   <tr>
     <th width="30%">文件类型：</th>
     <td>
-    根据文件扩展名自动适配导入文件类型，目前支持的格式包括：Excel各版本(*.xls,*.xlsx)和CSV(*.csv)。 请<a href="javascript:alert('请开发人员根据业务需求定义模板。')">下载模板文件</a>。
+    根据文件扩展名自动适配导入文件类型，目前支持的格式包括：Excel各版本(*.xls,*.xlsx)和CSV(*.csv)。 请<a href="/showcase/import_template_sumdata.xlsx" target="_blank">下载模板文件</a>。
     </td>
   </tr>	
   <tr>

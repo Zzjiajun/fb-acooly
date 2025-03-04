@@ -11,10 +11,10 @@ import java.awt.Color;
 import java.io.Closeable;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.lang.reflect.Field;
+import java.math.BigInteger;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +29,7 @@ import com.acooly.core.utils.Strings;
 import com.acooly.core.utils.ie.ExportModelMeta;
 import com.acooly.core.utils.ie.ExportStyleMeta;
 import com.acooly.core.utils.io.Streams;
+import com.acooly.showcase.stemp.enums.FieldEnum;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -123,6 +124,21 @@ public class EmSumdataManagerController extends AbstractJsonEntityController<EmS
 
 		return this.getEditView();
 	}
+
+	@Override
+	public String importView(Model model, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Map<String, Object> map = this.referenceData(request);
+			map.put("stampId", request.getParameter("stampId"));
+			model.addAllAttributes(map);
+		} catch (Exception var5) {
+			logger.warn(this.getExceptionMessage("importView", var5), var5);
+			this.handleException("导入界面", var5, request);
+		}
+
+		return this.getImportView();
+	}
+
 
 	//表格导出
 
@@ -339,4 +355,57 @@ public class EmSumdataManagerController extends AbstractJsonEntityController<EmS
 		}
 		return super.onSave(request, response, model, entity, isCreate);
 	}
+
+
+	//动态导入
+
+	@Override
+	protected List<EmSumdata> unmarshal(List<List<String>> lines, HttpServletRequest request) {
+		List< EmSumdata> entities = new LinkedList<>();
+
+		if (lines.isEmpty()) return entities;
+
+		// 获取表头行（中文名称）
+		List<String> headers = lines.get(0);
+		String stampId = request.getParameter("stampId");
+
+		// 从第二行开始遍历数据行
+		for (int i = 1; i < lines.size(); i++) {
+			List<String> row = lines.get(i);
+
+			// 1. 手动创建实体实例（绕过可能出问题的doImportEntity）
+			EmSumdata entity = new EmSumdata();
+
+			try {
+				// 2. 设置stampId（需类型安全转换）
+				if (stampId != null) {
+					entity.setStampId(new BigInteger(stampId));
+				}
+
+				// 3. 动态匹配字段赋值
+				for (int col = 0; col < headers.size() && col < row.size(); col++) {
+					String chineseHeader = headers.get(col);
+					String fieldName = FieldEnum.getFieldNameByChineseName(chineseHeader);
+
+					if (fieldName != null) {
+						Field field = entity.getClass().getDeclaredField(fieldName);
+						field.setAccessible(true); // 突破私有限制
+
+						// 4. 类型安全设置值（示例为String类型）
+						String value = row.get(col);
+						if (value != null) {
+							field.set(entity, value);
+						}
+					}
+				}
+				entity.setIsDelete(0);
+				entities.add(entity);
+			} catch (Exception e) {
+				// 5. 异常处理（记录错误行）
+				logger.error("第{}行数据解析失败: {}", i+1, e.getMessage());
+			}
+		}
+		return entities;
+	}
+
 }
