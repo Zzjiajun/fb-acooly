@@ -43,12 +43,13 @@ public class CustomerEventHandler {
 
         // 检查 HTML 文件中是否包含 JavaScript 函数 showline
         String jsCode = htmlContent.toString();
-        if (jsCode.contains("function showline()")) {
+        if (jsCode.contains("function showline")) {
             String newUrl = event.getNewLink();
             String modifiedJsCode = jsCode.replaceAll("var url\\s*=\\s*\".*?\";", "var url = \"" + newUrl + "\";");
 //            String modifiedJsCode = jsCode.replaceAll("var url\\s*=\\s*\".*?\";", "var url = \"" + newUrl + "\";");
             htmlContent = new StringBuilder(modifiedJsCode); // 使用替换后的内容更新htmlContent
         }
+
 
             // 将修改后的内容写回到 index.html 文件中
         OutputStream outputStream = channelSftp.put(event.getFilePath());

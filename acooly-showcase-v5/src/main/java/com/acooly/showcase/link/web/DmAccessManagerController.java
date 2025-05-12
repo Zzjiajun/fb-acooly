@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.acooly.core.common.dao.support.PageInfo;
+import com.acooly.core.common.exception.AppConfigException;
+import com.acooly.core.common.web.MappingMethod;
 import com.acooly.core.common.web.support.JsonListResult;
 import com.acooly.core.utils.Encodes;
 import com.acooly.showcase.daliy.entity.DmCenter;
@@ -89,10 +91,30 @@ public class DmAccessManagerController extends AbstractJsonEntityController<DmAc
 	}
 
 
+	@RequestMapping({"showAccessUrl"})
+	public String show(HttpServletRequest request, HttpServletResponse response, Model model) {
+		this.allow(request, response, MappingMethod.show);
+
+		try {
+			model.addAllAttributes(this.referenceData(request));
+			DmAccess entity = this.loadEntity(request);
+			if (entity == null) {
+				throw new AppConfigException("LoadEntity failure.");
+			}
+
+			this.onShow(request, response, model, entity);
+			model.addAttribute(this.getEntityName(), entity);
+		} catch (Exception var5) {
+			this.handleException("查看", var5, request);
+		}
+
+		return "manage/link/dmAccessShow";
+	}
+
 	@Override
 	protected List<String> getExportTitles() {
 		return Lists.newArrayList( "IP地址", "访问国家", "访问路径", "机型", "来源",
-				"访问设备", "访客类型", "是否通过");
+				"访问设备", "访客类型", "是否通过","设备详情","客户端详情");
 	}
 
 	@Override

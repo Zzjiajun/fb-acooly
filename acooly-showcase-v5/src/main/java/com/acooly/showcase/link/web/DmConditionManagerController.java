@@ -17,18 +17,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.acooly.core.common.dao.support.PageInfo;
+import com.acooly.core.common.domain.Entityable;
+import com.acooly.core.common.web.AbstractStandardEntityController;
+import com.acooly.core.common.web.MappingMethod;
 import com.acooly.module.security.domain.User;
 import com.acooly.module.security.service.UserService;
 import com.acooly.showcase.daliy.entity.DmCenter;
 import com.acooly.showcase.daliy.entity.DmRegion;
 import com.acooly.showcase.daliy.entity.Regname;
+import com.acooly.showcase.daliy.service.DmCenterService;
 import com.acooly.showcase.daliy.service.DmRegionService;
 import com.acooly.showcase.daliy.service.PermissionsService;
 import com.acooly.showcase.daliy.service.RegnameService;
 import com.acooly.showcase.link.entity.Board;
 import com.acooly.showcase.link.service.BoardService;
 import com.acooly.showcase.link.service.DmCountryService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,9 +63,13 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
         allowMapping = "*";
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(AbstractStandardEntityController.class);
+
     @SuppressWarnings("unused")
     @Autowired
     private DmConditionService dmConditionService;
+    @Autowired
+    private DmCenterService dmCenterService;
 	@Autowired
 	private UserService userService;
     @Autowired
@@ -97,11 +108,11 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
 
     @Override
     protected void referenceData(HttpServletRequest request, Map<String, Object> model) {
-        Map<String, Integer> statusMap = Maps.newHashMap();
+        Map<String, Integer> statusMap = Maps.newLinkedHashMap();
         statusMap.put("关闭", 0);
         statusMap.put("开启", 1);
         model.put("statusMap", statusMap);
-        Map<String, String> conMap = Maps.newHashMap();
+        Map<String, String> conMap = Maps.newLinkedHashMap();
         conMap.put("美洲", "America");
         conMap.put("非洲", "Africa");
         conMap.put("南极洲", "Antarctica");
@@ -111,6 +122,7 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
         conMap.put("欧洲", "Europe");
         conMap.put("印度洋", "Indian");
         conMap.put("太平洋", "Pacific");
+
         model.put("conMap", conMap);
         // 使用 Stream API 简化代码
         Map<String, String> ipMap = dmRegionService.getAll().stream()
@@ -121,6 +133,49 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
 		List<User> query3 = userService.query(mapQuery, null);
 		Map<String, String> mapName = query3.stream().collect(Collectors.toMap(User::getUsername, User::getRealName));
 		model.put("map1Name", mapName);
+
+        // 添加iOS系统版本号映射
+        Map<String, String> iosVersionMap = Maps.newLinkedHashMap();
+        iosVersionMap.put("iOS 17及以下", "17.0.0");
+        iosVersionMap.put("iOS 16及以下", "16.0.0");
+        iosVersionMap.put("iOS 15及以下", "15.0.0");
+        iosVersionMap.put("iOS 14及以下", "14.0.0");
+        iosVersionMap.put("iOS 13及以下", "13.0.0");
+        iosVersionMap.put("iOS 12及以下", "12.0.0");
+        iosVersionMap.put("iOS 11及以下", "11.0.0");
+        iosVersionMap.put("iOS 10及以下", "10.0.0");
+        iosVersionMap.put("iOS 9及以下", "9.0.0");
+        iosVersionMap.put("iOS 8及以下", "8.0.0");
+        iosVersionMap.put("无限制", "0.0.0");
+        model.put("iosVersionMap", iosVersionMap);
+
+        // 添加Android系统版本号映射
+        Map<String, String> androidVersionMap = Maps.newLinkedHashMap();
+        androidVersionMap.put("Android 14及以下", "14.0.0");
+        androidVersionMap.put("Android 13及以下", "13.0.0");
+        androidVersionMap.put("Android 12及以下", "12.0.0");
+        androidVersionMap.put("Android 11及以下", "11.0.0");
+        androidVersionMap.put("Android 10及以下", "10.0.0");
+        androidVersionMap.put("Android 9及以下", "9.0.0");
+        androidVersionMap.put("Android 8及以下", "8.0.0");
+        androidVersionMap.put("Android 7及以下", "7.0.0");
+        androidVersionMap.put("Android 6及以下", "6.0.0");
+        androidVersionMap.put("Android 5及以下", "5.0.0");
+        androidVersionMap.put("无限制", "0.0.0");
+        model.put("androidVersionMap", androidVersionMap);
+
+        // 添加语言映射
+        Map<String, String> languageMap = Maps.newLinkedHashMap();
+        languageMap.put("中文", "zh");
+        languageMap.put("简体中文(大陆)", "zh-CN");
+        languageMap.put("简体中文(新加坡)", "zh-SG");
+        languageMap.put("繁體中文(台灣)", "zh-TW");
+        languageMap.put("繁體中文(香港)", "zh-HK");
+        languageMap.put("繁體中文(澳門)", "zh-MO");
+        languageMap.put("英文", "en");
+        languageMap.put("日文", "jp");
+        languageMap.put("韩文", "kr");
+        model.put("languageMap", languageMap);
     }
 
     @Override
@@ -133,6 +188,28 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
             entity.setTimeContinent(map.get(entity.getIpCountry()));
         }
         return super.onSave(request, response, model, entity, isCreate);
+    }
+
+
+    @RequestMapping({"editCenter"})
+    public String editTwo(HttpServletRequest request, HttpServletResponse response, Model model) {
+        this.allow(request, response, MappingMethod.update);
+
+        try {
+            model.addAllAttributes(this.referenceData(request));
+            String id = request.getParameter("id");
+            DmCenter dmCenter = dmCenterService.get(Long.valueOf(id));
+            DmCondition entity = dmConditionService.get(dmCenter.getConditionId());
+            model.addAttribute("action", "edit");
+            model.addAttribute(this.getEntityName(), entity);
+            this.onEdit(request, response, model, entity);
+        } catch (Exception var5) {
+            logger.warn(this.getExceptionMessage("edit", var5), var5);
+            this.handleException("编辑", var5, request);
+        }
+
+        String editView1 = this.getEditView();
+        return this.getEditView();
     }
 
 

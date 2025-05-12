@@ -103,4 +103,10 @@ public class DmCenter extends AbstractEntity {
     private Integer protect;
 
     private String remark;
+
+    private String keyy;
+    /**
+     * 限制条件绑定id
+     */
+    private Long conditionId;
 }

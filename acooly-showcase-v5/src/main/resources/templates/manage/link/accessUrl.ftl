@@ -74,6 +74,7 @@
                                             <th field="source" formatter="contentFormatter">来源</th>
                                             <th field="visitorType" formatter="clickTypeFormatterFunction">访客类型</th>
                                             <th field="passed" formatter="displayPassedFunction">是否通过</th>
+                                            <th field="deviceDetails"  formatter="showDetails">设备和客户端详情</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -228,6 +229,50 @@
 
         $.acooly.framework.createAndSubmitForm(url, queryParams);
     }
+
+    function showAccessDetails(value) {
+        if (!value) {
+            return '';
+        }
+        // 如果value是字符串，尝试解析为JSON
+        if (typeof value === 'string') {
+            try {
+                value = JSON.parse(value);
+            } catch (e) {
+                return value;
+            }
+        }
+        // 如果是数组
+        if (Array.isArray(value)) {
+            let html = '<div style="max-height: 100px; overflow-y: auto;">';
+            value.forEach((item) => {
+                html += `<div>${item}</div>`;
+            });
+            html += '</div>';
+            return html;
+        }
+        // 如果是对象
+        if (typeof value === 'object') {
+            let html = '<div style="max-height: 100px; overflow-y: auto;">';
+            Object.entries(value).forEach(([key, val]) => {
+                html += `<div>${key}: ${val}</div>`;
+            });
+            html += '</div>';
+            return html;
+        }
+        return value;
+    }
+
+    function showDetails(value,row) {
+        return '<button onclick="showDetailsList(' +row.id+ ')" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>';
+    }
+
+    function showDetailsList(id) {
+        var url ='/manage/link/dmAccess/showAccessUrl.html?id='+id;
+        $.acooly.framework.show(url,500,500);
+    }
+
+
 
 
 </script>

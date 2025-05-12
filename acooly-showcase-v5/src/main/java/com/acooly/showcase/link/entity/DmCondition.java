@@ -68,27 +68,33 @@ public class DmCondition extends AbstractEntity {
     private String timeContinent;
 
     /**
-     * 设备语言
+     * 是否开启识别中文
      */
     @ExportColumn(header = "设备语言", order = 6)
     private Integer isChinese;
 
     /**
+     * 语言
+     */
+    @ExportColumn(header = "设备语言", order = 7)
+    private String language;
+
+    /**
      * 移动设备
      */
-    @ExportColumn(header = "移动设备", order = 7)
+    @ExportColumn(header = "移动设备", order = 8)
     private Integer isMobile;
 
     /**
      * 指定设备
      */
-    @ExportColumn(header = "指定设备", order = 8)
+    @ExportColumn(header = "指定设备", order = 9)
     private Integer isSpecificDevice;
 
     /**
      * 访问路径
      */
-    @ExportColumn(header = "访问路径", order = 9)
+    @ExportColumn(header = "访问路径", order = 10)
     private Integer isFbclid;
 
     private Integer isIp;
@@ -108,4 +114,21 @@ public class DmCondition extends AbstractEntity {
      * 白名单
      */
     private String whiteList;
+    /**
+     * 是否机器人
+     */
+    private Integer isRobot;
+    /**
+     * 无法识别设备
+     */
+    private Integer isIdentify;
+    /**
+     * ios系统
+     */
+    private String iosVersion;
+    /**
+     * 安卓系统
+     */
+    private String andVersion;
+
 }

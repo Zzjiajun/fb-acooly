@@ -6,22 +6,24 @@
 */
 package com.acooly.showcase.link.web;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.acooly.core.common.dao.support.PageInfo;
+import com.acooly.core.common.web.support.JsonListResult;
 import com.acooly.module.security.domain.User;
+import com.acooly.showcase.daliy.Utils.EncryptionUtil;
+import com.acooly.showcase.daliy.entity.DmCenter;
 import com.acooly.showcase.daliy.entity.DmDomain;
 import com.acooly.showcase.daliy.entity.DmPixel;
 import com.acooly.showcase.daliy.entity.Link;
-import com.acooly.showcase.daliy.service.DmDomainService;
-import com.acooly.showcase.daliy.service.DmPixelService;
-import com.acooly.showcase.daliy.service.LinkService;
-import com.acooly.showcase.daliy.service.PermissionsService;
+import com.acooly.showcase.daliy.service.*;
 import com.acooly.showcase.link.entity.LinkInt;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,8 @@ public class LinkSrcsManagerController extends AbstractJsonEntityController<Link
 	private PermissionsService permissionsService;
 	@Autowired
 	private DmPixelService dmPixelService;
+	@Autowired
+	private DmCenterService dmCenterService;
 
 
 	@Override
@@ -79,7 +83,45 @@ public class LinkSrcsManagerController extends AbstractJsonEntityController<Link
 			User principal = (User) SecurityUtils.getSubject().getPrincipal();
 			entity.setUserName(principal.getUsername());
 		}
+		//判断这个数据中心当中是否防护
+		String domain = entity.getDomain();
+		String[] parts = entity.getDomain().split("/", 2);
+		Map<String, Object> mapQuery = Maps.newHashMap();
+		mapQuery.put("EQ_domain",  parts[0]);
+		mapQuery.put("EQ_secondaryDomain",  parts[1]);
+		List<DmCenter> list = dmCenterService.query(mapQuery, null);
+		if (list.size() > 0){
+			DmCenter dmCenter = list.get(0);
+			if (dmCenter.getProtect() == 0){
+				SecretKey secretKey = EncryptionUtil.generateKey();
+				String encrypt = EncryptionUtil.encrypt(entity.getLinkSrc(), secretKey);
+				entity.setLinkSrc(encrypt);
+				String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+				entity.setKeyy(encodedKey);
+			}
+		}
 		return super.onSave(request, response, model, entity, isCreate);
+	}
+
+
+	@Override
+	public JsonListResult<LinkSrcs> listJson(HttpServletRequest request, HttpServletResponse response) {
+		JsonListResult<LinkSrcs> linkSrcsJsonListResult = super.listJson(request, response);
+		List<LinkSrcs> rows = linkSrcsJsonListResult.getRows();
+		rows.forEach(linkSrcs -> {
+			if (linkSrcs.getProtect() == 0){
+				SecretKey secretKey = EncryptionUtil.stringToSecretKey(linkSrcs.getKeyy());
+                String decrypt = null;
+                try {
+                    decrypt = EncryptionUtil.decrypt(linkSrcs.getLinkSrc(), secretKey);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                linkSrcs.setLinkSrc(decrypt);
+			}
+		});
+		linkSrcsJsonListResult.setRows(rows);
+		return linkSrcsJsonListResult;
 	}
 
 	@Override

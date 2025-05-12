@@ -54,4 +54,8 @@ public class LinkSrcs extends AbstractEntity {
     @ExportColumn(header = "domain", order = 3)
     private String domain;
 
+    private String keyy;
+
+    private Integer protect;
+
 }

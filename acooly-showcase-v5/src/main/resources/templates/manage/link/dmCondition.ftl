@@ -13,6 +13,19 @@
                 </select>
             </div>
             <div class="form-group">
+                <label class="col-form-label">访问域名：</label>
+                <input type="text" class="form-control form-control-sm" name="search_LIKE_accessAddress"/>
+            </div>
+            <div class="form-group">
+                <label class="col-form-label">国家：</label>
+                <select name="search_EQ_ipCountry" class="form-control select2bs4" data-options="required:true">
+                    <option value="">全部</option>
+                    <#list ipMap as k,v >
+                        <option value="${v}">${k}</option>
+                    </#list>
+                </select>
+            </div>
+            <div class="form-group">
                 <label class="col-form-label">创建时间：</label>
                 <input type="text" class="form-control form-control-sm" id="search_GTE_createTime" name="search_GTE_createTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />
                 <span class="mr-1 ml-1">至</span> <input type="text" class="form-control form-control-sm" id="search_LTE_createTime" name="search_LTE_createTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />
@@ -37,17 +50,22 @@
                 <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
                 <th field="id" sortable="true" >id</th>
                 <th field="userName" formatter="contentFormatter">用户名</th>
-                <th field="accessAddress" style="width: 25%"  formatter="contidFunction">二级域名</th>
+                <th field="accessAddress" style="width: 25%"  formatter="contidFunction">访问域名</th>
                 <th field="isIp" formatter="statusFunction">IP防护</th>
                 <th field="ipCountry" formatter="isIpFormatter">IP国家</th>
                 <th field="timeZone" formatter="statusFunction">是否添加时区</th>
                 <th field="timeContinent" formatter="conFormatter">时区洲</th>
                 <th field="isChinese" formatter="statusFunction">设备中文语言</th>
+<#--                <th field="language" formatter="contentFormatter">设备语言</th>-->
                 <th field="isMobile" formatter="statusFunction">移动设备</th>
-                <th field="isSpecificDevice" formatter="statusFunction">指定设备</th>
-                <th field="isVpn" formatter="statusFunction">VPN检测</th>
+                <th field="isSpecificDevice" formatter="statusFunction">特定设备低端机</th>
+                <th field="isVpn" formatter="statusFunction">VPN和代理检测</th>
                 <th field="ipWhite" formatter="statusFunction">白名单开关</th>
                 <th field="ipLimits" formatter="statusFunction">ip点击限制</th>
+                <th field="isRobot" formatter="statusFunction">爬虫机器人</th>
+                <th field="isIdentify" formatter="statusFunction">无法识别设备</th>
+                <th field="iosVersion" formatter="contentFormatter">ios系统版本</th>
+                <th field="andVersion" formatter="contentFormatter">安卓系统</th>
                 <th field="createTime" formatter="dateTimeFormatter">创建时间</th>
                 <th field="updateTime" formatter="dateTimeFormatter">修改时间</th>
             </tr>
@@ -62,7 +80,7 @@
         <div id="manage_dmCondition_action" style="display: none;">
             <div class="btn-group btn-group-xs">
 <#--              <button onclick="$.acooly.framework.show('/manage/link/dmCondition/show.html?id={0}',500,500);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>-->
-              <button id="myCondition_edit" onclick="$.acooly.framework.edit({url:'/manage/link/dmCondition/edit.html',id:'{0}',entity:'dmCondition',width:500,height:500});" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
+              <button id="myCondition_edit" onclick="$.acooly.framework.edit({url:'/manage/link/dmCondition/edit.html',id:'{0}',entity:'dmCondition',width:700,height:600});" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
 <#--              <button onclick="$.acooly.framework.remove('/manage/link/dmCondition/deleteJson.html','{0}','manage_dmCondition_datagrid');" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>-->
           </div>
         </div>
@@ -108,9 +126,9 @@
 
         function statusFunction (value) {
             if (value == 1) {
-                return '<span class="fa fa-check-square fa-fw fa-col" style="color: green">启用</span>';
+                return '<span class="fa fa-check-square fa-fw fa-col" style="color: green">开启</span>';
             }else {
-                return '<span class="fa  fa-remove fa-fw fa-col" style="color: red">禁用</span>';
+                return '<span class="fa  fa-remove fa-fw fa-col" style="color: red">关闭</span>';
             }
         }
 

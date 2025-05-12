@@ -21,6 +21,18 @@
                     </#list>
                 </select>
             </div>
+            <div class="form-group">
+                <label class="col-form-label">主域名：</label>
+                <input type="text" class="form-control form-control-sm" name="search_LIKE_domain"/>
+            </div>
+            <div class="form-group">
+                <label class="col-form-label">二级域名：</label>
+                <input type="text" class="form-control form-control-sm" name="search_LIKE_secondaryDomain"/>
+            </div>
+            <div class="form-group">
+                <label class="col-form-label">备注：</label>
+                <input type="text" class="form-control form-control-sm" name="search_LIKE_remark"/>
+            </div>
 
             <#--            <div class="form-group">-->
             <#--                <label class="col-form-label">创建时间：</label>-->
@@ -58,7 +70,7 @@
                 <th field="visitsNumber"  formatter="accessNumberFunction" sortable="true" sum="true">域名访问量</th>
                 <th field="trolls"  formatter="tollsNumberFunction" >跳转水军群数量</th>
                 <th field="clicksNumber" formatter="clickNumberFunction" sortable="true" sum="true">按钮点击数量</th>
-                <th field="diversion" formatter="displayOptionTwoFunction">是否轮询</th>
+<#--                <th field="diversion" formatter="displayOptionTwoFunction">是否轮询</th>-->
                 <th field="createTime" formatter="dateTimeFormatter">创建时间</th>
                 <th field="updateTime" formatter="dateTimeFormatter">修改时间</th>
             </tr>
@@ -72,6 +84,7 @@
         <!-- 每行的Action动作模板 -->
         <div id="manage_dmCenter_action" style="display: none;">
             <div class="btn-group btn-group-xs">
+                <button onclick="$.acooly.framework.edit({url:'/manage/link/dmCondition/editCenter.html',id:'{0}',entity:'dmCondition',width:600,height:600});" class="btn btn-success btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑规则</button>
                 <button onclick="$.acooly.framework.show('/manage/showcase/daily/dmCenter/show.html?id={0}',600,600);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>
                 <button id="myCenter_edit1" onclick="confirmSubmit1('/manage/showcase/daily/dmCenter/eliminate.html','{0}','manage_dmCenter_datagrid');" class="btn btn-outline-secondary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>清除记录</button>
                 <button id="myCenter_edit2" onclick="$.acooly.framework.edit({url:'/manage/showcase/daily/dmCenter/edit.html',id:'{0}',entity:'dmCenter',width:800,height:700});" class="btn btn-outline-success btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
@@ -158,8 +171,15 @@
         // }
 
 
+
+        // function domainFunction(value, row) {
+        //     return "<div style='text-align: center;'><button onclick='copyToClipboard3("+JSON.stringify(row)+")' " +
+        //         "title='" + value + " / " + row.secondaryDomain + "' style='width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'  class='layui-btn layui-btn-radius'>" + value + ' / ' + row.secondaryDomain + "</button></div>";
+        // }
+
         function domainFunction(value, row) {
-            return "<div style='text-align: center;'><button onclick='copyToClipboard3("+JSON.stringify(row)+")' class='layui-btn layui-btn-radius'>" + value + ' / ' + row.secondaryDomain + "</button></div>";
+            return "<div style='text-align: center;'><button onclick='copyToClipboard3("+JSON.stringify(row)+")' " +
+                "title='" + value + " / " + row.secondaryDomain + "'  class='layui-btn layui-btn-radius'>" + value + ' / ' + row.secondaryDomain + "</button></div>";
         }
 
         function domainClick(row){
@@ -434,11 +454,11 @@
         .btns {
             background: #eb94d0;
             /* 创建渐变 */
-            background-image: -webkit-linear-gradient( #eb94d0, #2079b0);
-            background-image: -moz-linear-gradient( #eb94d0, #2079b0);
-            background-image: -ms-linear-gradient( #eb94d0, #2079b0);
-            background-image: -o-linear-gradient( #eb94d0, #2079b0);
-            background-image: linear-gradient(to bottom, #eb94d0, #2079b0);
+            background-image: -webkit-linear-gradient( #36d482, #2079b0);
+            background-image: -moz-linear-gradient(  #36d482, #2079b0);
+            background-image: -ms-linear-gradient(  #36d482, #2079b0);
+            background-image: -o-linear-gradient(  #36d482, #2079b0);
+            background-image: linear-gradient(to bottom,  #36d482, #2079b0);
             /* 给按钮添加圆角 */
             border-radius: 14px;
             text-shadow: 3px 2px 1px #9daef5;
@@ -451,11 +471,11 @@
         /* 悬停样式 */
         .btns:hover {
             background: #2079b0;
-            background-image: -webkit-linear-gradient( #2079b0, #eb94d0);
-            background-image: -moz-linear-gradient( #2079b0, #eb94d0);
-            background-image: -ms-linear-gradient( #2079b0, #eb94d0);
-            background-image: -o-linear-gradient( #2079b0, #eb94d0);
-            background-image: linear-gradient(to bottom, #2079b0, #eb94d0);
+            background-image: -webkit-linear-gradient( #2079b0,  #36d482);
+            background-image: -moz-linear-gradient( #2079b0,  #36d482);
+            background-image: -ms-linear-gradient( #2079b0,  #36d482);
+            background-image: -o-linear-gradient( #2079b0,  #36d482);
+            background-image: linear-gradient(to bottom, #2079b0,  #36d482);
             text-decoration: none;
         }
 

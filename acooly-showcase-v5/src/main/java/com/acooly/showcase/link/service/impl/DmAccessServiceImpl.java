@@ -29,6 +29,6 @@ public class DmAccessServiceImpl extends EntityServiceImpl<DmAccess, DmAccessDao
 
     @Override
     public void deleteAll() {
-        this.getEntityDao().deleteAll();
+        this.getEntityDao().truncateYourTable();
     }
 }

@@ -22,4 +22,8 @@ import com.acooly.showcase.link.entity.DmTrolls;
 @Service("dmTrollsService")
 public class DmTrollsServiceImpl extends EntityServiceImpl<DmTrolls, DmTrollsDao> implements DmTrollsService {
 
+    @Override
+    public void deleteAll() {
+        this.getEntityDao().truncateYourTable();
+    }
 }

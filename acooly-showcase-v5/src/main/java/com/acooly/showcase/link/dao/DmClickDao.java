@@ -20,4 +20,7 @@ public interface DmClickDao extends EntityMybatisDao<DmClick> {
 
     @Delete("DELETE FROM dm_click")
     void deleteAll();
+
+    @Delete("TRUNCATE TABLE dm_click")
+    void truncateYourTable();
 }

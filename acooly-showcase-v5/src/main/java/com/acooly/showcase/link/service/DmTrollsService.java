@@ -16,5 +16,6 @@ import com.acooly.showcase.link.entity.DmTrolls;
  * @date 2024-09-25 04:30:32
  */
 public interface DmTrollsService extends EntityService<DmTrolls> {
+    void deleteAll();
 
 }

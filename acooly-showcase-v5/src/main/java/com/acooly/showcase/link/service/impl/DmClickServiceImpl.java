@@ -24,6 +24,6 @@ public class DmClickServiceImpl extends EntityServiceImpl<DmClick, DmClickDao> i
 
     @Override
     public void deleteAll() {
-        this.getEntityDao().deleteAll();
+        this.getEntityDao().truncateYourTable();
     }
 }

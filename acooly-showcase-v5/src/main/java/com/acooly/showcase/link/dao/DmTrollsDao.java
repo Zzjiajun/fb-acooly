@@ -8,6 +8,7 @@
 
 import com.acooly.module.mybatis.EntityMybatisDao;
 import com.acooly.showcase.link.entity.DmTrolls;
+import org.apache.ibatis.annotations.Delete;
 
 /**
  * dm_trolls Mybatis Dao
@@ -16,5 +17,8 @@ import com.acooly.showcase.link.entity.DmTrolls;
  * @date 2024-09-25 04:30:32
  */
 public interface DmTrollsDao extends EntityMybatisDao<DmTrolls> {
+
+    @Delete("TRUNCATE TABLE dm_trolls")
+    void truncateYourTable();
 
 }

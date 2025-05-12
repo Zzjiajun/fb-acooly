@@ -24,9 +24,9 @@
     <#if securityConfig.logo?? && securityConfig.logo != "">
         <img alt="logo" width="200" src="${securityConfig.logo}">
     <#else>
-        <a href="javascript:;" class="text-white">${securityConfig.title}</a>
+        <a href="javascript:;" class="text-primary">${securityConfig.title}</a>
     </#if>
-    <div class="text-center text-white" style="font-size: 14px;margin-top: 10px;">${securityConfig.subtitle}</div>
+    <div class="text-center text-danger" style="font-size: 14px;margin-top: 10px;">${securityConfig.subtitle}</div>
 </div>
 <div class="login-box" style="background-color: transparent; border: none;">
 

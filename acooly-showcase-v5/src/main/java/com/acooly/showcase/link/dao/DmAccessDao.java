@@ -20,8 +20,11 @@ import org.apache.ibatis.annotations.Select;
 public interface DmAccessDao extends EntityMybatisDao<DmAccess> {
 
 
- @Select("SELECT COUNT(DISTINCT ip) FROM dm_access")
- Integer countDistinctIp();
- @Delete("DELETE FROM dm_access")
- void deleteAll();
+   @Select("SELECT COUNT(DISTINCT ip) FROM dm_access")
+   Integer countDistinctIp();
+   @Delete("DELETE FROM dm_access")
+   void deleteAll();
+
+   @Delete("TRUNCATE TABLE dm_access")
+   void truncateYourTable();
 }

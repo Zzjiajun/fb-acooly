@@ -15,6 +15,7 @@ import com.acooly.module.event.EventBus;
 import com.acooly.module.security.domain.User;
 import com.acooly.module.security.service.UserService;
 
+import com.acooly.showcase.daliy.Utils.EncryptionUtil;
 import com.acooly.showcase.daliy.Utils.RedisUtils;
 import com.acooly.showcase.daliy.Utils.RemoteFileOperationsUtil;
 import com.acooly.showcase.daliy.entity.*;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -209,6 +211,16 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		Map<String, Object> map1 = Maps.newHashMap();
 		map1.put("collected1",collected);
 		model.addAllAttributes(map1);
+		if(entity.getProtect()==0){
+			SecretKey secretKey = EncryptionUtil.stringToSecretKey(entity.getKeyy());
+            String decrypt = null;
+            try {
+                decrypt = EncryptionUtil.decrypt(entity.getLink(), secretKey);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            entity.setLink(decrypt);
+		}
 		super.onEdit(request, response, model, entity);
 	}
 
@@ -275,6 +287,8 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		mapCondition.put("EQ_accessAddress",str);
 		DmCondition dmCondition = dmConditionService.query(mapCondition, null).get(0);
 		entity.setUserName(dmCondition.getUserName()); // 设置实体的用户名为当前用户的用户名
+		//绑定限制条件的id
+		entity.setConditionId(dmCondition.getId());
 		if (entity.getProtect() == 0) {
 			pathNameCil = redisString(builtKey, 1L);
 			pathNameCil1 = redisString(builtKey1, 2L);
@@ -303,9 +317,18 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		}
 
 		if(isCreate){
+			String encrypt="";
+			String encodedKey="";
 			entity.setTrolls(0); // 设置初始的骚扰数为0
 			entity.setClicksNumber(0); // 设置点击数初始值为0
 			entity.setVisitsNumber(0); // 设置访问数初始值为0
+			if (entity.getProtect()==0){
+				SecretKey secretKey = EncryptionUtil.generateKey();
+				encrypt = EncryptionUtil.encrypt(entity.getLink(), secretKey);
+				entity.setLink(encrypt);
+				encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+				entity.setKeyy(encodedKey);
+			}
 			if (entity.getDiversion() == 1) {
 				RemoteFileOperationsUtil.clearDirectory(clearStr,dmServer.getUsername(),dmServer.getPassword(),dmServer.getIp());
 				//引流的落地页和表单模版不一样，需要复制新的模版
@@ -334,6 +357,8 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 				}
 				LinkSrcs linkSrcs = new LinkSrcs();
 				linkSrcs.setLinkSrc(entity.getLink());
+				linkSrcs.setKeyy(entity.getKeyy());
+				linkSrcs.setProtect(entity.getProtect());
 				linkSrcs.setUserName(principal.getUsername());
 				linkSrcs.setDomain(str);
 				linkSrcsService.save(linkSrcs); // 保存新的链接信息
@@ -365,12 +390,18 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 				dmPixelService.saves(dmPixelList);
 			}
 		}else {
-			// 修改时 当修改链接发送改变时
 			DmCenter dmCenterOld = this.getEntityService().get(entity.getId());
 			Map<String, Object> map = Maps.newHashMap();
 			String oldStr = dmCenterOld.getDomain() + "/" + dmCenterOld.getSecondaryDomain();
 			map.put("EQ_domainName",oldStr);
-
+			// 修改时 当修改链接发送改变时
+			if (entity.getProtect()==0) {
+				SecretKey secretKey = EncryptionUtil.generateKey();
+				String encrypt = EncryptionUtil.encrypt(entity.getLink(), secretKey);
+				String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+				entity.setKeyy(encodedKey);
+				entity.setLink(encrypt);
+			}
 
 			//像素id修改
 			if (!entity.getPixel().equals(dmCenterOld.getPixel()) ||!oldStr.equals(str)){
@@ -422,6 +453,8 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 				}
 				LinkSrcs linkSrcs = new LinkSrcs();
 				linkSrcs.setLinkSrc(entity.getLink());
+				linkSrcs.setProtect(entity.getProtect());
+				linkSrcs.setKeyy(entity.getKeyy());
 				linkSrcs.setUserName(principal.getUsername());
 				linkSrcs.setDomain(str);
 				linkSrcsService.save(linkSrcs); // 保存新的链接信息
@@ -468,6 +501,8 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 							}
 							LinkSrcs linkSrcs = new LinkSrcs();
 							linkSrcs.setLinkSrc(entity.getLink());
+							linkSrcs.setProtect(entity.getProtect());
+							linkSrcs.setKeyy(entity.getKeyy());
 							linkSrcs.setUserName(principal.getUsername());
 							linkSrcs.setDomain(str);
 							linkSrcsService.save(linkSrcs); // 保存新的链接信息
@@ -637,15 +672,18 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 	@ResponseBody
 	public JsonResult eliminateAll(HttpServletRequest request, HttpServletResponse response) {
 		JsonResult jsonResult = new JsonResult();
-		dmAccessService.getAll().forEach(s->{
-			dmAccessService.removeById(s.getId());
-		});
-		dmClickService.getAll().forEach(s->{
-			dmClickService.removeById(s.getId());
-		});
-		dmTrollsService.getAll().forEach(s->{
-			dmTrollsService.removeById(s.getId());
-		});
+//		dmAccessService.getAll().forEach(s->{
+//			dmAccessService.removeById(s.getId());
+//		});
+//		dmClickService.getAll().forEach(s->{
+//			dmClickService.removeById(s.getId());
+//		});
+//		dmTrollsService.getAll().forEach(s->{
+//			dmTrollsService.removeById(s.getId());
+//		});
+		dmAccessService.deleteAll();
+		dmClickService.deleteAll();
+		dmTrollsService.deleteAll();
 		dmCenterService.getAll().forEach(s->{
 			s.setVisitsNumber(0);
 			s.setClicksNumber(0);
@@ -733,7 +771,16 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		Map<String, String> userMap = userList.stream()
 				.collect(Collectors.toMap(User::getUsername, User::getRealName));
 		rows.forEach(s->{
-			s.setUserName(userMap.get(s.getUserName()));
+			SecretKey secretKey = EncryptionUtil.stringToSecretKey(s.getKeyy());
+            try {
+				if(s.getProtect()==0){
+					String decrypt = EncryptionUtil.decrypt(s.getLink(), secretKey);
+					s.setLink(decrypt);
+				}
+			} catch (Exception e) {
+                throw new RuntimeException("解密失败");
+            }
+            s.setUserName(userMap.get(s.getUserName()));
 		});
 		dmCenterJsonListResult.setRows(rows);
         try {
