@@ -8,6 +8,10 @@
 		<dd style="color: red; word-wrap: break-word;" class="col-sm-9">
 			<pre id="clientDetailsContainer">${dmAccess.clientDetails}</pre>
 		</dd>
+		<dt class="col-sm-3">虚拟机详情:</dt>
+		<dd style="color: red; word-wrap: break-word;" class="col-sm-9">
+			<pre id="virtualDetailsContainer">${dmAccess.virtualDetails}</pre>
+		</dd>
 	</dl>
 </div>
 <script>
@@ -40,6 +44,23 @@
 				.map(item => item.trim())
 				.join('\n');
 			clientContainer.text(formattedClientContent);
+		} catch (error) {
+			console.error('格式化客户端详情时出错:', error);
+		}
+
+
+		// 格式化客户端详情
+		try {
+			const virtualContainer = $('#virtualDetailsContainer');
+			const virtualContent = virtualContainer.text();
+			// console.log('原始客户端详情内容:', clientContent);
+
+			// 直接处理字符串
+			const formattedClientContent = virtualContent
+					.split(',')
+					.map(item => item.trim())
+					.join('\n');
+			virtualContainer.text(formattedClientContent);
 		} catch (error) {
 			console.error('格式化客户端详情时出错:', error);
 		}

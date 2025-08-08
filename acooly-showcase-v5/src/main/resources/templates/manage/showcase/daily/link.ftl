@@ -3,16 +3,6 @@
   <!-- 查询条件 -->
   <div data-options="region:'north',border:false" style="padding:5px; overflow: hidden;" align="left">
     <form id="manage_link_searchform" class="form-inline ac-form-search" onsubmit="return false">
-<#--                    <div class="form-group">-->
-<#--                        <label class="col-form-label">创建时间：</label>-->
-<#--                        <input type="text" class="form-control form-control-sm" id="search_GTE_createTime" name="search_GTE_createTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
-<#--                        <span class="mr-1 ml-1">至</span> <input type="text" class="form-control form-control-sm" id="search_LTE_createTime" name="search_LTE_createTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
-<#--                    </div>-->
-<#--                    <div class="form-group">-->
-<#--                        <label class="col-form-label">修改时间：</label>-->
-<#--                        <input type="text" class="form-control form-control-sm" id="search_GTE_updateTime" name="search_GTE_updateTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
-<#--                        <span class="mr-1 ml-1">至</span> <input type="text" class="form-control form-control-sm" id="search_LTE_updateTime" name="search_LTE_updateTime" onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" />-->
-<#--                    </div>-->
         <div class="form-group">
             <label class="col-form-label">持有者：</label>
             <select name="search_EQ_holder" class="form-control select2bs4" data-options="required:true">
@@ -31,6 +21,23 @@
                 </#list>
             </select>
         </div>
+        <div class="form-group">
+            <label class="col-form-label">一级域名：</label>
+            <select name="search_EQ_regionName" class="form-control select2bs4" data-options="required:true">
+                <option value="">全部</option>
+                <#list collect as collect >
+                    <option value="${collect}">${collect}</option>
+                </#list>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="col-form-label">二级域名：</label>
+            <input type="text" class="form-control form-control-sm" name="search_LIKE_domain" placeholder="请输入二级域名">
+        </div>
+        <div class="form-group">
+            <label class="col-form-label">备注</label>
+            <input type="text" class="form-control form-control-sm" name="search_LIKE_remark" placeholder="请输入备注">
+        </div>
             <div class="form-group">
                 <button class="btn btn-sm btn-primary" type="button" onclick="$.acooly.framework.search('manage_link_searchform','manage_link_datagrid');"><i class="fa fa-search fa-lg fa-fw fa-col"></i> 查询</button>
             </div>
@@ -40,7 +47,7 @@
   <!-- 列表和工具栏 -->
   <div data-options="region:'center',border:false">
     <table id="manage_link_datagrid" class="easyui-datagrid" url="/manage/showcase/daily/link/listJson.html" toolbar="#manage_link_toolbar" fit="true" border="false" fitColumns="false"
-      pagination="true" idField="id" pageSize="20" pageList="[ 10, 20, 30, 40, 50 ]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
+      pagination="true" idField="id" pageSize="20" pageList="[ 10, 20, 30, 40, 50 ]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="false">
       <thead>
         <tr>
         	<th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
@@ -68,13 +75,14 @@
     <!-- 表格的工具栏 -->
     <div id="manage_link_toolbar">
       <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.create({url:'/manage/showcase/daily/link/create.html',entity:'link',width:500,height:500})"><i class="fa fa-plus-circle fa-lg fa-fw fa-col"></i>添加</a>
-      <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.removes('/manage/showcase/daily/link/deleteJson.html','manage_link_datagrid')"><i class="fa fa-trash-o fa-lg fa-fw fa-col"></i>批量删除</a>
-      <a href="#" class="easyui-menubutton" data-options="menu:'#manage_link_exports_menu'"><i class="fa fa-arrow-circle-o-down fa-lg fa-fw fa-col"></i>批量导出</a>
-      <div id="manage_link_exports_menu" style="width:150px;">
-        <div onclick="$.acooly.framework.exports('/manage/showcase/daily/link/exportXls.html','manage_link_searchform','dm_link')"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>
-        <div onclick="$.acooly.framework.exports('/manage/showcase/daily/link/exportCsv.html','manage_link_searchform','dm_link')"><i class="fa fa-file-text-o fa-lg fa-fw fa-col"></i>CSV</div>
-      </div>
-      <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.imports({url:'/manage/showcase/daily/link/importView.html',uploader:'manage_link_import_uploader_file'});"><i class="fa fa-arrow-circle-o-up fa-lg fa-fw fa-col"></i>批量导入</a>
+
+<#--      <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.removes('/manage/showcase/daily/link/deleteJson.html','manage_link_datagrid')"><i class="fa fa-trash-o fa-lg fa-fw fa-col"></i>批量删除</a>-->
+<#--      <a href="#" class="easyui-menubutton" data-options="menu:'#manage_link_exports_menu'"><i class="fa fa-arrow-circle-o-down fa-lg fa-fw fa-col"></i>批量导出</a>-->
+<#--      <div id="manage_link_exports_menu" style="width:150px;">-->
+<#--        <div onclick="$.acooly.framework.exports('/manage/showcase/daily/link/exportXls.html','manage_link_searchform','dm_link')"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>-->
+<#--        <div onclick="$.acooly.framework.exports('/manage/showcase/daily/link/exportCsv.html','manage_link_searchform','dm_link')"><i class="fa fa-file-text-o fa-lg fa-fw fa-col"></i>CSV</div>-->
+<#--      </div>-->
+<#--      <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.imports({url:'/manage/showcase/daily/link/importView.html',uploader:'manage_link_import_uploader_file'});"><i class="fa fa-arrow-circle-o-up fa-lg fa-fw fa-col"></i>批量导入</a>-->
     </div>
   </div>
     <script type="text/javascript">

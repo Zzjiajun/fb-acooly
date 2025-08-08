@@ -62,5 +62,19 @@ public class DmCountryServiceImpl extends EntityServiceImpl<DmCountry, DmCountry
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
     }
 
+    @Override
+    public void dmWarmupRedis() throws IOException {
+        //更新redis缓存
+        DmServer dmServer = dmServerService.getAll().get(0);
+        String urls= dmServer.getDomain()+"/fbVpnStock/warmupRedis";
+        URL url = new URL(urls);
+//        URL url = new URL("https://xunwor.top/hotel/dmConditionRedis");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+
+    }
+
 
 }

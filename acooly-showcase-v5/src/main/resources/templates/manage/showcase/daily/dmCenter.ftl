@@ -53,7 +53,7 @@
     <!-- 列表和工具栏 -->
     <div data-options="region:'center',border:false">
         <table id="manage_dmCenter_datagrid" class="easyui-datagrid" url="/manage/showcase/daily/dmCenter/listJson.html" toolbar="#manage_dmCenter_toolbar" fit="true" border="false" fitColumns="false"
-               border="true" pagination="true" idField="id" pageSize="20" pageList="[ 10, 20, 30, 40, 50 ]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
+               border="true" pagination="true" idField="id" pageSize="20" pageList="[ 10, 20, 30, 40, 50 ]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="false">
             <thead>
             <tr>
                 <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
@@ -84,23 +84,30 @@
         <!-- 每行的Action动作模板 -->
         <div id="manage_dmCenter_action" style="display: none;">
             <div class="btn-group btn-group-xs">
-                <button onclick="$.acooly.framework.edit({url:'/manage/link/dmCondition/editCenter.html',id:'{0}',entity:'dmCondition',width:600,height:600});" class="btn btn-success btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑规则</button>
-                <button onclick="$.acooly.framework.show('/manage/showcase/daily/dmCenter/show.html?id={0}',600,600);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>
-                <button id="myCenter_edit1" onclick="confirmSubmit1('/manage/showcase/daily/dmCenter/eliminate.html','{0}','manage_dmCenter_datagrid');" class="btn btn-outline-secondary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>清除记录</button>
-                <button id="myCenter_edit2" onclick="$.acooly.framework.edit({url:'/manage/showcase/daily/dmCenter/edit.html',id:'{0}',entity:'dmCenter',width:800,height:700});" class="btn btn-outline-success btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
-                <button id="myCenter_edit3" onclick="deleteDmCenter('/manage/showcase/daily/dmCenter/deleteJson.html','{0}','manage_dmCenter_datagrid');" class="btn btn-outline-danger btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>
+                <button onclick="editDmCondition('{0}');" class="btn btn-success btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑规则</button>
+                <#if !isCurrentUserObserver>
+                    <button onclick="$.acooly.framework.show('/manage/showcase/daily/dmCenter/show.html?id={0}',600,600);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>
+                <#--                <button onclick="assignObservers('{0}');" class="btn btn-info btn-xs" type="button"><i class="fa fa-users fa-fw fa-col"></i>分配观察者</button>-->
+                    <button onclick="$.acooly.framework.edit({url:'/manage/link/dmObserverPermission/editCenter.html',id:'{0}',entity:'dmObserverPermission',width:500,height:500});" class="btn btn-info btn-xs" type="button"><i class="fa fa-users fa-fw fa-col"></i>分配观察者</button>
+                    <button id="myCenter_edit1" onclick="confirmSubmit1('/manage/showcase/daily/dmCenter/eliminate.html','{0}','manage_dmCenter_datagrid');" class="btn btn-outline-secondary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>清除记录</button>
+                    <button id="myCenter_edit2" onclick="$.acooly.framework.edit({url:'/manage/showcase/daily/dmCenter/edit.html',id:'{0}',entity:'dmCenter',width:800,height:700});" class="btn btn-outline-success btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
+                    <button id="myCenter_edit3" onclick="deleteDmCenter('/manage/showcase/daily/dmCenter/deleteJson.html','{0}','manage_dmCenter_datagrid');" class="btn btn-outline-danger btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>
+                </#if>
             </div>
         </div>
         <!-- 表格的工具栏 -->
         <div id="manage_dmCenter_toolbar">
-            <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.create({url:'/manage/showcase/daily/dmCenter/create.html',entity:'dmCenter',width:800,height:700})"><i class="fa fa-plus-circle fa-fw fa-col"></i>添加</a>
-            <#--            <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.removes('/manage/showcase/daily/dmCenter/deleteJson.html','manage_dmCenter_datagrid')"><i class="fa fa-trash fa-fw fa-col"></i>批量删除</a>-->
-            <a href="#" class="easyui-menubutton" data-options="menu:'#manage_dmCenter_exports_menu'"><i class="fa fa-cloud-download fa-fw fa-col"></i>批量导出</a>
-            <div id="manage_dmCenter_exports_menu" style="width:150px;">
-                <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmCenter/exportXls.html','manage_dmCenter_searchform','dm_center')"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>
-                <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmCenter/exportCsv.html','manage_dmCenter_searchform','dm_center')"><i class="fa fa-file-text-o fa-lg fa-fw fa-col"></i>CSV</div>
-            </div>
-            <a id="myCenter_edit4" href="#" class="btn btn-outline-danger" plain="true" onclick="confirmSubmit1('/manage/showcase/daily/dmCenter/eliminateAll.html','1','manage_dmCenter_datagrid')"><i class="fa fa-plus-circle fa-fw fa-col"></i>清除全部记录</a>
+            <#if !isCurrentUserObserver>
+                <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.create({url:'/manage/showcase/daily/dmCenter/create.html',entity:'dmCenter',width:800,height:700})"><i class="fa fa-plus-circle fa-fw fa-col"></i>添加</a>
+                <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.removes('/manage/showcase/daily/dmCenter/deleteJson.html','manage_dmCenter_datagrid')"><i class="fa fa-trash fa-fw fa-col"></i>批量删除</a>
+                <a href="#" class="easyui-menubutton" data-options="menu:'#manage_dmCenter_exports_menu'"><i class="fa fa-cloud-download fa-fw fa-col"></i>批量导出</a>
+                <div id="manage_dmCenter_exports_menu" style="width:150px;">
+                    <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmCenter/exportXls.html','manage_dmCenter_searchform','dm_center')"><i class="fa fa-file-excel-o fa-lg fa-fw fa-col"></i>Excel</div>
+                    <div onclick="$.acooly.framework.exports('/manage/showcase/daily/dmCenter/exportCsv.html','manage_dmCenter_searchform','dm_center')"><i class="fa fa-file-text-o fa-lg fa-fw fa-col"></i>CSV</div>
+                </div>
+                <a id="myCenter_edit4" href="#" class="btn btn-outline-danger" plain="true" onclick="confirmSubmit1('/manage/showcase/daily/dmCenter/eliminateAll.html','1','manage_dmCenter_datagrid')"><i class="fa fa-plus-circle fa-fw fa-col"></i>清除全部记录</a>
+            </#if>
+
             <#--            <a href="#" class="easyui-linkbutton" plain="true" onclick="$.acooly.framework.imports({url:'/manage/showcase/daily/dmCenter/importView.html',uploader:'manage_dmCenter_import_uploader_file'});"><i class="fa fa-cloud-upload fa-fw fa-col"></i>批量导入</a>-->
         </div>
     </div>
@@ -112,6 +119,52 @@
         $(function () {
             $.acooly.framework.initPage('manage_dmCenter_searchform', 'manage_dmCenter_datagrid');
         });
+
+        // 编辑规则函数 - 添加回调刷新功能
+        function editDmCondition(id) {
+            var dialog = $('<div/>').dialog({
+                href: contextPath + '/manage/link/dmCondition/editCenter.html?id=' + id,
+                width: 700,
+                height: 600,
+                modal: true,
+                title: '<i class="fa fa-pencil fa-lg fa-fw fa-col"></i>编辑规则',
+                buttons: [{
+                    text: '<i class="fa fa-save fa-lg fa-fw fa-col"></i>保存',
+                    handler: function () {
+                        // 获取表单数据并提交
+                        var form = dialog.find('#manage_dmCondition_editform');
+                        $.ajax({
+                            url: contextPath + form.attr('action'),
+                            data: form.serialize(),
+                            type: 'POST',
+                            dataType: 'json',
+                            success: function (result) {
+                                if (result.success) {
+                                    // 保存成功后关闭对话框并刷新数据表格
+                                    dialog.dialog('close');
+                                    // 触发查询按钮刷新数据
+                                    $.acooly.framework.search('manage_dmCenter_searchform', 'manage_dmCenter_datagrid');
+                                    $.acooly.messager('提示', '保存成功！', 'success');
+                                } else {
+                                    $.acooly.messager('错误', result.message || '保存失败！', 'danger');
+                                }
+                            },
+                            error: function () {
+                                $.acooly.messager('错误', '网络错误，保存失败！', 'danger');
+                            }
+                        });
+                    }
+                }, {
+                    text: '<i class="fa fa-times-circle fa-lg fa-fw fa-col"></i>取消',
+                    handler: function () {
+                        dialog.dialog('close');
+                    }
+                }],
+                onClose: function () {
+                    $(this).dialog('destroy');
+                }
+            });
+        }
 
         // $(document).ready(function() {
         //     $('#myCenter_edit1').hide();
@@ -408,7 +461,7 @@
 
         function showClickGet(opts) {
             var url = opts.url;
-            var width = opts.width != null ? opts.width : 1400;
+            var width = opts.width != null ? opts.width : 1600;
             var height = opts.height != null ? opts.height : 800;
             var title = opts.title != null ? opts.title : '<i class="fa fa-file-o fa-lg fa-fw fa-col"></i>查看';
             var buttonLabel = opts.buttonLabel != null ? opts.buttonLabel : '关闭';

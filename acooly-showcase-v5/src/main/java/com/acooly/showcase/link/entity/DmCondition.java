@@ -130,5 +130,13 @@ public class DmCondition extends AbstractEntity {
      * 安卓系统
      */
     private String andVersion;
+    /**
+     * 是否商业网络
+     */
+    private Integer isBusiness;
+    /**
+     * 虚拟机
+     */
+    private Integer isVirtual;
 
 }

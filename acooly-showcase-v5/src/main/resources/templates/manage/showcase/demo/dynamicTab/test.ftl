@@ -30,14 +30,6 @@
                     <i class="fa fa-file-excel-o fa-fw fa-col"></i> 导出Excel记录表
                 </button>
             </div>
-            <div class="form-group">
-                <label class="col-form-label">显示时区：</label>
-                <select id="timezoneSelector" class="form-control select2bs4" style="width: 160px;">
-                    <option value="Asia/Shanghai">中国上海</option>
-                    <option value="Europe/Berlin">德国柏林</option>
-                    <option value="America/New_York">纽约</option>
-                </select>
-            </div>
         </form>
     </div>
 
@@ -67,26 +59,23 @@
                                 <!-- Morris chart - Sales -->
                                 <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 500px;">
                                     <table  id="manage_accessUrl_datagrid" class="easyui-datagrid"
-                                           url="/manage/link/dmAccess/listAccessUrl?centerId=${k}"  fit="true" border="false" fitColumns="false"
-                                           pagination="true" idField="id" pageSize="100" pageList="[10, 20, 30, 40, 50,100,1000]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
+                                            url="/manage/link/dmAccess/listAccessUrl?centerId=${k}"  fit="true" border="false" fitColumns="false"
+                                            pagination="true" idField="id" pageSize="100" pageList="[10, 20, 30, 40, 50,100,1000]" sortName="id" sortOrder="desc" checkOnSelect="true" selectOnCheck="true" singleSelect="true">
                                         <thead>
                                         <tr>
                                             <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
                                             <th field="id" sortable="true">id</th>
-                                            <th field="createTime" formatter="dateTimeOneFormatter">访问时间</th>
+                                            <th field="createTime" formatter="dateTimeFormatter">访问时间</th>
+                                            <th field="ip" formatter="contentFormatter">IP地址</th>
                                             <th field="region" formatter="contentFormatter">访客地区</th>
-                                            <th field="ip" formatter="deviceDetailsFormatter">IP</th>
-                                            <th field="continent" formatter="timeZoneFormatter">时区</th>
                                             <th field="accessPath" formatter="contentFormatter">访问路径</th>
                                             <th field="accessDevice" formatter="clickDeviceFormatterFunction">访问设备</th>
                                             <th field="models" formatter="contentFormatter">机型</th>
                                             <th field="source" formatter="contentFormatter">来源</th>
                                             <th field="visitorType" formatter="clickTypeFormatterFunction">访客类型</th>
-                                            <th field="language" formatter="contentFormatter">语言</th>
                                             <th field="passed" formatter="displayPassedFunction">是否通过</th>
-                                            <#if !isCurrentUserObserverAccess>
-                                                <th field="deviceDetails"  formatter="showDetails">设备和客户端详情</th>
-                                            </#if>
+                                            <th field="deviceDetails" formatter="showAccessDetails">设备详情</th>
+                                            <th field="clientDetails" formatter="showAccessDetails">客户端详情</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -102,10 +91,6 @@
         </section>
     </div>
 </div>
-<script>
-    dayjs.extend(dayjs_plugin_utc);
-    dayjs.extend(dayjs_plugin_timezone);
-</script>
 <script type="text/javascript">
     $(function () {
         $.acooly.framework.initPage('manage_accessUrl_searchform', 'manage_accessUrl_datagrid');
@@ -208,20 +193,6 @@
         });
     });
 
-    window.currentTimezone = 'Asia/Shanghai';
-    $('#timezoneSelector').on('change', function() {
-        window.currentTimezone = $(this).val();
-        $('#manage_accessUrl_datagrid').datagrid('reload');
-    });
-
-    function dateTimeOneFormatter(value, row, index) {
-        if (!value) return '';
-        // value 例：'2024-05-01 08:00:00'，假设为服务器上海时区
-        // 先解析为 dayjs 对象，再转为选中时区
-        return dayjs.tz(value, 'Asia/Shanghai').tz(currentTimezone).format('YYYY-MM-DD HH:mm:ss');
-    }
-
-
     function clickDeviceFormatterFunction(value) {
         if (value == '1') {
             return '<i class="fa fa-desktop fa-fw fa-col" style="color: firebrick; align-items: center;"></i>';
@@ -244,27 +215,6 @@
         }else {
             return '<i class="fa  fa-remove fa-fw fa-col" style="color: red"/>'
         }
-    }
-
-    function displayPassedFunction(value, row) {
-        if (value === '0') {
-            return '<i class="fa fa-check fa-fw fa-col" style="color: cornflowerblue"></i>';
-        } else {
-            return '<i class="fa fa-remove fa-fw fa-col" style="color: red"></i>' +
-                '<button onclick="showTrollsDetailsList(' +row.id+ ')" class="btn btn-outline-danger btn-xs" type="button">' +
-                '<i class="fa fa-info fa-fw fa-col"></i>失败详情</button>';
-        }
-    }
-
-
-    function deviceDetailsFormatter(value, row) {
-        return '<div style="font-size: 11px" >Ip：' + (value || '') + '</div>'
-            + '<div style="color:#aaa; font-size:11px;">运营商：' + (row.ipDetails || '') + '</div>';
-    }
-
-    function timeZoneFormatter(value, row) {
-        return '<div style="font-size: 11px; color:;" >设备时区：' + (value || '') + '</div>'
-            + '<div style="color:#aaa; font-size:11px;">Ip时区：' + (row.ipTime || '') + '</div>';
     }
     function exportsAccessUrl(url, searchForm, fileName, centerId){
         var queryParams = $.acooly.framework.afterQueryParams[searchForm];
@@ -296,8 +246,8 @@
         // 如果是数组
         if (Array.isArray(value)) {
             let html = '<div style="max-height: 100px; overflow-y: auto;">';
-            value.forEach((item) => {
-                html += `<div>${item}</div>`;
+            value.forEach((item, index) => {
+                html += `<div>${index + 1}. ${item}</div>`;
             });
             html += '</div>';
             return html;
@@ -305,30 +255,13 @@
         // 如果是对象
         if (typeof value === 'object') {
             let html = '<div style="max-height: 100px; overflow-y: auto;">';
-            Object.entries(value).forEach(([key, val]) => {
-                html += `<div>${key}: ${val}</div>`;
+            Object.entries(value).forEach(([key, val], index) => {
+                html += `<div>${index + 1}. ${key}: ${val}</div>`;
             });
             html += '</div>';
             return html;
         }
         return value;
     }
-
-    function showDetails(value,row) {
-        return '<button onclick="showDetailsList(' +row.id+ ')" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>';
-    }
-
-    function showDetailsList(id) {
-        var url ='/manage/link/dmAccess/showAccessUrl.html?id='+id;
-        $.acooly.framework.show(url,500,500);
-    }
-
-    function showTrollsDetailsList(id) {
-        var url ='/manage/link/dmAccess/showDetailsAccessUrl.html?id='+id;
-        $.acooly.framework.show(url,500,500);
-    }
-
-
-
 
 </script>

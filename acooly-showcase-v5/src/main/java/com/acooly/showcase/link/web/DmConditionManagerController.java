@@ -7,6 +7,7 @@
 package com.acooly.showcase.link.web;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.acooly.core.common.dao.support.PageInfo;
 import com.acooly.core.common.domain.Entityable;
 import com.acooly.core.common.web.AbstractStandardEntityController;
 import com.acooly.core.common.web.MappingMethod;
+import com.acooly.core.common.web.support.JsonEntityResult;
 import com.acooly.module.security.domain.User;
 import com.acooly.module.security.service.UserService;
 import com.acooly.showcase.daliy.entity.DmCenter;
@@ -32,6 +34,7 @@ import com.acooly.showcase.daliy.service.RegnameService;
 import com.acooly.showcase.link.entity.Board;
 import com.acooly.showcase.link.service.BoardService;
 import com.acooly.showcase.link.service.DmCountryService;
+import com.acooly.showcase.link.service.DmObserverPermissionService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
@@ -80,6 +83,8 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
     private DmRegionService dmRegionService;
     @Autowired
     private BoardService boardService;
+    @Autowired
+    private DmObserverPermissionService dmObserverPermissionService;
 
 
     @Override
@@ -108,6 +113,9 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
 
     @Override
     protected void referenceData(HttpServletRequest request, Map<String, Object> model) {
+        User principal = (User) SecurityUtils.getSubject().getPrincipal();
+        boolean observer = dmObserverPermissionService.isObserver(principal.getId());
+        model.put("observer", observer);
         Map<String, Integer> statusMap = Maps.newLinkedHashMap();
         statusMap.put("关闭", 0);
         statusMap.put("开启", 1);
@@ -137,6 +145,15 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
         // 添加iOS系统版本号映射
         Map<String, String> iosVersionMap = Maps.newLinkedHashMap();
         iosVersionMap.put("iOS 17及以下", "17.0.0");
+        iosVersionMap.put("iOS16.9及以下", "16.9.0");
+        iosVersionMap.put("iOS16.8及以下", "16.8.0");
+        iosVersionMap.put("iOS16.7及以下", "16.7.0");
+        iosVersionMap.put("iOS16.6及以下", "16.6.0");
+        iosVersionMap.put("iOS16.5及以下", "16.5.0");
+        iosVersionMap.put("iOS16.4及以下", "16.4.0");
+        iosVersionMap.put("iOS16.3及以下", "16.3.0");
+        iosVersionMap.put("iOS16.2及以下", "16.2.0");
+        iosVersionMap.put("iOS16.1及以下", "16.1.0");
         iosVersionMap.put("iOS 16及以下", "16.0.0");
         iosVersionMap.put("iOS 15及以下", "15.0.0");
         iosVersionMap.put("iOS 14及以下", "14.0.0");
@@ -151,16 +168,16 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
 
         // 添加Android系统版本号映射
         Map<String, String> androidVersionMap = Maps.newLinkedHashMap();
-        androidVersionMap.put("Android 14及以下", "14.0.0");
-        androidVersionMap.put("Android 13及以下", "13.0.0");
-        androidVersionMap.put("Android 12及以下", "12.0.0");
-        androidVersionMap.put("Android 11及以下", "11.0.0");
-        androidVersionMap.put("Android 10及以下", "10.0.0");
-        androidVersionMap.put("Android 9及以下", "9.0.0");
-        androidVersionMap.put("Android 8及以下", "8.0.0");
-        androidVersionMap.put("Android 7及以下", "7.0.0");
-        androidVersionMap.put("Android 6及以下", "6.0.0");
-        androidVersionMap.put("Android 5及以下", "5.0.0");
+        androidVersionMap.put("And 14及以下", "14.0.0");
+        androidVersionMap.put("And 13及以下", "13.0.0");
+        androidVersionMap.put("And 12及以下", "12.0.0");
+        androidVersionMap.put("And 11及以下", "11.0.0");
+        androidVersionMap.put("And 10及以下", "10.0.0");
+        androidVersionMap.put("And 9及以下", "9.0.0");
+        androidVersionMap.put("And 8及以下", "8.0.0");
+        androidVersionMap.put("And 7及以下", "7.0.0");
+        androidVersionMap.put("And 6及以下", "6.0.0");
+        androidVersionMap.put("And 5及以下", "5.0.0");
         androidVersionMap.put("无限制", "0.0.0");
         model.put("androidVersionMap", androidVersionMap);
 
@@ -180,21 +197,45 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
 
     @Override
     protected DmCondition onSave(HttpServletRequest request, HttpServletResponse response, Model model, DmCondition entity, boolean isCreate) throws Exception {
+        dmCountryService.dmWarmupRedis();
         dmCountryService.dmConditionRedis();
-        dmCountryService.dmCenterRedis();
-        if (!isCreate) {
-            Map<String, String> map = dmRegionService.getAll().stream().
-                    collect(Collectors.toMap(DmRegion::getCode, DmRegion::getTimeZone));
-            entity.setTimeContinent(map.get(entity.getIpCountry()));
-        }
+//        if (!isCreate) {
+//            Map<String, String> map = dmRegionService.getAll().stream().
+//                    collect(Collectors.toMap(DmRegion::getCode, DmRegion::getTimeZone));
+//            entity.setTimeContinent(map.get(entity.getIpCountry()));
+//        }
+//        User principal = (User) SecurityUtils.getSubject().getPrincipal();
+//        // 检查当前用户是否有权限查看此记录
+//        if (dmObserverPermissionService.isObserver(principal.getId())) {
+//            request.setAttribute("message", "您没有权限操作");
+//            throw new AccessDeniedException("您没有权限操作");
+//        }
         return super.onSave(request, response, model, entity, isCreate);
     }
 
+    @Override
+    public JsonEntityResult<DmCondition> updateJson(HttpServletRequest request, HttpServletResponse response) {
+        JsonEntityResult<DmCondition> result = new JsonEntityResult();
+        this.allow(request, response, MappingMethod.create);
+        try {
+            User principal = (User) SecurityUtils.getSubject().getPrincipal();
+            // 检查当前用户是否有权限查看此记录
+            if (dmObserverPermissionService.isObserver(principal.getId())) {
+                result.setSuccess(false);
+                result.setMessage("您没有权限操作");
+            }else {
+                result.setEntity(this.doSave(request, response, (Model)null, false));
+                result.setMessage("更新成功");
+            }
+        } catch (Exception var5) {
+            this.handleException(result, "更新", var5);
+        }
+        return result;
+    }
 
     @RequestMapping({"editCenter"})
-    public String editTwo(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String editTwo(HttpServletRequest request, HttpServletResponse response, Model model) throws AccessDeniedException {
         this.allow(request, response, MappingMethod.update);
-
         try {
             model.addAllAttributes(this.referenceData(request));
             String id = request.getParameter("id");
@@ -214,13 +255,26 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
 
 
 
-    @Override
-    public String save(HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes) {
-        try {
-            dmCountryService.dmConditionRedis();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return super.save(request, response, model, redirectAttributes);
-    }
+//    @Override
+//    public String save(HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes) {
+//        try {
+//            dmCountryService.dmCenterRedis();
+//            dmCountryService.dmConditionRedis();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return super.save(request, response, model, redirectAttributes);
+//    }
+
+
+//    @Override
+//    protected DmCondition doSave(HttpServletRequest request, HttpServletResponse response, Model model, boolean isCreate) throws Exception {
+//        try {
+//            dmCountryService.dmCenterRedis();
+//            dmCountryService.dmConditionRedis();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return super.doSave(request, response, model, isCreate);
+//    }
 }

@@ -106,6 +106,28 @@ public class DmAccess extends AbstractEntity {
     @Size(max = 255)
     @ExportColumn(header = "客户端详情", order = 11)
     private String clientDetails;
+
+    @Size(max = 255)
+    @ExportColumn(header = "设备语言", order = 12)
+    private String language;
+
+    @Size(max = 255)
+    @ExportColumn(header = "设备时间", order = 13)
+    private String continent;
+
+    @Size(max = 255)
+    @ExportColumn(header = "ip详情", order = 14)
+    private String ipDetails;
+
+    @Size(max = 255)
+    @ExportColumn(header = "ip时区", order = 15)
+    private String ipTime;
+    @Size(max = 255)
+    @ExportColumn(header = "失败详情", order = 16)
+    private String Details;
+    @Size(max = 255)
+    @ExportColumn(header = "虚拟机详情", order = 17)
+    private String virtualDetails;
 //    /**
 //     * IP总和
 //     */

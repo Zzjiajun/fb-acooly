@@ -6,6 +6,8 @@
 */
 package com.acooly.showcase.link.web;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,11 +19,14 @@ import com.acooly.core.common.exception.AppConfigException;
 import com.acooly.core.common.web.MappingMethod;
 import com.acooly.core.common.web.support.JsonListResult;
 import com.acooly.core.utils.Encodes;
+import com.acooly.module.security.domain.User;
 import com.acooly.showcase.daliy.entity.DmCenter;
 import com.acooly.showcase.daliy.service.DmCenterService;
 import com.acooly.showcase.link.entity.DmClick;
 import com.acooly.showcase.link.entity.DmTrolls;
+import com.acooly.showcase.link.service.DmObserverPermissionService;
 import com.google.common.collect.Lists;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,11 +61,16 @@ public class DmAccessManagerController extends AbstractJsonEntityController<DmAc
 	private DmAccessService dmAccessService;
 	@Autowired
 	private DmCenterService dmCenterService;
+	@Autowired
+	private DmObserverPermissionService dmObserverPermissionService;
 
 
 	@RequestMapping(value = "buildAccessUrl",method = RequestMethod.GET)
 	public String buildAccessUrl(HttpServletRequest request, HttpServletResponse response , Model model) {
 		String centerId = request.getParameter("centerId");
+		User principal = (User) SecurityUtils.getSubject().getPrincipal();
+		boolean isCurrentUserObserverAccess = dmObserverPermissionService.isObserver(principal.getId());
+		model.addAttribute("isCurrentUserObserverAccess", isCurrentUserObserverAccess);
 		model.addAttribute("k",centerId);
 		return "manage/link/accessUrl";
 	}
@@ -68,12 +78,18 @@ public class DmAccessManagerController extends AbstractJsonEntityController<DmAc
 	@RequestMapping(value = "buildAccess",method = RequestMethod.GET)
 	public String buildAccess(HttpServletRequest request, HttpServletResponse response , Model model) {
 		String centerId = request.getParameter("centerId");
+		User principal = (User) SecurityUtils.getSubject().getPrincipal();
+		boolean isCurrentUserObserverAccess = dmObserverPermissionService.isObserver(principal.getId());
+		model.addAttribute("isCurrentUserObserverAccess", isCurrentUserObserverAccess);
 		model.addAttribute("k",centerId);
 		return "manage/link/dmTabl/index";
 	}
 
 
+	@Override
+	protected void referenceData(HttpServletRequest request, Map<String, Object> model) {
 
+	}
 
 	@RequestMapping({"listAccessUrl"})
 	@ResponseBody
@@ -109,6 +125,27 @@ public class DmAccessManagerController extends AbstractJsonEntityController<DmAc
 		}
 
 		return "manage/link/dmAccessShow";
+	}
+
+
+	@RequestMapping({"showDetailsAccessUrl"})
+	public String showDetails(HttpServletRequest request, HttpServletResponse response, Model model) {
+		this.allow(request, response, MappingMethod.show);
+
+		try {
+			model.addAllAttributes(this.referenceData(request));
+			DmAccess entity = this.loadEntity(request);
+			if (entity == null) {
+				throw new AppConfigException("LoadEntity failure.");
+			}
+
+			this.onShow(request, response, model, entity);
+			model.addAttribute(this.getEntityName(), entity);
+		} catch (Exception var5) {
+			this.handleException("查看", var5, request);
+		}
+
+		return "manage/link/dmAccessDetails";
 	}
 
 	@Override
@@ -156,5 +193,63 @@ public class DmAccessManagerController extends AbstractJsonEntityController<DmAc
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-Disposition", "attachment");
 		response.setHeader("Content-Disposition", "filename=\"" + Encodes.urlEncode(domainName) + ".xlsx\"");
+	}
+
+
+	@RequestMapping(value = "ipDistribution", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Map<String, Object>> ipDistribution(HttpServletRequest request, HttpServletResponse response) {
+		return dmAccessService.getWorldIpDistribution();
+	}
+
+	@RequestMapping(value = "supplierStats", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> supplierStats(HttpServletRequest request, HttpServletResponse response) {
+		List<Map<String, Object>> list = dmAccessService.getSupplierStats();
+		List<String> names = new ArrayList<>();
+		List<Integer> values = new ArrayList<>();
+		for (Map<String, Object> row : list) {
+			names.add((String) row.get("name"));
+			values.add(((Number) row.get("value")).intValue());
+		}
+		Map<String, Object> result = new HashMap<>();
+		result.put("names", names);
+		result.put("values", values);
+		return result;
+	}
+
+	@RequestMapping(value = "trend", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> trend(HttpServletRequest request, HttpServletResponse response) {
+		List<Map<String, Object>> list = dmAccessService.getTrend();
+		List<String> dates = new ArrayList<>();
+		List<Integer> ipCounts = new ArrayList<>();
+		List<Integer> visitCounts = new ArrayList<>();
+		for (Map<String, Object> row : list) {
+			dates.add(row.get("date").toString());
+			ipCounts.add(((Number) row.get("ipCount")).intValue());
+			visitCounts.add(((Number) row.get("visitCount")).intValue());
+		}
+		Map<String, Object> result = new HashMap<>();
+		result.put("dates", dates);
+		result.put("ipCounts", ipCounts);
+		result.put("visitCounts", visitCounts);
+		return result;
+	}
+
+	@RequestMapping(value = "userStats", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> userStats(HttpServletRequest request, HttpServletResponse response) {
+		List<Map<String, Object>> list = dmAccessService.getUserStats();
+		List<String> names = new ArrayList<>();
+		List<Integer> values = new ArrayList<>();
+		for (Map<String, Object> row : list) {
+			names.add((String) row.get("name"));
+			values.add(((Number) row.get("value")).intValue());
+		}
+		Map<String, Object> result = new HashMap<>();
+		result.put("names", names);
+		result.put("values", values);
+		return result;
 	}
 }

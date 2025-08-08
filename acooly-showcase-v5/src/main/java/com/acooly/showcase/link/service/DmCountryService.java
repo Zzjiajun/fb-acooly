@@ -24,5 +24,6 @@ public interface DmCountryService extends EntityService<DmCountry> {
     void dmCenterRedis() throws IOException;
 
     void dmConditionRedis() throws IOException;
+    void dmWarmupRedis() throws IOException;
 
 }

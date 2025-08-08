@@ -91,6 +91,7 @@ public class LinkSrcsManagerController extends AbstractJsonEntityController<Link
 		mapQuery.put("EQ_secondaryDomain",  parts[1]);
 		List<DmCenter> list = dmCenterService.query(mapQuery, null);
 		if (list.size() > 0){
+			entity.setProtect(list.get(0).getProtect());
 			DmCenter dmCenter = list.get(0);
 			if (dmCenter.getProtect() == 0){
 				SecretKey secretKey = EncryptionUtil.generateKey();
@@ -134,5 +135,21 @@ public class LinkSrcsManagerController extends AbstractJsonEntityController<Link
 		List<String> list = query.stream().map(Link::getAccessAddress).collect(Collectors.toList());
 //		List<String> list = query.stream().map(DmPixel::getDomain).collect(Collectors.toList());
 		model.put("list" ,list);
+	}
+
+
+	@Override
+	protected void onEdit(HttpServletRequest request, HttpServletResponse response, Model model, LinkSrcs entity) {
+		if(entity.getProtect()==0){
+			SecretKey secretKey = EncryptionUtil.stringToSecretKey(entity.getKeyy());
+			String decrypt = null;
+			try {
+				decrypt = EncryptionUtil.decrypt(entity.getLinkSrc(), secretKey);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			entity.setLinkSrc(decrypt);
+		}
+		super.onEdit(request, response, model, entity);
 	}
 }

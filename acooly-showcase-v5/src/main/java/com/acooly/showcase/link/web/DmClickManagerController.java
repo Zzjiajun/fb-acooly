@@ -17,7 +17,6 @@ import com.acooly.core.common.web.support.JsonListResult;
 import com.acooly.core.utils.Encodes;
 import com.acooly.showcase.daliy.entity.DmCenter;
 import com.acooly.showcase.daliy.service.DmCenterService;
-import com.acooly.showcase.link.entity.DmAccess;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +27,6 @@ import com.acooly.core.common.web.AbstractJsonEntityController;
 import com.acooly.showcase.link.entity.DmClick;
 import com.acooly.showcase.link.service.DmClickService;
 
-import com.google.common.collect.Maps;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;

@@ -60,6 +60,7 @@
                 <th field="isMobile" formatter="statusFunction">移动设备</th>
                 <th field="isSpecificDevice" formatter="statusFunction">特定设备低端机</th>
                 <th field="isVpn" formatter="statusFunction">VPN和代理检测</th>
+                <th field="isBusiness" formatter="statusFunction">商业网络检测</th>
                 <th field="ipWhite" formatter="statusFunction">白名单开关</th>
                 <th field="ipLimits" formatter="statusFunction">ip点击限制</th>
                 <th field="isRobot" formatter="statusFunction">爬虫机器人</th>
@@ -80,8 +81,10 @@
         <div id="manage_dmCondition_action" style="display: none;">
             <div class="btn-group btn-group-xs">
 <#--              <button onclick="$.acooly.framework.show('/manage/link/dmCondition/show.html?id={0}',500,500);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>-->
-              <button id="myCondition_edit" onclick="$.acooly.framework.edit({url:'/manage/link/dmCondition/edit.html',id:'{0}',entity:'dmCondition',width:700,height:600});" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
 <#--              <button onclick="$.acooly.framework.remove('/manage/link/dmCondition/deleteJson.html','{0}','manage_dmCondition_datagrid');" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>-->
+                <#if !observer>
+                    <button id="myCondition_edit" onclick="$.acooly.framework.edit({url:'/manage/link/dmCondition/edit.html',id:'{0}',entity:'dmCondition',width:700,height:600});" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
+                </#if>
           </div>
         </div>
         <!-- 表格的工具栏 -->

@@ -12,10 +12,10 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>com.acooly.showcase</groupId>
-            <artifactId>acooly-showcase-openapi-message</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.acooly.showcase</groupId>-->
+<!--            <artifactId>acooly-showcase-openapi-message</artifactId>-->
+<!--        </dependency>-->
 
 <!--        &lt;!&ndash; showcase core &ndash;&gt;-->
 <!--        <dependency>-->
@@ -29,7 +29,7 @@
 <!--            <artifactId>openapi-framework-apidoc</artifactId>-->
 <!--        </dependency>-->
 
-<!--        &lt;!&ndash; OpenApi核心框架 &ndash;&gt;-->
+        <!-- OpenApi核心框架 -->
 <!--        <dependency>-->
 <!--            <groupId>com.acooly</groupId>-->
 <!--            <artifactId>openapi-framework-core</artifactId>-->
