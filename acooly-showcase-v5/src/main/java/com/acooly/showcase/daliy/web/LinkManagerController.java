@@ -283,6 +283,8 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			DmCondition dmCondition = new DmCondition();
 			dmCondition.setUserName(principal.getUsername());
 			dmCondition.setIsIp(0);
+			dmCondition.setIpCountry("US");
+			dmCondition.setTimeContinent("America");
 			dmCondition.setIsVpn(0);
 			dmCondition.setIsFbclid(0);
 			dmCondition.setIsChinese(0);

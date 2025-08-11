@@ -41,6 +41,31 @@
         </form>
     </div>
 
+    <style>
+      /* 轻量风格与紧凑表格 */
+      .kpi-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin: 4px 0 6px; }
+      .kpi-card { background: #fff; border: 1px solid #eef0f3; border-radius: 8px; padding: 8px 10px; box-shadow: 0 1px 2px rgba(0,0,0,.03); transition: box-shadow .2s ease, transform .2s ease; }
+      .kpi-card:hover { box-shadow: 0 2px 6px rgba(0,0,0,.06); transform: translateY(-1px); }
+      .kpi-title { color: #6b7280; font-size: 11px; margin-bottom: 4px; }
+      .kpi-value { color: #0f172a; font-size: 18px; font-weight: 700; letter-spacing: .2px; }
+      .kpi-sub { color: #9ca3af; font-size: 11px; }
+
+      .badge { display: inline-block; padding: 2px 6px; border-radius: 10px; font-size: 11px; line-height: 1.4; }
+      .badge-success { color: #065f46; background: #d1fae5; border: 1px solid #a7f3d0; }
+      .badge-danger  { color: #991b1b; background: #fee2e2; border: 1px solid #fecaca; }
+      .badge-info    { color: #1e40af; background: #dbeafe; border: 1px solid #bfdbfe; }
+      .badge-primary { color: #1d4ed8; background: #e0ecff; border: 1px solid #c7dbff; }
+      .badge-muted   { color: #e80808; background: #f3f4f6; border: 1px solid #e5e7eb; }
+
+      .ellipsis { max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; vertical-align: bottom; }
+
+      /* EasyUI 表格紧凑化与悬浮 */
+      .datagrid-row { font-size: 12px; }
+      .datagrid-header .datagrid-cell, .datagrid-body .datagrid-cell { padding: 6px 8px; }
+      .datagrid-row-over { background: #f7fafc !important; }
+      .datagrid-row-selected { background: #eef2ff !important; }
+    </style>
+
     <div data-options="region:'center', border: false">
         <section class="content" style="min-height: 10px; padding-top: 5px">
             <div class="row">
@@ -49,7 +74,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-chart-pie mr-1"></i>
-                                Sales
+                                访问统计
                             </h3>
                             <div class="card-tools">
                                 <ul class="nav nav-pills dropdown-menu-lg-right">
@@ -63,8 +88,42 @@
                             </div>
                         </div>
                         <div class="card-body">
+                            <!-- KPI 概览 -->
+                            <div class="kpi-wrap">
+                              <div class="kpi-card">
+                                <div class="kpi-title">访问总次数</div>
+                                <div id="kpiTotalRows" class="kpi-value">-</div>
+                                <div class="kpi-sub">当前筛选范围</div>
+                              </div>
+                              <div class="kpi-card">
+                                <div class="kpi-title">独立 IP</div>
+                                <div id="kpiUniqueIps" class="kpi-value">-</div>
+                                <div class="kpi-sub">按 IP 去重</div>
+                              </div>
+                              <div class="kpi-card">
+                                <div class="kpi-title">通过率</div>
+                                <div id="kpiPassRate" class="kpi-value">-</div>
+                                <div class="kpi-sub">通过/总次数</div>
+                              </div>
+                              <div class="kpi-card">
+                                <div class="kpi-title">访问地区（Top3）</div>
+                                <div id="kpiTopRegions" class="kpi-value" style="font-size:14px; font-weight:600; line-height:1.4;">-</div>
+                                <div class="kpi-sub">按地区计数</div>
+                              </div>
+                              <div class="kpi-card">
+                                <div class="kpi-title">机型（Top3）</div>
+                                <div id="kpiTopModels" class="kpi-value" style="font-size:14px; font-weight:600; line-height:1.4;">-</div>
+                                <div class="kpi-sub">按机型计数</div>
+                              </div>
+                              <div class="kpi-card">
+                                <div class="kpi-title">来源（Top3）</div>
+                                <div id="kpiTopSources" class="kpi-value" style="font-size:14px; font-weight:600; line-height:1.4;">-</div>
+                                <div class="kpi-sub">按来源计数</div>
+                              </div>
+                            </div>
+
                             <div class="tab-content p-0">
-                                <!-- Morris chart - Sales -->
+                                <!-- 数据表格 -->
                                 <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 500px;">
                                     <table  id="manage_accessUrl_datagrid" class="easyui-datagrid"
                                            url="/manage/link/dmAccess/listAccessUrl?centerId=${k}"  fit="true" border="false" fitColumns="false"
@@ -91,6 +150,7 @@
                                         </thead>
                                     </table>
                                 </div>
+                                <!-- 折线图 -->
                                 <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 500px; width: 100%">
                                     <div id="chartContainer" style="width: 1200px; height: 500px;"></div>
                                 </div>
@@ -113,45 +173,16 @@
         var chart = echarts.init(document.getElementById('chartContainer'));
 
         var chartOptions = {
-            title: {
-                text: '每日 IP 和访问次数数'
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data: ['IP', '访问次数']
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: []
-            },
-            yAxis: {
-                type: 'value'
-            },
+            color: ['#4f46e5', '#10b981'],
+            title: { text: '每日 IP 和访问次数数' },
+            tooltip: { trigger: 'axis', backgroundColor: 'rgba(17,24,39,.95)', borderWidth: 0, textStyle: { color: '#e5e7eb' } },
+            legend: { data: ['IP', '访问次数'] },
+            grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+            xAxis: { type: 'category', boundaryGap: false, axisLine: { lineStyle: { color: '#e5e7eb' } }, axisLabel: { color: '#6b7280' }, data: [] },
+            yAxis: { type: 'value', axisLine: { lineStyle: { color: '#e5e7eb' } }, axisLabel: { color: '#6b7280' }, splitLine: { lineStyle: { color: '#f3f4f6' } } },
             series: [
-                {
-                    name: 'IP',
-                    type: 'line',
-                    data: []
-                },
-                {
-                    name: '访问次数',
-                    type: 'line',
-                    data: []
-                }
+                { name: 'IP', type: 'line', smooth: true, symbolSize: 6, areaStyle: { color: 'rgba(79,70,229,.08)' }, data: [] },
+                { name: '访问次数', type: 'line', smooth: true, symbolSize: 6, areaStyle: { color: 'rgba(16,185,129,.08)' }, data: [] }
             ]
         };
 
@@ -176,34 +207,49 @@
             // 按日期升序排序
             dates.sort();
 
-            var ipCountData = dates.map(function (date) {
-                return ipCounts[date].size;
-            });
-
-            var totalRowsData = dates.map(function (date) {
-                return totalRows[date];
-            });
+            var ipCountData = dates.map(function (date) { return ipCounts[date].size; });
+            var totalRowsData = dates.map(function (date) { return totalRows[date]; });
 
             chart.setOption({
-                xAxis: {
-                    data: dates
-                },
-                series: [
-                    {
-                        name: 'IP',
-                        data: ipCountData
-                    },
-                    {
-                        name: '访问次数',
-                        data: totalRowsData
-                    }
-                ]
+                xAxis: { data: dates },
+                series: [ { name: 'IP', data: ipCountData }, { name: '访问次数', data: totalRowsData } ]
             });
+        }
+
+        function updateKpis(rows) {
+            var total = rows.length;
+            var ipSet = new Set();
+            var pass = 0;
+            var regionCount = {};
+            var modelCount = {};
+            var sourceCount = {};
+            rows.forEach(function (r) {
+                if (r.ip) ipSet.add(r.ip);
+                if (String(r.passed) === '0') pass++;
+                if (r.region) regionCount[r.region] = (regionCount[r.region] || 0) + 1;
+                if (r.models) modelCount[r.models] = (modelCount[r.models] || 0) + 1;
+                if (r.source) sourceCount[r.source] = (sourceCount[r.source] || 0) + 1;
+            });
+            var uniqueIps = ipSet.size;
+            var passRate = total > 0 ? Math.round(pass * 1000 / total) / 10 + '%' : '-';
+            $('#kpiTotalRows').text(total);
+            $('#kpiUniqueIps').text(uniqueIps);
+            $('#kpiPassRate').text(passRate);
+
+            function top3(obj){
+                var arr = Object.keys(obj).map(function(k){ return { key: k, val: obj[k] }; });
+                arr.sort(function(a,b){ return b.val - a.val; });
+                return arr.slice(0,3).map(function(it){ return it.key + '(' + it.val + ')'; }).join(' / ') || '-';
+            }
+            $('#kpiTopRegions').text(top3(regionCount));
+            $('#kpiTopModels').text(top3(modelCount));
+            $('#kpiTopSources').text(top3(sourceCount));
         }
 
         $('#manage_accessUrl_datagrid').datagrid({
             onLoadSuccess: function (data) {
                 updateChart(data.rows);
+                updateKpis(data.rows);
             }
         });
     });
@@ -232,39 +278,33 @@
 
     function clickTypeFormatterFunction(value) {
         if (value == '1') {
-            return '旧点击访客<i class="fa fa-user-times fa-fw fa-col" style="color: red; align-items: center;" title="旧访客"></i>';
+            return '<span class="badge badge-muted">旧访客</span>';
         } else {
-            return '新点击访客<i class="fa fa-user-plus fa-fw fa-col" style="color: green; align-items: center;" title="新访客"></i>';
-        }
-    }
-
-    function displayPassedFunction (value){
-        if (value=='0'){
-            return ' <i class="fa fa-check fa-fw fa-col" style="color: cornflowerblue" />'
-        }else {
-            return '<i class="fa  fa-remove fa-fw fa-col" style="color: red"/>'
+            return '<span class="badge badge-primary">新访客</span>';
         }
     }
 
     function displayPassedFunction(value, row) {
         if (value === '0') {
-            return '<i class="fa fa-check fa-fw fa-col" style="color: cornflowerblue"></i>';
+            return '<span class="badge badge-success">通过</span>';
         } else {
-            return '<i class="fa fa-remove fa-fw fa-col" style="color: red"></i>' +
+            return '<span class="badge badge-danger" style="margin-right:6px;">失败</span>' +
                 '<button onclick="showTrollsDetailsList(' +row.id+ ')" class="btn btn-outline-danger btn-xs" type="button">' +
-                '<i class="fa fa-info fa-fw fa-col"></i>失败详情</button>';
+                '<i class="fa fa-info fa-fw fa-col"></i>详情</button>';
         }
     }
 
 
     function deviceDetailsFormatter(value, row) {
-        return '<div style="font-size: 11px" >Ip：' + (value || '') + '</div>'
-            + '<div style="color:#aaa; font-size:11px;">运营商：' + (row.ipDetails || '') + '</div>';
+        var ip = value || '';
+        var isp = row.ipDetails || '';
+        return '<div  style="font-size: 11px;" title="' + ip + '">Ip：' + ip + '</div>'
+            + '<div class="ellipsis" style="color:#8b8f98; font-size:11px; margin-top:2px;" title="' + isp + '">运营商：' + isp + '</div>';
     }
 
     function timeZoneFormatter(value, row) {
-        return '<div style="font-size: 11px; color:;" >设备时区：' + (value || '') + '</div>'
-            + '<div style="color:#aaa; font-size:11px;">Ip时区：' + (row.ipTime || '') + '</div>';
+        return '<div style="font-size: 11px;" >设备时区：' + (value || '') + '</div>'
+            + '<div style="color:#8b8f98; font-size:11px;">Ip时区：' + (row.ipTime || '') + '</div>';
     }
     function exportsAccessUrl(url, searchForm, fileName, centerId){
         var queryParams = $.acooly.framework.afterQueryParams[searchForm];
@@ -282,34 +322,19 @@
     }
 
     function showAccessDetails(value) {
-        if (!value) {
-            return '';
-        }
-        // 如果value是字符串，尝试解析为JSON
+        if (!value) { return ''; }
         if (typeof value === 'string') {
-            try {
-                value = JSON.parse(value);
-            } catch (e) {
-                return value;
-            }
+            try { value = JSON.parse(value); } catch (e) { return value; }
         }
-        // 如果是数组
         if (Array.isArray(value)) {
             let html = '<div style="max-height: 100px; overflow-y: auto;">';
-            value.forEach((item) => {
-                html += `<div>${item}</div>`;
-            });
-            html += '</div>';
-            return html;
+            value.forEach((item) => { html += `<div>${item}</div>`; });
+            html += '</div>'; return html;
         }
-        // 如果是对象
         if (typeof value === 'object') {
             let html = '<div style="max-height: 100px; overflow-y: auto;">';
-            Object.entries(value).forEach(([key, val]) => {
-                html += `<div>${key}: ${val}</div>`;
-            });
-            html += '</div>';
-            return html;
+            Object.entries(value).forEach(([key, val]) => { html += `<div>${key}: ${val}</div>`; });
+            html += '</div>'; return html;
         }
         return value;
     }
@@ -327,8 +352,4 @@
         var url ='/manage/link/dmAccess/showDetailsAccessUrl.html?id='+id;
         $.acooly.framework.show(url,500,500);
     }
-
-
-
-
 </script>

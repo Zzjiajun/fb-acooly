@@ -292,7 +292,7 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 	}
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	protected DmCenter onSave(HttpServletRequest request, HttpServletResponse response, Model model, DmCenter entity, boolean isCreate) throws Exception {
+	public DmCenter onSave(HttpServletRequest request, HttpServletResponse response, Model model, DmCenter entity, boolean isCreate) throws Exception {
 		List<String> list = Arrays.asList(entity.getPixel().split("\n")); // 将像素id拆分为列表
 		User principal = (User) SecurityUtils.getSubject().getPrincipal(); // 获取当前用户
 		String str=entity.getDomain() + "/" + entity.getSecondaryDomain(); // 拼接域名

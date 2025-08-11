@@ -1,68 +1,66 @@
+<style>
+  .details-box {
+    background: #ffffff;
+    color: #333333;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    max-height: 260px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+</style>
 <div class="card-body">
 	<dl class="row">
 		<dt class="col-sm-3">设备详情:</dt>
-		<dd style="color: red; word-wrap: break-word;" class="col-sm-9">
-			<pre id="deviceDetailsContainer">${dmAccess.deviceDetails}</pre>
+		<dd class="col-sm-9">
+			<pre id="deviceDetailsContainer" class="details-box">${dmAccess.deviceDetails}</pre>
 		</dd>
 		<dt class="col-sm-3">客户端详情:</dt>
-		<dd style="color: red; word-wrap: break-word;" class="col-sm-9">
-			<pre id="clientDetailsContainer">${dmAccess.clientDetails}</pre>
+		<dd class="col-sm-9">
+			<pre id="clientDetailsContainer" class="details-box">${dmAccess.clientDetails}</pre>
 		</dd>
 		<dt class="col-sm-3">虚拟机详情:</dt>
-		<dd style="color: red; word-wrap: break-word;" class="col-sm-9">
-			<pre id="virtualDetailsContainer">${dmAccess.virtualDetails}</pre>
+		<dd class="col-sm-9">
+			<pre id="virtualDetailsContainer" class="details-box">${dmAccess.virtualDetails}</pre>
 		</dd>
 	</dl>
 </div>
 <script>
 	$(function() {
-		// 格式化设备详情
-		try {
-			const deviceContainer = $('#deviceDetailsContainer');
-			const deviceContent = deviceContainer.text();
-			// console.log('原始设备详情内容:', deviceContent);
-			
-			// 直接处理字符串
-			const formattedDeviceContent = deviceContent
-				.split(',')
-				.map(item => item.trim())
-				.join('\n');
-			deviceContainer.text(formattedDeviceContent);
-		} catch (error) {
-			console.error('格式化设备详情时出错:', error);
-		}
+    function tryFormatContent(rawText) {
+      const text = (rawText || '').trim();
+      if (!text) return '';
+      // 优先尝试 JSON 美化
+      try {
+        const first = text[0];
+        const last = text[text.length - 1];
+        const looksLikeJson = (first === '{' && last === '}') || (first === '[' && last === ']');
+        if (looksLikeJson) {
+          return JSON.stringify(JSON.parse(text), null, 2);
+        }
+      } catch (e) { /* 忽略，走降级逻辑 */ }
 
-		// 格式化客户端详情
-		try {
-			const clientContainer = $('#clientDetailsContainer');
-			const clientContent = clientContainer.text();
-			// console.log('原始客户端详情内容:', clientContent);
-			
-			// 直接处理字符串
-			const formattedClientContent = clientContent
-				.split(',')
-				.map(item => item.trim())
-				.join('\n');
-			clientContainer.text(formattedClientContent);
-		} catch (error) {
-			console.error('格式化客户端详情时出错:', error);
-		}
+      // 其次尝试 querystring 风格 a=1&b=2
+      if (text.indexOf('&') > -1 && text.indexOf('=') > -1) {
+        return text.split('&').map(item => item.trim()).join('\n');
+      }
 
+      // 最后按逗号分隔
+      if (text.indexOf(',') > -1) {
+        return text.split(',').map(item => item.trim()).join('\n');
+      }
 
-		// 格式化客户端详情
-		try {
-			const virtualContainer = $('#virtualDetailsContainer');
-			const virtualContent = virtualContainer.text();
-			// console.log('原始客户端详情内容:', clientContent);
+      return text;
+    }
 
-			// 直接处理字符串
-			const formattedClientContent = virtualContent
-					.split(',')
-					.map(item => item.trim())
-					.join('\n');
-			virtualContainer.text(formattedClientContent);
-		} catch (error) {
-			console.error('格式化客户端详情时出错:', error);
-		}
+    ['#deviceDetailsContainer', '#clientDetailsContainer', '#virtualDetailsContainer'].forEach(sel => {
+      const $el = $(sel);
+      $el.text(tryFormatContent($el.text()));
+    });
 	});
 </script>
