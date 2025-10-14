@@ -299,6 +299,9 @@ public class LinkManagerController extends AbstractJsonEntityController<Link, Li
 			dmCondition.setIsVirtual(0);
 			dmCondition.setIosVersion("0.0.0");
 			dmCondition.setAndVersion("0.0.0");
+			dmCondition.setTimeMatch(0);
+			dmCondition.setUpdateBy(principal.getUsername());
+			dmCondition.setIsParams(0);
 			dmCondition.setAccessAddress(entity.getAccessAddress());
 			dmConditionService.save(dmCondition);
 

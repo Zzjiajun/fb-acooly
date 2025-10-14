@@ -138,5 +138,20 @@ public class DmCondition extends AbstractEntity {
      * 虚拟机
      */
     private Integer isVirtual;
-
+    /**
+     * id时区和设备时区是否一致
+     */
+    private Integer timeMatch;
+//    /**
+//     * 手机型号id集合
+//     */
+//    private String phoneModelIds;
+    /**
+     * 更新者
+     */
+    private String updateBy;
+    /**
+     * 是否带参数
+     */
+    private Integer isParams;
 }

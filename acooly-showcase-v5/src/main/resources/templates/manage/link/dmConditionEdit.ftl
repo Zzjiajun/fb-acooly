@@ -4,6 +4,26 @@
 		<@jodd.form bean="dmCondition" scope="request">
         <input name="id" type="hidden" />
 		<div class="card-body">
+			<#if action != 'create'>
+				<div class="form-group row">
+					<div class="col-sm-12">
+						<div class="alert alert-light" role="alert" style="margin-bottom:8px;">
+							最后更新时间：<span id="lastUpdateText">
+							<#if dmCondition.updateTime?has_content>
+								<#if dmCondition.updateTime?is_date>
+									${dmCondition.updateTime?string('yyyy-MM-dd HH:mm:ss')}
+								<#else>
+									${dmCondition.updateTime}
+								</#if>
+							</#if>
+							</span>
+							最后更新人: <span id="lastUpdateText">
+									${dmCondition.updateBy}
+							</span>
+						</div>
+					</div>
+				</div>
+			</#if>
 			<div class="form-group row">
 				<label class="col-sm-3 col-form-label">IP限制</label>
 				<div class="col-sm-3">
@@ -198,14 +218,30 @@
 					</div>
 				</div>
 			</div>
-<#--			<div class="card-body">-->
-<#--				<dl class="row">-->
-<#--					<dt class="col-sm-3">失败明细:</dt>-->
-<#--					<dd class="col-sm-9">-->
-<#--						<ul id="detailsContainer" style="padding-left: 18px; color: #d9534f; background: #fff3f3; border-left: 3px solid #d9534f; border-radius: 4px; min-height: 28px; margin-bottom: 0;"></ul>-->
-<#--					</dd>-->
-<#--				</dl>-->
-<#--			</div>-->
+			<div class="form-group row">
+				<label class="col-sm-3 col-form-label">ip和设备时区验证</label>
+				<div class="col-sm-3">
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-outline-primary">
+							<input type="radio" name="timeMatch" value="1" autocomplete="off"> 开启
+						</label>
+						<label class="btn btn-outline-danger">
+							<input type="radio" name="timeMatch" value="0" autocomplete="off"> 关闭
+						</label>
+					</div>
+				</div>
+				<label class="col-sm-3 col-form-label">是否限制带参数</label>
+				<div class="col-sm-3">
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-outline-primary">
+							<input type="radio" name="isParams" value="1" autocomplete="off"> 开启
+						</label>
+						<label class="btn btn-outline-danger">
+							<input type="radio" name="isParams" value="0" autocomplete="off"> 关闭
+						</label>
+					</div>
+				</div>
+			</div>
         </div>
       </@jodd.form>
     </form>
@@ -260,7 +296,9 @@
 		isRobot: '${dmCondition.isRobot!"0"}',
 		isVirtual: '${dmCondition.isVirtual!"0"}',
 		isBusiness: '${dmCondition.isBusiness!"0"}',
+		timeMatch: '${dmCondition.timeMatch!"0"}',
 		isIdentify: '${dmCondition.isIdentify!"0"}',
+		isParams: '${dmCondition.isParams!"0"}',
 		iosVersion: '${dmCondition.iosVersion!" "}',
 		andVersion: '${dmCondition.andVersion!" "}'
 	};
@@ -299,6 +337,9 @@ $(document).ready(function() {
 			width: '100%'
 		});
 		$languageSelect.trigger('change');
+
+		// 手机型号多选回显 待开发
+
 
 		// ipCountry多选回显
 		var ipCountryString = '${dmCondition.ipCountry!""}';
@@ -364,6 +405,45 @@ $(document).ready(function() {
             }
         });
     });
+	});
+</script>
+<script>
+$(function() {
+	if ('${action!"create"}' != 'create') {
+		var idVal = $('input[name="id"]').val();
+		if (idVal) {
+			$.getJSON('/manage/link/dmCondition/listJson.html', {'search_EQ_id': idVal}, function(res) {
+				try {
+					var rows = res.rows || res.data || [];
+					if (rows.length > 0) {
+						var ut = rows[0].updateTime || rows[0].updatedTime || rows[0].modifyTime || rows[0].lastModifyTime;
+						if (ut) {
+							$('#lastUpdateText').text(formatUpdateTime(ut));
+						}
+					}
+				} catch(e) {
+					console.log('获取更新时间失败:', e);
+				}
+			});
+		}
+	}
+	function formatUpdateTime(ut) {
+		if (typeof ut === 'number') {
+			var d = new Date(ut);
+			return formatDateObj(d);
+		}
+		if (typeof ut === 'string') {
+			if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(ut)) {
+				return ut.substring(0,19).replace('T',' ');
+			}
+			return ut;
+		}
+		return '' + ut;
+	}
+	function pad(n){return n<10?'0'+n:n;}
+	function formatDateObj(d){
+		return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+	}
 });
 </script>
 <#--<script>-->

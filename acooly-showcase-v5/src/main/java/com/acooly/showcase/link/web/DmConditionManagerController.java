@@ -6,7 +6,6 @@
  */
 package com.acooly.showcase.link.web;
 
-import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,9 +31,7 @@ import com.acooly.showcase.daliy.service.DmRegionService;
 import com.acooly.showcase.daliy.service.PermissionsService;
 import com.acooly.showcase.daliy.service.RegnameService;
 import com.acooly.showcase.link.entity.Board;
-import com.acooly.showcase.link.service.BoardService;
-import com.acooly.showcase.link.service.DmCountryService;
-import com.acooly.showcase.link.service.DmObserverPermissionService;
+import com.acooly.showcase.link.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
@@ -46,7 +43,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.acooly.core.common.web.AbstractJsonEntityController;
 import com.acooly.showcase.link.entity.DmCondition;
-import com.acooly.showcase.link.service.DmConditionService;
 
 import com.google.common.collect.Maps;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -85,6 +81,8 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
     private BoardService boardService;
     @Autowired
     private DmObserverPermissionService dmObserverPermissionService;
+    @Autowired
+    private DmModlesService dmModlesService;
 
 
     @Override
@@ -130,6 +128,7 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
         conMap.put("欧洲", "Europe");
         conMap.put("印度洋", "Indian");
         conMap.put("太平洋", "Pacific");
+
 
         model.put("conMap", conMap);
         // 使用 Stream API 简化代码
@@ -193,12 +192,19 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
         languageMap.put("日文", "jp");
         languageMap.put("韩文", "kr");
         model.put("languageMap", languageMap);
+
+        //手机型号列表 待开发
+
     }
 
     @Override
     protected DmCondition onSave(HttpServletRequest request, HttpServletResponse response, Model model, DmCondition entity, boolean isCreate) throws Exception {
         dmCountryService.dmWarmupRedis();
         dmCountryService.dmConditionRedis();
+        if (!isCreate){
+            User principal = (User) SecurityUtils.getSubject().getPrincipal();
+            entity.setUpdateBy(principal.getUsername());
+        }
 //        if (!isCreate) {
 //            Map<String, String> map = dmRegionService.getAll().stream().
 //                    collect(Collectors.toMap(DmRegion::getCode, DmRegion::getTimeZone));

@@ -205,7 +205,7 @@
             var dialog = $('<div/>').dialog({
                 href: contextPath + '/manage/link/dmCondition/editCenter.html?id=' + id,
                 width: 700,
-                height: 600,
+                height: 720,
                 modal: true,
                 title: '<i class="fa fa-pencil fa-lg fa-fw fa-col"></i>编辑规则',
                 buttons: [{

@@ -34,7 +34,7 @@
                 <th field="trollsDevice" formatter="contentFormatter">访问设备</th>
                 <th field="visitorType" formatter="contentFormatter">访客类型</th>
                 <th field="models" formatter="contentFormatter">机型</th>
-                <th field="source" formatter="contentFormatter">来源</th>
+<#--                <th field="source" formatter="contentFormatter">来源</th>-->
                 <th field="createTime" formatter="dateTimeFormatter">创建时间</th>
                 <th field="updateTime" formatter="dateTimeFormatter">修改时间</th>
             </tr>

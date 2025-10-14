@@ -73,10 +73,10 @@
 <!--            <artifactId>acooly-component-chart</artifactId>-->
 <!--        </dependency>-->
         
-<!--        <dependency>-->
-<!--            <groupId>com.acooly</groupId>-->
-<!--            <artifactId>acooly-component-chat</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.acooly</groupId>
+            <artifactId>acooly-component-chat</artifactId>
+        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>com.acooly</groupId>-->
 <!--            <artifactId>acooly-component-data-region</artifactId>-->

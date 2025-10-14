@@ -40,8 +40,8 @@
             <tr>
                 <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
                 <th field="id" sortable="true" >id</th>
-                <th field="userId" sortable="true" sum="true">观察者用户ID</th>
-                <th field="dmCenterId" sortable="true" sum="true">dmCenter记录ID</th>
+                <th field="userId" sortable="true" sum="true">观察者用户</th>
+                <th field="dmCenterId" formatter="dateTimeFormatter">链接记录对应域名</th>
                 <th field="grantTime" formatter="dateTimeFormatter">授权时间</th>
                 <th field="grantBy">授权人</th>
                 <th field="status" sortable="true" sum="true">状态：1=有效，0=无效</th>

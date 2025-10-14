@@ -61,7 +61,7 @@
                                             <th field="region" formatter="contentFormatter">访客地区</th>
                                             <th field="trollsPath" formatter="contentFormatter">访问路径</th>
                                             <th field="models" formatter="contentFormatter">机型</th>
-                                            <th field="source" formatter="contentFormatter">来源</th>
+<#--                                            <th field="source" formatter="contentFormatter">来源</th>-->
                                             <th field="trollsDevice" formatter="clickDeviceFormatterFunction">访问设备</th>
                                             <th field="visitorType" formatter="clickTypeFormatterFunction">访客类型</th>
                                             <th field="details" formatter="showDetails">失败详情</th>

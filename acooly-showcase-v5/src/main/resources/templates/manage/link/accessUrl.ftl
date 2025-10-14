@@ -115,11 +115,14 @@
                                 <div id="kpiTopModels" class="kpi-value" style="font-size:14px; font-weight:600; line-height:1.4;">-</div>
                                 <div class="kpi-sub">按机型计数</div>
                               </div>
+                              <#if !isCurrentUserObserverAccess>
                               <div class="kpi-card">
-                                <div class="kpi-title">来源（Top3）</div>
-                                <div id="kpiTopSources" class="kpi-value" style="font-size:14px; font-weight:600; line-height:1.4;">-</div>
-                                <div class="kpi-sub">按来源计数</div>
+                                 <div class="kpi-title">来源（Top3）</div>
+                                 <div id="kpiTopSources" class="kpi-value" style="font-size:14px; font-weight:600; line-height:1.4;">-</div>
+                                 <div class="kpi-sub">按来源计数</div>
                               </div>
+                              </#if>
+
                             </div>
 
                             <div class="tab-content p-0">
@@ -139,7 +142,9 @@
                                             <th field="accessPath" formatter="contentFormatter">访问路径</th>
                                             <th field="accessDevice" formatter="clickDeviceFormatterFunction">访问设备</th>
                                             <th field="models" formatter="contentFormatter">机型</th>
-                                            <th field="source" formatter="contentFormatter">来源</th>
+                                            <#if !isCurrentUserObserverAccess>
+                                                <th field="source" formatter="contentFormatter">来源</th>
+                                            </#if>
                                             <th field="visitorType" formatter="clickTypeFormatterFunction">访客类型</th>
                                             <th field="language" formatter="contentFormatter">语言</th>
                                             <th field="passed" formatter="displayPassedFunction">是否通过</th>
@@ -250,6 +255,7 @@
             onLoadSuccess: function (data) {
                 updateChart(data.rows);
                 updateKpis(data.rows);
+                enableDatagridColumnDrag('#manage_accessUrl_datagrid');
             }
         });
     });
@@ -265,6 +271,88 @@
         // value 例：'2024-05-01 08:00:00'，假设为服务器上海时区
         // 先解析为 dayjs 对象，再转为选中时区
         return dayjs.tz(value, 'Asia/Shanghai').tz(currentTimezone).format('YYYY-MM-DD HH:mm:ss');
+    }
+
+
+    // 简版：为 EasyUI datagrid 启用列拖拽（仅普通列，跳过复选框列；作用于非冻结区 view2）
+    function enableDatagridColumnDrag(gridSelector) {
+        var $grid = $(gridSelector);
+        var $panel = $grid.datagrid('getPanel');
+        if (!$panel || $panel.length === 0) { return; }
+
+        var $headerRow = $panel.find('div.datagrid-view2 .datagrid-header .datagrid-header-row');
+        if ($headerRow.length === 0) { return; }
+
+        // 解绑旧事件，避免重复绑定
+        $headerRow.find('td[field]').each(function(){
+            this.ondragstart = null;
+            this.ondragover = null;
+            this.ondrop = null;
+            this.ondragend = null;
+            this.draggable = false;
+        });
+
+        var dragState = { fromField: null, toField: null };
+
+        function moveColumnDom(fromField, toField) {
+            if (!fromField || !toField || fromField === toField) { return; }
+            var $view2 = $panel.find('div.datagrid-view2');
+
+            // 移动表头单元
+            var $fromTh = $headerRow.find('td[field="' + fromField + '"]');
+            var $toTh = $headerRow.find('td[field="' + toField + '"]');
+            if ($fromTh.length === 0 || $toTh.length === 0) { return; }
+
+            var fromIndex = $fromTh.index();
+            var toIndex = $toTh.index();
+
+            if (fromIndex < toIndex) {
+                $toTh.after($fromTh);
+            } else {
+                $toTh.before($fromTh);
+            }
+
+            // 同步移动每一行对应单元格
+            $view2.find('.datagrid-body tr.datagrid-row').each(function(){
+                var $row = $(this);
+                var $fromTd = $row.find('td[field="' + fromField + '"]');
+                var $toTd = $row.find('td[field="' + toField + '"]');
+                if ($fromTd.length === 0 || $toTd.length === 0) { return; }
+                var fIdx = $fromTd.index();
+                var tIdx = $toTd.index();
+                if (fIdx < tIdx) {
+                    $toTd.after($fromTd);
+                } else {
+                    $toTd.before($fromTd);
+                }
+            });
+        }
+
+        // 设置可拖拽
+        $headerRow.find('td[field]').each(function(){
+            var $th = $(this);
+            var field = $th.attr('field');
+            if (!field || field === 'showCheckboxWithId') { return; }
+
+            this.draggable = true;
+            this.ondragstart = function (e) {
+                dragState.fromField = field;
+                try { e.dataTransfer.setData('text/plain', field); } catch (err) {}
+                // 提示样式
+                $th.addClass('ac-col-dragging');
+            };
+            this.ondragover = function (e) { e.preventDefault(); };
+            this.ondrop = function (e) {
+                e.preventDefault();
+                dragState.toField = field;
+                if (dragState.fromField && dragState.toField) {
+                    moveColumnDom(dragState.fromField, dragState.toField);
+                }
+                dragState.fromField = null;
+                dragState.toField = null;
+            };
+            this.ondragend = function () { $headerRow.find('.ac-col-dragging').removeClass('ac-col-dragging'); };
+        });
     }
 
 
