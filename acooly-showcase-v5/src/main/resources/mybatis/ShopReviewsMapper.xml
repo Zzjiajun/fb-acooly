@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopReviewsDao">
+
+    <resultMap id="shopReviewsResultMap" type="com.acooly.showcase.shop.entity.ShopReviews">
+        <id property="id" column="shopReviews_id"/>
+        <result property="productId" column="shopReviews_product_id"/>
+        <result property="userId" column="shopReviews_user_id"/>
+        <result property="rating" column="shopReviews_rating"/>
+        <result property="comment" column="shopReviews_comment"/>
+        <result property="isVerified" column="shopReviews_is_verified"/>
+        <result property="helpfulCount" column="shopReviews_helpful_count"/>
+        <result property="createdAt" column="shopReviews_created_at"/>
+    </resultMap>
+
+    <sql id="shopReviewsSqlSelect">
+            shopReviews.id as shopReviews_id,
+            shopReviews.product_id as shopReviews_product_id,
+            shopReviews.user_id as shopReviews_user_id,
+            shopReviews.rating as shopReviews_rating,
+            shopReviews.comment as shopReviews_comment,
+            shopReviews.is_verified as shopReviews_is_verified,
+            shopReviews.helpful_count as shopReviews_helpful_count,
+            shopReviews.created_at as shopReviews_created_at
+    </sql>
+
+</mapper>

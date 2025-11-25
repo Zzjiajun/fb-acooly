@@ -1,0 +1,34 @@
+<div class="card-body">
+	<dl class="row">
+		<dt class="col-sm-3">子级分类ID:</dt>
+		<dd class="col-sm-9">${shopSubCategories.id}</dd>
+		<dt class="col-sm-3">父级分类ID:</dt>
+		<dd class="col-sm-9">${shopSubCategories.parentId}</dd>
+		<dt class="col-sm-3">子级分类名称:</dt>
+		<dd class="col-sm-9">${shopSubCategories.name}</dd>
+		<dt class="col-sm-3">子级分类标识:</dt>
+		<dd class="col-sm-9">${shopSubCategories.slug}</dd>
+		<dt class="col-sm-3">子级分类描述:</dt>
+		<dd class="col-sm-9">${shopSubCategories.description}</dd>
+		<dt class="col-sm-3">排序顺序:</dt>
+		<dd class="col-sm-9">${shopSubCategories.sortOrder}</dd>
+		<dt class="col-sm-3">是否启用:</dt>
+		<dd class="col-sm-9">${shopSubCategories.isActive}</dd>
+		<dt class="col-sm-3">是否显示:</dt>
+		<dd class="col-sm-9">${shopSubCategories.isShow}</dd>
+		<dt class="col-sm-3">分类图标URL:</dt>
+		<dd class="col-sm-9">${shopSubCategories.icon}</dd>
+		<dt class="col-sm-3">分类图片URL:</dt>
+		<dd class="col-sm-9">${shopSubCategories.image}</dd>
+		<dt class="col-sm-3">SEO标题:</dt>
+		<dd class="col-sm-9">${shopSubCategories.seoTitle}</dd>
+		<dt class="col-sm-3">SEO关键词:</dt>
+		<dd class="col-sm-9">${shopSubCategories.seoKeywords}</dd>
+		<dt class="col-sm-3">SEO描述:</dt>
+		<dd class="col-sm-9">${shopSubCategories.seoDescription}</dd>
+		<dt class="col-sm-3">创建时间:</dt>
+		<dd class="col-sm-9">${(shopSubCategories.createdAt?string('yyyy-MM-dd HH:mm:ss'))!}</dd>
+		<dt class="col-sm-3">更新时间:</dt>
+		<dd class="col-sm-9">${(shopSubCategories.updatedAt?string('yyyy-MM-dd HH:mm:ss'))!}</dd>
+	</dl>
+</div>

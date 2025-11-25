@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopContactMessagesDao">
+
+    <resultMap id="shopContactMessagesResultMap" type="com.acooly.showcase.shop.entity.ShopContactMessages">
+        <id property="id" column="shopContactMessages_id"/>
+        <result property="name" column="shopContactMessages_name"/>
+        <result property="email" column="shopContactMessages_email"/>
+        <result property="subject" column="shopContactMessages_subject"/>
+        <result property="message" column="shopContactMessages_message"/>
+        <result property="createdAt" column="shopContactMessages_created_at"/>
+    </resultMap>
+
+    <sql id="shopContactMessagesSqlSelect">
+            shopContactMessages.id as shopContactMessages_id,
+            shopContactMessages.name as shopContactMessages_name,
+            shopContactMessages.email as shopContactMessages_email,
+            shopContactMessages.subject as shopContactMessages_subject,
+            shopContactMessages.message as shopContactMessages_message,
+            shopContactMessages.created_at as shopContactMessages_created_at
+    </sql>
+
+</mapper>

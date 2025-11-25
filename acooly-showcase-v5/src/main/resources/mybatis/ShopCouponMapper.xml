@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopCouponDao">
+
+    <resultMap id="shopCouponResultMap" type="com.acooly.showcase.shop.entity.ShopCoupon">
+        <id property="id" column="shopCoupon_id"/>
+        <result property="code" column="shopCoupon_code"/>
+        <result property="discountType" column="shopCoupon_discount_type"/>
+        <result property="discountValue" column="shopCoupon_discount_value"/>
+        <result property="totalUses" column="shopCoupon_total_uses"/>
+        <result property="usedCount" column="shopCoupon_used_count"/>
+        <result property="perUserLimit" column="shopCoupon_per_user_limit"/>
+        <result property="status" column="shopCoupon_status"/>
+        <result property="validFrom" column="shopCoupon_valid_from"/>
+        <result property="validTo" column="shopCoupon_valid_to"/>
+        <result property="createdBy" column="shopCoupon_created_by"/>
+        <result property="createTime" column="shopCoupon_create_time"/>
+        <result property="updateTime" column="shopCoupon_update_time"/>
+    </resultMap>
+
+    <sql id="shopCouponSqlSelect">
+            shopCoupon.id as shopCoupon_id,
+            shopCoupon.code as shopCoupon_code,
+            shopCoupon.discount_type as shopCoupon_discount_type,
+            shopCoupon.discount_value as shopCoupon_discount_value,
+            shopCoupon.total_uses as shopCoupon_total_uses,
+            shopCoupon.used_count as shopCoupon_used_count,
+            shopCoupon.per_user_limit as shopCoupon_per_user_limit,
+            shopCoupon.status as shopCoupon_status,
+            shopCoupon.valid_from as shopCoupon_valid_from,
+            shopCoupon.valid_to as shopCoupon_valid_to,
+            shopCoupon.created_by as shopCoupon_created_by,
+            shopCoupon.create_time as shopCoupon_create_time,
+            shopCoupon.update_time as shopCoupon_update_time
+    </sql>
+
+</mapper>

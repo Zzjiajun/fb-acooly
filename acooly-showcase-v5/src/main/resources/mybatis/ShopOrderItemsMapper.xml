@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopOrderItemsDao">
+
+    <resultMap id="shopOrderItemsResultMap" type="com.acooly.showcase.shop.entity.ShopOrderItems">
+        <id property="id" column="shopOrderItems_id"/>
+        <result property="orderId" column="shopOrderItems_order_id"/>
+        <result property="productId" column="shopOrderItems_product_id"/>
+        <result property="productName" column="shopOrderItems_product_name"/>
+        <result property="quantity" column="shopOrderItems_quantity"/>
+        <result property="price" column="shopOrderItems_price"/>
+        <result property="totalPrice" column="shopOrderItems_total_price"/>
+        <result property="createTime" column="shopOrderItems_create_time"/>
+        <result property="updateTime" column="shopOrderItems_update_time"/>
+    </resultMap>
+
+    <sql id="shopOrderItemsSqlSelect">
+            shopOrderItems.id as shopOrderItems_id,
+            shopOrderItems.order_id as shopOrderItems_order_id,
+            shopOrderItems.product_id as shopOrderItems_product_id,
+            shopOrderItems.product_name as shopOrderItems_product_name,
+            shopOrderItems.quantity as shopOrderItems_quantity,
+            shopOrderItems.price as shopOrderItems_price,
+            shopOrderItems.total_price as shopOrderItems_total_price,
+            shopOrderItems.create_time as shopOrderItems_create_time,
+            shopOrderItems.update_time as shopOrderItems_update_time
+    </sql>
+
+</mapper>

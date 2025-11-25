@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopSubCategoriesDao">
+
+    <resultMap id="shopSubCategoriesResultMap" type="com.acooly.showcase.shop.entity.ShopSubCategories">
+        <id property="id" column="shopSubCategories_id"/>
+        <result property="parentId" column="shopSubCategories_parent_id"/>
+        <result property="name" column="shopSubCategories_name"/>
+        <result property="slug" column="shopSubCategories_slug"/>
+        <result property="description" column="shopSubCategories_description"/>
+        <result property="sortOrder" column="shopSubCategories_sort_order"/>
+        <result property="isActive" column="shopSubCategories_is_active"/>
+        <result property="isShow" column="shopSubCategories_is_show"/>
+        <result property="icon" column="shopSubCategories_icon"/>
+        <result property="image" column="shopSubCategories_image"/>
+        <result property="seoTitle" column="shopSubCategories_seo_title"/>
+        <result property="seoKeywords" column="shopSubCategories_seo_keywords"/>
+        <result property="seoDescription" column="shopSubCategories_seo_description"/>
+        <result property="createdAt" column="shopSubCategories_created_at"/>
+        <result property="updatedAt" column="shopSubCategories_updated_at"/>
+    </resultMap>
+
+    <sql id="shopSubCategoriesSqlSelect">
+            shopSubCategories.id as shopSubCategories_id,
+            shopSubCategories.parent_id as shopSubCategories_parent_id,
+            shopSubCategories.name as shopSubCategories_name,
+            shopSubCategories.slug as shopSubCategories_slug,
+            shopSubCategories.description as shopSubCategories_description,
+            shopSubCategories.sort_order as shopSubCategories_sort_order,
+            shopSubCategories.is_active as shopSubCategories_is_active,
+            shopSubCategories.is_show as shopSubCategories_is_show,
+            shopSubCategories.icon as shopSubCategories_icon,
+            shopSubCategories.image as shopSubCategories_image,
+            shopSubCategories.seo_title as shopSubCategories_seo_title,
+            shopSubCategories.seo_keywords as shopSubCategories_seo_keywords,
+            shopSubCategories.seo_description as shopSubCategories_seo_description,
+            shopSubCategories.created_at as shopSubCategories_created_at,
+            shopSubCategories.updated_at as shopSubCategories_updated_at
+    </sql>
+
+</mapper>

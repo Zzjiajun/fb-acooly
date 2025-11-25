@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopParentCategoriesDao">
+
+    <resultMap id="shopParentCategoriesResultMap" type="com.acooly.showcase.shop.entity.ShopParentCategories">
+        <id property="id" column="shopParentCategories_id"/>
+        <result property="name" column="shopParentCategories_name"/>
+        <result property="slug" column="shopParentCategories_slug"/>
+        <result property="description" column="shopParentCategories_description"/>
+        <result property="sortOrder" column="shopParentCategories_sort_order"/>
+        <result property="isActive" column="shopParentCategories_is_active"/>
+        <result property="isShow" column="shopParentCategories_is_show"/>
+        <result property="icon" column="shopParentCategories_icon"/>
+        <result property="image" column="shopParentCategories_image"/>
+        <result property="seoTitle" column="shopParentCategories_seo_title"/>
+        <result property="seoKeywords" column="shopParentCategories_seo_keywords"/>
+        <result property="seoDescription" column="shopParentCategories_seo_description"/>
+        <result property="createdAt" column="shopParentCategories_created_at"/>
+        <result property="updatedAt" column="shopParentCategories_updated_at"/>
+    </resultMap>
+
+    <sql id="shopParentCategoriesSqlSelect">
+            shopParentCategories.id as shopParentCategories_id,
+            shopParentCategories.name as shopParentCategories_name,
+            shopParentCategories.slug as shopParentCategories_slug,
+            shopParentCategories.description as shopParentCategories_description,
+            shopParentCategories.sort_order as shopParentCategories_sort_order,
+            shopParentCategories.is_active as shopParentCategories_is_active,
+            shopParentCategories.is_show as shopParentCategories_is_show,
+            shopParentCategories.icon as shopParentCategories_icon,
+            shopParentCategories.image as shopParentCategories_image,
+            shopParentCategories.seo_title as shopParentCategories_seo_title,
+            shopParentCategories.seo_keywords as shopParentCategories_seo_keywords,
+            shopParentCategories.seo_description as shopParentCategories_seo_description,
+            shopParentCategories.created_at as shopParentCategories_created_at,
+            shopParentCategories.updated_at as shopParentCategories_updated_at
+    </sql>
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopCartDao">
+
+    <resultMap id="shopCartResultMap" type="com.acooly.showcase.shop.entity.ShopCart">
+        <id property="id" column="shopCart_id"/>
+        <result property="userId" column="shopCart_user_id"/>
+        <result property="totalPrice" column="shopCart_total_price"/>
+        <result property="createTime" column="shopCart_create_time"/>
+        <result property="updateTime" column="shopCart_update_time"/>
+    </resultMap>
+
+    <sql id="shopCartSqlSelect">
+            shopCart.id as shopCart_id,
+            shopCart.user_id as shopCart_user_id,
+            shopCart.total_price as shopCart_total_price,
+            shopCart.create_time as shopCart_create_time,
+            shopCart.update_time as shopCart_update_time
+    </sql>
+
+</mapper>

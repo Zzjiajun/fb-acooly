@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopCartItemDao">
+
+    <resultMap id="shopCartItemResultMap" type="com.acooly.showcase.shop.entity.ShopCartItem">
+        <id property="id" column="shopCartItem_id"/>
+        <result property="cartId" column="shopCartItem_cart_id"/>
+        <result property="userId" column="shopCartItem_user_id"/>
+        <result property="productId" column="shopCartItem_product_id"/>
+        <result property="quantity" column="shopCartItem_quantity"/>
+        <result property="price" column="shopCartItem_price"/>
+        <result property="totalPrice" column="shopCartItem_total_price"/>
+        <result property="createTime" column="shopCartItem_create_time"/>
+        <result property="updateTime" column="shopCartItem_update_time"/>
+    </resultMap>
+
+    <sql id="shopCartItemSqlSelect">
+            shopCartItem.id as shopCartItem_id,
+            shopCartItem.cart_id as shopCartItem_cart_id,
+            shopCartItem.user_id as shopCartItem_user_id,
+            shopCartItem.product_id as shopCartItem_product_id,
+            shopCartItem.quantity as shopCartItem_quantity,
+            shopCartItem.price as shopCartItem_price,
+            shopCartItem.total_price as shopCartItem_total_price,
+            shopCartItem.create_time as shopCartItem_create_time,
+            shopCartItem.update_time as shopCartItem_update_time
+    </sql>
+
+</mapper>

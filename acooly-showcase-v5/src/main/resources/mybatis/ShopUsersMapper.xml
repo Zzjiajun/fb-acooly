@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopUsersDao">
+
+    <resultMap id="shopUsersResultMap" type="com.acooly.showcase.shop.entity.ShopUsers">
+        <id property="id" column="shopUsers_id"/>
+        <result property="email" column="shopUsers_email"/>
+        <result property="password" column="shopUsers_password"/>
+        <result property="name" column="shopUsers_name"/>
+        <result property="avatar" column="shopUsers_avatar"/>
+        <result property="thirdPartyId" column="shopUsers_third_party_id"/>
+        <result property="provider" column="shopUsers_provider"/>
+        <result property="createTime" column="shopUsers_created_at"/>
+        <result property="updateTime" column="shopUsers_updated_at"/>
+    </resultMap>
+
+    <sql id="shopUsersSqlSelect">
+            shopUsers.id as shopUsers_id,
+            shopUsers.email as shopUsers_email,
+            shopUsers.password as shopUsers_password,
+            shopUsers.name as shopUsers_name,
+            shopUsers.avatar as shopUsers_avatar,
+            shopUsers.third_party_id as shopUsers_third_party_id,
+            shopUsers.provider as shopUsers_provider,
+            shopUsers.created_at as shopUsers_created_at,
+            shopUsers.updated_at as shopUsers_updated_at
+    </sql>
+
+</mapper>

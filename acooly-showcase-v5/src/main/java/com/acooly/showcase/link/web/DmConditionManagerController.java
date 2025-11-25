@@ -189,8 +189,38 @@ public class DmConditionManagerController extends AbstractJsonEntityController<D
         languageMap.put("繁體中文(香港)", "zh-HK");
         languageMap.put("繁體中文(澳門)", "zh-MO");
         languageMap.put("英文", "en");
-        languageMap.put("日文", "jp");
-        languageMap.put("韩文", "kr");
+        languageMap.put("日文", "ja");          // 修改为标准 jp -> ja
+        languageMap.put("韩文", "ko");          // 修改为标准 kr -> ko
+        languageMap.put("墨西哥(西班牙语)", "es-MX");
+        languageMap.put("西班牙语", "es");
+        languageMap.put("法语", "fr");
+        languageMap.put("德语", "de");
+        languageMap.put("葡萄牙语", "pt");
+        languageMap.put("意大利语", "it");
+        languageMap.put("俄语", "ru");
+        languageMap.put("阿拉伯语", "ar");
+        languageMap.put("印地语", "hi");
+        languageMap.put("孟加拉语", "bn");
+        languageMap.put("乌尔都语", "ur");
+        languageMap.put("泰语", "th");
+        languageMap.put("越南语", "vi");
+        languageMap.put("土耳其语", "tr");
+        languageMap.put("荷兰语", "nl");
+        languageMap.put("瑞典语", "sv");
+        languageMap.put("挪威语", "no");
+        languageMap.put("丹麦语", "da");
+        languageMap.put("芬兰语", "fi");
+        languageMap.put("希腊语", "el");
+        languageMap.put("波兰语", "pl");
+        languageMap.put("匈牙利语", "hu");
+        languageMap.put("捷克语", "cs");
+        languageMap.put("斯洛伐克语", "sk");
+        languageMap.put("希伯来语", "he");
+        languageMap.put("印尼语", "id");
+        languageMap.put("马来语", "ms");
+        languageMap.put("菲律宾语", "tl");
+        languageMap.put("韩语", "ko"); // 保留
+        languageMap.put("日语", "ja"); // 保留
         model.put("languageMap", languageMap);
 
         //手机型号列表 待开发

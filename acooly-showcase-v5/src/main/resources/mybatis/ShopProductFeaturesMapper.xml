@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopProductFeaturesDao">
+
+    <resultMap id="shopProductFeaturesResultMap" type="com.acooly.showcase.shop.entity.ShopProductFeatures">
+        <id property="id" column="shopProductFeatures_id"/>
+        <result property="productId" column="shopProductFeatures_product_id"/>
+        <result property="feature" column="shopProductFeatures_feature"/>
+        <result property="featureValue" column="shopProductFeatures_feature_value"/>
+        <result property="sortOrder" column="shopProductFeatures_sort_order"/>
+        <result property="createdAt" column="shopProductFeatures_created_at"/>
+    </resultMap>
+
+    <sql id="shopProductFeaturesSqlSelect">
+            shopProductFeatures.id as shopProductFeatures_id,
+            shopProductFeatures.product_id as shopProductFeatures_product_id,
+            shopProductFeatures.feature as shopProductFeatures_feature,
+            shopProductFeatures.feature_value as shopProductFeatures_feature_value,
+            shopProductFeatures.sort_order as shopProductFeatures_sort_order,
+            shopProductFeatures.created_at as shopProductFeatures_created_at
+    </sql>
+
+</mapper>

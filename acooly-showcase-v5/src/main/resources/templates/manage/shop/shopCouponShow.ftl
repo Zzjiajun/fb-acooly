@@ -1,0 +1,30 @@
+<div class="card-body">
+	<dl class="row">
+		<dt class="col-sm-3">id:</dt>
+		<dd class="col-sm-9">${shopCoupon.id}</dd>
+		<dt class="col-sm-3">code:</dt>
+		<dd class="col-sm-9">${shopCoupon.code}</dd>
+		<dt class="col-sm-3">'percent' or 'amount':</dt>
+		<dd class="col-sm-9">${shopCoupon.discountType}</dd>
+		<dt class="col-sm-3">discount_value:</dt>
+		<dd class="col-sm-9">${shopCoupon.discountValue}</dd>
+		<dt class="col-sm-3">券可被全局使用的总次数，0 表示不限:</dt>
+		<dd class="col-sm-9">${shopCoupon.totalUses}</dd>
+		<dt class="col-sm-3">已被使用次数:</dt>
+		<dd class="col-sm-9">${shopCoupon.usedCount}</dd>
+		<dt class="col-sm-3">每个用户最多使用次数，0 表示不限:</dt>
+		<dd class="col-sm-9">${shopCoupon.perUserLimit}</dd>
+		<dt class="col-sm-3">ACTIVE/INACTIVE/EXPIRED:</dt>
+		<dd class="col-sm-9">${shopCoupon.status}</dd>
+		<dt class="col-sm-3">有效期开始:</dt>
+		<dd class="col-sm-9">${(shopCoupon.validFrom?string('yyyy-MM-dd HH:mm:ss'))!}</dd>
+		<dt class="col-sm-3">有效期结束:</dt>
+		<dd class="col-sm-9">${(shopCoupon.validTo?string('yyyy-MM-dd HH:mm:ss'))!}</dd>
+		<dt class="col-sm-3">created_by:</dt>
+		<dd class="col-sm-9">${shopCoupon.createdBy}</dd>
+		<dt class="col-sm-3">create_time:</dt>
+		<dd class="col-sm-9">${(shopCoupon.createTime?string('yyyy-MM-dd HH:mm:ss'))!}</dd>
+		<dt class="col-sm-3">update_time:</dt>
+		<dd class="col-sm-9">${(shopCoupon.updateTime?string('yyyy-MM-dd HH:mm:ss'))!}</dd>
+	</dl>
+</div>

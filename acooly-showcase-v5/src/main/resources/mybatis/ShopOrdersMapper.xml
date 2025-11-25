@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopOrdersDao">
+
+    <resultMap id="shopOrdersResultMap" type="com.acooly.showcase.shop.entity.ShopOrders">
+        <id property="id" column="shopOrders_id"/>
+        <result property="orderId" column="shopOrders_order_id"/>
+        <result property="userId" column="shopOrders_user_id"/>
+        <result property="totalPrice" column="shopOrders_total_price"/>
+        <result property="status" column="shopOrders_status"/>
+        <result property="shippingAddress" column="shopOrders_shipping_address"/>
+        <result property="shippingCity" column="shopOrders_shipping_city"/>
+        <result property="shippingZipCode" column="shopOrders_shipping_zip_code"/>
+        <result property="shippingCountry" column="shopOrders_shipping_country"/>
+        <result property="contactPhone" column="shopOrders_contact_phone"/>
+        <result property="paymentMethod" column="shopOrders_payment_method"/>
+        <result property="cancelReason" column="shopOrders_cancel_reason"/>
+        <result property="createdAt" column="shopOrders_created_at"/>
+        <result property="updatedAt" column="shopOrders_updated_at"/>
+    </resultMap>
+
+    <sql id="shopOrdersSqlSelect">
+            shopOrders.id as shopOrders_id,
+            shopOrders.order_id as shopOrders_order_id,
+            shopOrders.user_id as shopOrders_user_id,
+            shopOrders.total_price as shopOrders_total_price,
+            shopOrders.status as shopOrders_status,
+            shopOrders.shipping_address as shopOrders_shipping_address,
+            shopOrders.shipping_city as shopOrders_shipping_city,
+            shopOrders.shipping_zip_code as shopOrders_shipping_zip_code,
+            shopOrders.shipping_country as shopOrders_shipping_country,
+            shopOrders.contact_phone as shopOrders_contact_phone,
+            shopOrders.payment_method as shopOrders_payment_method,
+            shopOrders.cancel_reason as shopOrders_cancel_reason,
+            shopOrders.created_at as shopOrders_created_at,
+            shopOrders.updated_at as shopOrders_updated_at
+    </sql>
+
+</mapper>

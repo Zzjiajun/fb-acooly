@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -18,8 +19,13 @@ import java.util.stream.Stream;
 @Slf4j
 public class RedisUtils {
 
-    @Resource
-    private RedisTemplate redisTemplate;
+    /**
+     * 方案二：指定使用 jsonRedisTemplate Bean，避免使用框架的 redisTemplate
+     * 这样就能确保使用我们配置的 GenericJackson2JsonRedisSerializer
+     */
+//    @Resource(name = "jsonRedisTemplate")
+    @Resource(name = "redisTemplate")
+    private RedisTemplate<String, Object> redisTemplate;
 
     private static final String CACHE_KEY_SEPARATOR = ".";
 
@@ -29,6 +35,13 @@ public class RedisUtils {
      */
     public String buildKey(String... strObjs) {
         return Stream.of(strObjs).collect(Collectors.joining(CACHE_KEY_SEPARATOR));
+    }
+
+
+    public String buildKeyShop(String... segments) {
+        return Stream.of(segments)
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(CACHE_KEY_SEPARATOR));
     }
 
     /**
@@ -65,6 +78,15 @@ public class RedisUtils {
     public String get(String key) {
         return (String) redisTemplate.opsForValue().get(key);
     }
+    public <T> T get(String key, Class<T> clazz) {
+        try {
+            Object obj = redisTemplate.opsForValue().get(key);
+            return clazz.isInstance(obj) ? clazz.cast(obj) : null;
+        } catch (Exception e) {
+            log.error("Redis get 失败 key={}", key, e);
+            return null;
+        }
+    }
 
     public Boolean zAdd(String key, String value, Long score) {
         return redisTemplate.opsForZSet().add(key, value, Double.valueOf(String.valueOf(score)));
@@ -74,7 +96,7 @@ public class RedisUtils {
         return redisTemplate.opsForZSet().size(key);
     }
 
-    public Set<String> rangeZset(String key, long start, long end) {
+    public Set<Object> rangeZset(String key, long start, long end) {
         return redisTemplate.opsForZSet().range(key, start, end);
     }
 
@@ -90,7 +112,7 @@ public class RedisUtils {
         return redisTemplate.opsForZSet().score(key, value);
     }
 
-    public Set<String> rangeByScore(String key, long start, long end) {
+    public Set<Object> rangeByScore(String key, long start, long end) {
         return redisTemplate.opsForZSet().rangeByScore(key, Double.valueOf(String.valueOf(start)), Double.valueOf(String.valueOf(end)));
     }
 

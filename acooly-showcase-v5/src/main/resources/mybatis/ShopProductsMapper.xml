@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acooly.showcase.shop.dao.ShopProductsDao">
+
+    <resultMap id="shopProductsResultMap" type="com.acooly.showcase.shop.entity.ShopProducts">
+        <id property="id" column="shopProducts_id"/>
+        <result property="name" column="shopProducts_name"/>
+        <result property="subCategoryId" column="shopProducts_sub_category_id"/>
+        <result property="price" column="shopProducts_price"/>
+        <result property="originalPrice" column="shopProducts_original_price"/>
+        <result property="rating" column="shopProducts_rating"/>
+        <result property="reviewCount" column="shopProducts_review_count"/>
+        <result property="imageUrl" column="shopProducts_image_url"/>
+        <result property="featured" column="shopProducts_featured"/>
+        <result property="freeShipping" column="shopProducts_free_shipping"/>
+        <result property="description" column="shopProducts_description"/>
+        <result property="createdAt" column="shopProducts_created_at"/>
+        <result property="updatedAt" column="shopProducts_updated_at"/>
+    </resultMap>
+
+    <sql id="shopProductsSqlSelect">
+            shopProducts.id as shopProducts_id,
+            shopProducts.name as shopProducts_name,
+            shopProducts.sub_category_id as shopProducts_sub_category_id,
+            shopProducts.price as shopProducts_price,
+            shopProducts.original_price as shopProducts_original_price,
+            shopProducts.rating as shopProducts_rating,
+            shopProducts.review_count as shopProducts_review_count,
+            shopProducts.image_url as shopProducts_image_url,
+            shopProducts.featured as shopProducts_featured,
+            shopProducts.free_shipping as shopProducts_free_shipping,
+            shopProducts.description as shopProducts_description,
+            shopProducts.created_at as shopProducts_created_at,
+            shopProducts.updated_at as shopProducts_updated_at
+    </sql>
+
+</mapper>

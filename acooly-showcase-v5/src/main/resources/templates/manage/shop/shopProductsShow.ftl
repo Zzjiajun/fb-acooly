@@ -1,0 +1,30 @@
+<div class="card-body">
+	<dl class="row">
+		<dt class="col-sm-3">商品ID:</dt>
+		<dd class="col-sm-9">${shopProducts.id}</dd>
+		<dt class="col-sm-3">商品名称:</dt>
+		<dd class="col-sm-9">${shopProducts.name}</dd>
+		<dt class="col-sm-3">子级分类ID:</dt>
+		<dd class="col-sm-9">${shopProducts.subCategoryId}</dd>
+		<dt class="col-sm-3">商品价格:</dt>
+		<dd class="col-sm-9">${shopProducts.price}</dd>
+		<dt class="col-sm-3">商品原价:</dt>
+		<dd class="col-sm-9">${shopProducts.originalPrice}</dd>
+		<dt class="col-sm-3">商品评分:</dt>
+		<dd class="col-sm-9">${shopProducts.rating}</dd>
+		<dt class="col-sm-3">评论数量:</dt>
+		<dd class="col-sm-9">${shopProducts.reviewCount}</dd>
+		<dt class="col-sm-3">商品主图URL:</dt>
+		<dd class="col-sm-9">${shopProducts.imageUrl}</dd>
+		<dt class="col-sm-3">是否推荐:</dt>
+		<dd class="col-sm-9">${shopProducts.featured}</dd>
+		<dt class="col-sm-3">是否包邮:</dt>
+		<dd class="col-sm-9">${shopProducts.freeShipping}</dd>
+		<dt class="col-sm-3">商品描述:</dt>
+		<dd class="col-sm-9">${shopProducts.description}</dd>
+		<dt class="col-sm-3">创建时间:</dt>
+		<dd class="col-sm-9">${(shopProducts.createdAt?string('yyyy-MM-dd HH:mm:ss'))!}</dd>
+		<dt class="col-sm-3">更新时间:</dt>
+		<dd class="col-sm-9">${(shopProducts.updatedAt?string('yyyy-MM-dd HH:mm:ss'))!}</dd>
+	</dl>
+</div>
