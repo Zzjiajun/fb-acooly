@@ -30,6 +30,7 @@
                 <th field="email" formatter="contentFormatter">邮箱地址</th>
                 <th field="password" formatter="contentFormatter">密码（加密存储）</th>
                 <th field="name" formatter="contentFormatter">用户姓名</th>
+                <th field="teamName" formatter="contentFormatter" width="120">团队名称</th>
 <#--                <th field="avatar" formatter="contentFormatter">头像URL</th>-->
 <#--                <th field="thirdPartyId" formatter="contentFormatter">第三方平台用户ID</th>-->
 <#--                <th field="provider">登录方式：GOOGLE, FACEBOOK, TIKTOK, LOCAL</th>-->

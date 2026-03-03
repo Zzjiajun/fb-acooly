@@ -187,6 +187,26 @@
                     <div class="card-header">
                         <h5 class="card-title"><i class="fas fa-chart-line mr-1"></i>订单统计</h5>
                         <div class="card-tools">
+                            <!-- 日期选择器 -->
+                            <div class="input-group input-group-sm" style="width: 350px; margin-right: 10px; display: inline-flex;">
+                                <input type="text" id="orderStatsStartDate" class="form-control form-control-sm" 
+                                       placeholder="开始日期" style="width: 120px;" 
+                                       onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'orderStatsEndDate\')}'})" 
+                                       onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'orderStatsEndDate\')}'})" />
+                                <span class="input-group-text" style="padding: 0.25rem 0.5rem;">至</span>
+                                <input type="text" id="orderStatsEndDate" class="form-control form-control-sm" 
+                                       placeholder="结束日期" style="width: 120px;" 
+                                       onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'orderStatsStartDate\')}'})" 
+                                       onFocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'orderStatsStartDate\')}'})" />
+                                <div class="input-group-append">
+                                    <button class="btn btn-link btn-sm" type="button" id="queryOrderStatsBtn" title="查询">
+                                        <i class="fas fa-search"></i> 查询
+                                    </button>
+                                    <button class="btn btn-link btn-sm" type="button" id="resetOrderStatsBtn" title="重置">
+                                        <i class="fas fa-redo"></i> 重置
+                                    </button>
+                                </div>
+                            </div>
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -195,45 +215,33 @@
                     <div class="card-body">
                         <div class="row">
                             <!-- 左侧：统计卡片 -->
-                            <div class="col-md-4">
-                                <div class="description-block border-right">
-                                    <#assign monthOrderCompareValue = ((orderStats.monthOrderCompare)!0)>
-                                    <span class="description-percentage ${(monthOrderCompareValue >= 0)?then('text-success', 'text-danger')}">
-                                        <i class="fas ${(monthOrderCompareValue >= 0)?then('fa-caret-up', 'fa-caret-down')}"></i>
-                                        ${monthOrderCompareValue?string('0.0')}%
+                            <div class="col-md-4" id="orderStatsCards">
+                                <div class="description-block border-right" id="statsTotalOrders">
+                                    <span class="description-percentage text-info" id="statsOrderCompare">
+                                        <i class="fas fa-caret-up"></i>
+                                        <span id="statsOrderCompareValue">0.0</span>%
                                     </span>
-                                    <h5 class="description-header">${(orderStats.monthOrderCount)!0}</h5>
-                                    <span class="description-text">本月订单总数</span>
+                                    <h5 class="description-header" id="statsTotalOrderCount">${(orderStats.monthOrderCount)!0}</h5>
+                                    <span class="description-text" id="statsDateRangeText">本月订单总数</span>
                                 </div>
                                 <hr>
-                                <div class="description-block border-right">
-                                    <#assign weekOrderCompareValue = ((orderStats.weekOrderCompare)!0)>
-                                    <span class="description-percentage ${(weekOrderCompareValue >= 0)?then('text-success', 'text-danger')}">
-                                        <i class="fas ${(weekOrderCompareValue >= 0)?then('fa-caret-up', 'fa-caret-down')}"></i>
-                                        ${weekOrderCompareValue?string('0.0')}%
+                                <div class="description-block border-right" id="statsTotalSales">
+                                    <span class="description-percentage text-info" id="statsSalesCompare">
+                                        <i class="fas fa-caret-up"></i>
+                                        <span id="statsSalesCompareValue">0.0</span>%
                                     </span>
-                                    <h5 class="description-header">${(orderStats.weekOrderCount)!0}</h5>
-                                    <span class="description-text">本周订单总数</span>
+                                    <h5 class="description-header" id="statsTotalSalesAmount">$${((orderStats.monthSalesAmount)!0)?string('0.00')}</h5>
+                                    <span class="description-text">销售总额</span>
                                 </div>
                                 <hr>
-                                <div class="description-block border-right">
-                                    <#assign monthSalesCompareValue = ((orderStats.monthSalesCompare)!0)>
-                                    <span class="description-percentage ${(monthSalesCompareValue >= 0)?then('text-success', 'text-danger')}">
-                                        <i class="fas ${(monthSalesCompareValue >= 0)?then('fa-caret-up', 'fa-caret-down')}"></i>
-                                        ${monthSalesCompareValue?string('0.0')}%
-                                    </span>
-                                    <h5 class="description-header">$${((orderStats.monthSalesAmount)!0)?string('0.00')}</h5>
-                                    <span class="description-text">本月销售总额</span>
+                                <div class="description-block border-right" id="statsAvgOrders">
+                                    <h5 class="description-header" id="statsAvgOrderCount">0</h5>
+                                    <span class="description-text">日均订单数</span>
                                 </div>
                                 <hr>
-                                <div class="description-block border-right">
-                                    <#assign weekSalesCompareValue = ((orderStats.weekSalesCompare)!0)>
-                                    <span class="description-percentage ${(weekSalesCompareValue >= 0)?then('text-success', 'text-danger')}">
-                                        <i class="fas ${(weekSalesCompareValue >= 0)?then('fa-caret-up', 'fa-caret-down')}"></i>
-                                        ${weekSalesCompareValue?string('0.0')}%
-                                    </span>
-                                    <h5 class="description-header">$${((orderStats.weekSalesAmount)!0)?string('0.00')}</h5>
-                                    <span class="description-text">本周销售总额</span>
+                                <div class="description-block border-right" id="statsAvgSales">
+                                    <h5 class="description-header" id="statsAvgSalesAmount">$0.00</h5>
+                                    <span class="description-text">日均销售额</span>
                                 </div>
                             </div>
                             <!-- 右侧：趋势图表 -->
@@ -330,7 +338,7 @@
                                 <li class="item">
                                     <div class="product-img">
                                         <#if product.imageUrl?? && product.imageUrl != ''>
-                                            <img src="${product.imageUrl}" alt="商品图片" class="img-size-50" onerror="this.src='dist/img/default-150x150.png'">
+                                            <img src="${product.imageUrl}" alt="商品图片" class="img-size-50">
                                         <#else>
                                             <img src="dist/img/default-150x150.png" alt="商品图片" class="img-size-50">
                                         </#if>
@@ -374,12 +382,15 @@
 </section>
 
 <script type="text/javascript">
+    // 全局变量：图表实例
+    var trendChart = null;
+    
     $(function() {
         // 初始化订单趋势图表
         <#if trendData?? && (trendData?size > 0)>
-        var trendChart = echarts.init(document.getElementById('orderTrendChart'));
+        trendChart = echarts.init(document.getElementById('orderTrendChart'));
         
-        // 准备数据
+        // 准备初始数据
         var dateList = [
             <#list trendData as data>
             '${(data.date)!''}'<#if data_has_next>,</#if>
@@ -479,8 +490,289 @@
         
         // 响应式调整
         window.addEventListener('resize', function() {
-            trendChart.resize();
+            if (trendChart) {
+                trendChart.resize();
+            }
         });
         </#if>
+        
+        // 初始化日期选择器（默认最近7天）
+        var today = new Date();
+        var sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(today.getDate() - 6);
+        
+        var formatDate = function(date) {
+            var year = date.getFullYear();
+            var month = String(date.getMonth() + 1).padStart(2, '0');
+            var day = String(date.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        };
+        
+        // 设置默认日期值
+        $('#orderStatsStartDate').val(formatDate(sevenDaysAgo));
+        $('#orderStatsEndDate').val(formatDate(today));
+        
+        // 确保日期选择器绑定（如果HTML属性方式不生效，使用jQuery绑定）
+        if (typeof WdatePicker !== 'undefined') {
+            // 绑定开始日期选择器
+            $('#orderStatsStartDate').on('click focus', function() {
+                WdatePicker({
+                    readOnly: true,
+                    dateFmt: 'yyyy-MM-dd',
+                    maxDate: '#F{$dp.$D(\'orderStatsEndDate\')}',
+                    onpicked: function() {
+                        // 如果开始日期大于结束日期，自动调整结束日期
+                        var startDate = $('#orderStatsStartDate').val();
+                        var endDate = $('#orderStatsEndDate').val();
+                        if (startDate && endDate && startDate > endDate) {
+                            $('#orderStatsEndDate').val(startDate);
+                        }
+                    }
+                });
+            });
+            
+            // 绑定结束日期选择器
+            $('#orderStatsEndDate').on('click focus', function() {
+                WdatePicker({
+                    readOnly: true,
+                    dateFmt: 'yyyy-MM-dd',
+                    minDate: '#F{$dp.$D(\'orderStatsStartDate\')}',
+                    onpicked: function() {
+                        // 如果结束日期小于开始日期，自动调整开始日期
+                        var startDate = $('#orderStatsStartDate').val();
+                        var endDate = $('#orderStatsEndDate').val();
+                        if (startDate && endDate && endDate < startDate) {
+                            $('#orderStatsStartDate').val(endDate);
+                        }
+                    }
+                });
+            });
+        }
+        
+        // 绑定查询按钮事件
+        $('#queryOrderStatsBtn').on('click', function() {
+            loadOrderStats();
+        });
+        
+        // 绑定重置按钮事件
+        $('#resetOrderStatsBtn').on('click', function() {
+            $('#orderStatsStartDate').val(formatDate(sevenDaysAgo));
+            $('#orderStatsEndDate').val(formatDate(today));
+            loadOrderStats();
+        });
+        
+        // 回车键触发查询
+        $('#orderStatsStartDate, #orderStatsEndDate').on('keypress', function(e) {
+            if (e.which === 13) {
+                loadOrderStats();
+            }
+        });
     });
+    
+    /**
+     * 加载订单统计数据
+     */
+    function loadOrderStats() {
+        var startDate = $('#orderStatsStartDate').val();
+        var endDate = $('#orderStatsEndDate').val();
+        
+        if (!startDate || !endDate) {
+            alert('请选择开始日期和结束日期');
+            return;
+        }
+        
+        // 显示加载状态
+        var $queryBtn = $('#queryOrderStatsBtn');
+        var originalHtml = $queryBtn.html();
+        $queryBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> 加载中...');
+        
+        $.ajax({
+            url: '/manage/shop/shopOrders/orderStats',
+            type: 'GET',
+            data: {
+                startDate: startDate,
+                endDate: endDate
+            },
+            success: function(response) {
+                if (response.success && !response.error) {
+                    // 更新统计卡片
+                    updateOrderStatsCards(response.orderStats);
+                    // 更新趋势图
+                    updateTrendChart(response.trendData);
+                } else {
+                    alert(response.error || '加载数据失败，请重试');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('加载数据失败:', error);
+                alert('加载数据失败，请检查网络连接或稍后重试');
+            },
+            complete: function() {
+                // 恢复按钮状态
+                $queryBtn.prop('disabled', false).html(originalHtml);
+            }
+        });
+    }
+    
+    /**
+     * 更新订单统计卡片
+     */
+    function updateOrderStatsCards(orderStats) {
+        if (!orderStats) return;
+        
+        // 更新总订单数
+        $('#statsTotalOrderCount').text(orderStats.totalOrderCount || 0);
+        
+        // 更新总销售额
+        var totalSales = parseFloat(orderStats.totalSalesAmount || 0).toFixed(2);
+        $('#statsTotalSalesAmount').text('$' + totalSales);
+        
+        // 更新同比数据
+        var orderCompare = parseFloat(orderStats.orderCompare || 0);
+        var salesCompare = parseFloat(orderStats.salesCompare || 0);
+        
+        // 更新订单数同比
+        var $orderCompare = $('#statsOrderCompare');
+        var $orderCompareValue = $('#statsOrderCompareValue');
+        $orderCompareValue.text(Math.abs(orderCompare).toFixed(1));
+        if (orderCompare >= 0) {
+            $orderCompare.removeClass('text-danger').addClass('text-success');
+            $orderCompare.find('i').removeClass('fa-caret-down').addClass('fa-caret-up');
+        } else {
+            $orderCompare.removeClass('text-success').addClass('text-danger');
+            $orderCompare.find('i').removeClass('fa-caret-up').addClass('fa-caret-down');
+        }
+        
+        // 更新销售额同比
+        var $salesCompare = $('#statsSalesCompare');
+        var $salesCompareValue = $('#statsSalesCompareValue');
+        $salesCompareValue.text(Math.abs(salesCompare).toFixed(1));
+        if (salesCompare >= 0) {
+            $salesCompare.removeClass('text-danger').addClass('text-success');
+            $salesCompare.find('i').removeClass('fa-caret-down').addClass('fa-caret-up');
+        } else {
+            $salesCompare.removeClass('text-success').addClass('text-danger');
+            $salesCompare.find('i').removeClass('fa-caret-up').addClass('fa-caret-down');
+        }
+        
+        // 计算日均数据
+        var startDate = new Date(orderStats.startDate);
+        var endDate = new Date(orderStats.endDate);
+        var daysDiff = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+        
+        if (daysDiff > 0) {
+            var avgOrders = Math.round((orderStats.totalOrderCount || 0) / daysDiff);
+            var avgSales = (parseFloat(orderStats.totalSalesAmount || 0) / daysDiff).toFixed(2);
+            $('#statsAvgOrderCount').text(avgOrders);
+            $('#statsAvgSalesAmount').text('$' + avgSales);
+        }
+        
+        // 更新日期范围文本
+        var dateRangeText = orderStats.startDate + ' 至 ' + orderStats.endDate;
+        $('#statsDateRangeText').text('订单总数 (' + dateRangeText + ')');
+    }
+    
+    /**
+     * 更新趋势图表
+     */
+    function updateTrendChart(trendData) {
+        if (!trendData || trendData.length === 0) {
+            console.warn('趋势数据为空');
+            return;
+        }
+        
+        // 如果图表未初始化，则初始化
+        if (!trendChart) {
+            trendChart = echarts.init(document.getElementById('orderTrendChart'));
+        }
+        
+        // 准备数据
+        var dateList = trendData.map(function(item) {
+            return item.date;
+        });
+        var orderCountList = trendData.map(function(item) {
+            return item.orderCount || 0;
+        });
+        var salesAmountList = trendData.map(function(item) {
+            return parseFloat(item.salesAmount || 0);
+        });
+        
+        // 更新图表选项
+        var option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                }
+            },
+            legend: {
+                data: ['订单数', '销售额'],
+                top: '5%',
+                left: 'center',
+                itemGap: 30,
+                textStyle: {
+                    fontSize: 12
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                top: '15%',
+                bottom: '10%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: dateList
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '订单数',
+                    position: 'left',
+                    axisLabel: {
+                        formatter: '{value}'
+                    }
+                },
+                {
+                    type: 'value',
+                    name: '销售额',
+                    position: 'right',
+                    axisLabel: {
+                        formatter: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '订单数',
+                    type: 'line',
+                    areaStyle: {
+                        color: 'rgba(54, 162, 235, 0.2)'
+                    },
+                    itemStyle: {
+                        color: 'rgba(54, 162, 235, 1)'
+                    },
+                    data: orderCountList
+                },
+                {
+                    name: '销售额',
+                    type: 'line',
+                    areaStyle: {
+                        color: 'rgba(75, 192, 192, 0.2)'
+                    },
+                    itemStyle: {
+                        color: 'rgba(75, 192, 192, 1)'
+                    },
+                    yAxisIndex: 1,
+                    data: salesAmountList
+                }
+            ]
+        };
+        
+        trendChart.setOption(option, true);
+    }
 </script>

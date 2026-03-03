@@ -42,15 +42,15 @@
 			<div class="form-group row">
 				<label class="col-sm-3 col-form-label">是否启用</label>
 				<div class="col-sm-9">
-					<input type="radio"  name="isActive" value="0"  checked> 否
-					<input type="radio" name="isActive" value="1" > 是
+					<input type="radio"  name="isActive" value="0"  > 否
+					<input type="radio" name="isActive" value="1" checked> 是
 				</div>
 			</div>
 			<div class="form-group row">
 				<label class="col-sm-3 col-form-label">是否显示</label>
 				<div class="col-sm-9">
-					<input type="radio"  name="isShow" value="0"  checked> 否
-					<input type="radio" name="isShow" value="1" > 是
+					<input type="radio"  name="isShow" value="0"  > 否
+					<input type="radio" name="isShow" value="1" checked > 是
 				</div>
 			</div>
 <#--			<div class="form-group row">-->

@@ -100,5 +100,9 @@ public class ShopProducts extends AbstractEntity {
     @ExportColumn(header = "商品描述", order = 10)
     private String description;
 
+    private String serialNumber;
+
+    private Long brandId;
+
 
 }

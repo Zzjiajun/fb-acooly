@@ -12,6 +12,8 @@ import javax.persistence.Table;
 
 import com.acooly.core.utils.ie.anno.ExportColumn;
 import com.acooly.core.utils.ie.anno.ExportModel;
+
+import javax.persistence.Transient;
 import javax.validation.constraints.*;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -102,5 +104,8 @@ public class ShopCoupon extends AbstractEntity {
 
     @ExportColumn(header = "支付成功总金额", order = 11)
     private BigDecimal paySuccessCount;
+    private Integer teamId;
+    @Transient
+    private String teamName;
 
 }

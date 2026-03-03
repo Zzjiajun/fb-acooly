@@ -8,6 +8,7 @@ package com.acooly.showcase.shop.web;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +25,10 @@ import com.acooly.module.security.service.UserService;
 import com.acooly.module.security.utils.ShiroUtils;
 import com.acooly.showcase.daliy.entity.DmCenter;
 import com.acooly.showcase.link.entity.DmCondition;
+import com.acooly.showcase.shop.entity.ShopTeam;
+import com.acooly.showcase.shop.service.ShopTeamService;
 import com.acooly.showcase.shop.utils.AESUtil;
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +65,8 @@ public class ShopUsersManagerController extends AbstractJsonEntityController<Sho
 	private ShopUsersService shopUsersService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ShopTeamService shopTeamService;
 
 
 	@Override
@@ -73,8 +79,25 @@ public class ShopUsersManagerController extends AbstractJsonEntityController<Sho
 			PageInfo<ShopUsers> pageInfo = this.doList(request, response);
 			List<ShopUsers> pageResults = pageInfo.getPageResults();
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			List<ShopTeam> shopTeams = shopTeamService.getAll();
+			if (CollectionUtils.isEmpty(shopTeams)) {
+				// 没有团队数据，统一给默认值
+				pageResults.forEach(item -> item.setTeamName("admin"));
+			}
+			Map<Long, String> teamMap = shopTeams.stream()
+					.filter(t -> t.getId() != null)
+					.collect(Collectors.toMap(
+							ShopTeam::getId,
+							ShopTeam::getTeamName,
+							(a, b) -> a   // 防止重复 key
+					));
 			pageResults.forEach(s-> {
 				s.setPassword("********");
+				String teamName = s.getTeamId() == null
+						? "admin"
+						: teamMap.getOrDefault(s.getTeamId() , "admin");
+
+				s.setTeamName(teamName);
 			});
 			result.setTotal(pageInfo.getTotalCount());
 			result.setRows(pageInfo.getPageResults());

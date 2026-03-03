@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import com.acooly.core.utils.ie.anno.ExportColumn;
 import com.acooly.core.utils.ie.anno.ExportModel;
 import org.hibernate.validator.constraints.*;
+
+import javax.persistence.Transient;
 import javax.validation.constraints.*;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -77,6 +79,9 @@ public class ShopUsers extends AbstractEntity {
     @ExportColumn(header = "登录方式：GOOGLE, FACEBOOK, TIKTOK, LOCAL", order = 6)
     private String provider;
 
+    private Long teamId;
+    @Transient
+    private String teamName;
 
 
 }

@@ -3,6 +3,7 @@ package com.acooly.showcase.shop.utils;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
@@ -10,6 +11,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -41,6 +43,35 @@ public class RedisShopUtil {
         Boolean hasKey = redisTemplate.hasKey(key);
         return Boolean.TRUE.equals(hasKey);
     }
+
+    public void deleteHotResultKeys(String searchKey) {
+        int count = 0;
+
+        try {
+            ScanOptions options = ScanOptions.scanOptions()
+                    .match(searchKey + "*")   // 匹配前缀
+                    .count(500)               // 每次扫描数量
+                    .build();
+
+            Cursor<byte[]> cursor = redisTemplate
+                    .getConnectionFactory()
+                    .getConnection()
+                    .scan(options);
+
+            while (cursor.hasNext()) {
+                String key = new String(cursor.next());
+                redisTemplate.delete(key);
+                count++;
+            }
+
+            log.info("🔥 已删除 {}* 前缀缓存，共 {} 个 key", searchKey, count);
+
+        } catch (Exception e) {
+            log.error("❌ 删除 {}* 前缀缓存失败，已删除 {} 个 key，原因：{}",
+                    searchKey, count, e.getMessage());
+        }
+    }
+
 
     /**
      * 删除指定 key
@@ -87,6 +118,16 @@ public class RedisShopUtil {
         try {
             Object obj = redisTemplate.opsForValue().get(key);
             return clazz.isInstance(obj) ? clazz.cast(obj) : null;
+        } catch (Exception e) {
+            log.error("Redis get 失败 key={}", key, e);
+            return null;
+        }
+    }
+
+    public Object get(String key){
+        try {
+            Object obj = redisTemplate.opsForValue().get(key);
+            return obj;
         } catch (Exception e) {
             log.error("Redis get 失败 key={}", key, e);
             return null;
@@ -250,6 +291,51 @@ public class RedisShopUtil {
         Set<String> keys = redisTemplate.keys(pattern);
         if (keys != null && !keys.isEmpty()) {
             redisTemplate.delete(keys);
+        }
+    }
+
+    public Set<String> scan(String pattern) {
+        Set<String> keys = new HashSet<>();
+        try {
+            RedisConnection connection = Objects.requireNonNull(redisTemplate.getConnectionFactory())
+                    .getConnection();
+
+            // 2.1.8 版本 scan 需要用 ScanOptions
+            ScanOptions options = ScanOptions.scanOptions()
+                    .match(pattern)
+                    .count(100)
+                    .build();
+
+            Cursor<byte[]> cursor = connection.scan(options);
+            while (cursor.hasNext()) {
+                keys.add(new String(cursor.next(), StandardCharsets.UTF_8));
+            }
+            cursor.close();
+            connection.close();
+        } catch (Exception e) {
+            log.error("Redis scan 失败 pattern={}", pattern, e);
+        }
+        return keys;
+    }
+    public long delete(String... keys) {
+        if (keys == null || keys.length == 0) {
+            return 0;
+        }
+        try {
+            Set<String> keySet = new HashSet<>();
+            for (String key : keys) {
+                if (key != null) {
+                    keySet.add(key);
+                }
+            }
+            if (keySet.isEmpty()) {
+                return 0;
+            }
+            Long result = redisTemplate.delete(keySet);
+            return result != null ? result : 0;
+        } catch (Exception e) {
+            log.error("Redis 批量删除失败 keys={}", Arrays.toString(keys), e);
+            return 0;
         }
     }
 }

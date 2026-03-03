@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import com.acooly.core.utils.ie.anno.ExportColumn;
 import com.acooly.core.utils.ie.anno.ExportModel;
 import org.hibernate.validator.constraints.*;
+
+import javax.persistence.Transient;
 import javax.validation.constraints.*;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -119,6 +121,10 @@ public class ShopOrders extends AbstractEntity {
     private String ccName;
 
     private Long couponId;
+
+    private String logisticsId;
+    @Transient
+    private String teamName;
 
 
 }

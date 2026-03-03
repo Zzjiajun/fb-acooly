@@ -72,10 +72,5 @@ public class ShopReviews extends AbstractEntity {
     @ExportColumn(header = "有用数量", order = 6)
     private Integer helpfulCount;
 
-    /**
-     * 创建时间
-     */
-    @ExportColumn(header = "创建时间", order = 7)
-    private Date createdAt;
 
 }

@@ -62,6 +62,7 @@
             <div class="btn-group btn-group-xs">
               <button onclick="$.acooly.framework.show('/manage/shop/shopSubCategories/show.html?id={0}',500,500);" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-info fa-fw fa-col"></i>查看</button>
               <button onclick="$.acooly.framework.edit({url:'/manage/shop/shopSubCategories/edit.html',id:'{0}',entity:'shopSubCategories',width:500,height:500});" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-pencil fa-fw fa-col"></i>编辑</button>
+              <button onclick="openSubCategoryTranslationDialog('{0}')" class="btn btn-outline-success btn-xs" type="button" title="多语言翻译"><i class="fa fa-language fa-fw fa-col"></i>翻译</button>
               <button onclick="$.acooly.framework.remove('/manage/shop/shopSubCategories/deleteJson.html','{0}','manage_shopSubCategories_datagrid');" class="btn btn-outline-primary btn-xs" type="button"><i class="fa fa-trash fa-fw fa-col"></i>删除</button>
           </div>
         </div>
@@ -97,6 +98,60 @@
             } else {
                 return '<span class="badge badge-normal">隐藏</span>';
             }
+        }
+
+        // ========== 多语言翻译管理 ==========
+        /**
+         * 打开子分类翻译管理弹窗
+         * @param categoryId 子分类ID
+         */
+        function openSubCategoryTranslationDialog(categoryId) {
+            if (!categoryId) {
+                if (typeof $.acooly !== 'undefined' && $.acooly.messager) {
+                    $.acooly.messager('错误', '子分类ID不能为空', 'danger');
+                } else if (typeof $.messager !== 'undefined') {
+                    $.messager.alert('错误', '子分类ID不能为空');
+                } else {
+                    alert('子分类ID不能为空');
+                }
+                return;
+            }
+
+            // 从表格中获取子分类名称
+            var categoryName = '';
+            try {
+                var rows = $('#manage_shopSubCategories_datagrid').datagrid('getRows');
+                var row = rows.find(function(r) {
+                    return r.id == categoryId;
+                });
+                if (row) {
+                    categoryName = row.name || '';
+                }
+            } catch (e) {
+                console.warn('无法获取子分类名称:', e);
+            }
+
+            // 使用 EasyUI Dialog 打开翻译管理弹窗
+            $('<div></div>').dialog({
+                title: '子分类多语言翻译管理' + (categoryName ? ' - ' + categoryName : ''),
+                width: 900,
+                height: 600,
+                modal: true,
+                maximizable: true,
+                resizable: true,
+                href: '/manage/shop/shopSubCategories/translationDialog.html?categoryId=' + categoryId,
+                onOpen: function() {
+                    // 确保对话框内容加载完成后再初始化
+                    setTimeout(function() {
+                        if (typeof initTranslationDialog === 'function') {
+                            initTranslationDialog();
+                        }
+                    }, 300);
+                },
+                onClose: function() {
+                    $(this).dialog('destroy');
+                }
+            });
         }
     </script>
 </div>

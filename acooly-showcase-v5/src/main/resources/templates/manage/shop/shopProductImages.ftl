@@ -30,7 +30,6 @@
                 <th field="imageUrl" formatter="contentFormatter">图片URL</th>
                 <th field="sortOrder" sortable="true" sum="true">排序顺序</th>
                 <th field="isPrimary" sortable="true" sum="true">是否为主图</th>
-                <th field="createdAt" formatter="dateTimeFormatter">创建时间</th>
             </tr>
             </thead>
             <thead frozen="true">

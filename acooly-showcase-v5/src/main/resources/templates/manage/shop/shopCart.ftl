@@ -28,7 +28,7 @@
                 <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
                 <th field="id" sortable="true" >id</th>
                 <th field="userId" sortable="true" formatter="userEmailFormatter">用户</th>
-                <th field="totalPrice">购物车总价</th>
+<#--                <th field="totalPrice">购物车总价</th>-->
                 <th field="createTime" formatter="dateTimeFormatter">创建时间</th>
                 <th field="updateTime" formatter="dateTimeFormatter">修改时间</th>
             </tr>

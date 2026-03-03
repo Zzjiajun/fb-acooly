@@ -26,13 +26,12 @@
             <tr>
                 <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
                 <th field="id" sortable="true" >评论ID</th>
-                <th field="productId" sortable="true" sum="true">商品ID</th>
-                <th field="userId" sortable="true" sum="true">用户ID</th>
+<#--                <th field="productId" sortable="true" sum="true">商品ID</th>-->
+<#--                <th field="userId" sortable="true" sum="true">用户ID</th>-->
                 <th field="rating" sortable="true" sum="true">评分（1-5）</th>
                 <th field="comment" formatter="contentFormatter">评论内容</th>
-                <th field="isVerified" sortable="true" sum="true">是否验证购买</th>
-                <th field="helpfulCount" sortable="true" sum="true">有用数量</th>
-                <th field="createdAt" formatter="dateTimeFormatter">创建时间</th>
+<#--                <th field="isVerified" sortable="true" sum="true">是否验证购买</th>-->
+<#--                <th field="helpfulCount" sortable="true" sum="true">有用数量</th>-->
             </tr>
             </thead>
             <thead frozen="true">

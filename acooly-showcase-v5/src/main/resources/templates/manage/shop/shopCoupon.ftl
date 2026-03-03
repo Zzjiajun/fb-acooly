@@ -91,6 +91,7 @@
             <tr>
                 <th field="showCheckboxWithId" checkbox="true" formatter="idFormatter">编号</th>
                 <th field="id" sortable="true" >id</th>
+                <th field="teamName" formatter="contentFormatter" width="120">团队名称</th>
                 <th field="code" formatter="CodeFunction">优惠劵码</th>
                 <th field="discountType" formatter="discountTypeFunction">优惠方式</th>
                 <th field="discountValue" formatter="discountValueFunction">优惠力度</th>

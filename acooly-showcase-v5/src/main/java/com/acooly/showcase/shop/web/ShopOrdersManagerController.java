@@ -6,10 +6,12 @@
 */
 package com.acooly.showcase.shop.web;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,10 +22,8 @@ import com.acooly.core.common.web.MappingMethod;
 import com.acooly.core.common.web.support.JsonListResult;
 import com.acooly.showcase.daliy.entity.DmShow;
 import com.acooly.showcase.daliy.entity.Link;
-import com.acooly.showcase.shop.entity.ShopCoupon;
-import com.acooly.showcase.shop.entity.ShopProducts;
-import com.acooly.showcase.shop.service.ShopCouponService;
-import com.acooly.showcase.shop.service.ShopProductsService;
+import com.acooly.showcase.shop.entity.*;
+import com.acooly.showcase.shop.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,12 +31,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.acooly.core.common.web.AbstractJsonEntityController;
-import com.acooly.showcase.shop.entity.ShopOrders;
-import com.acooly.showcase.shop.entity.ShopOrderItems;
-import com.acooly.showcase.shop.service.ShopOrdersService;
-import com.acooly.showcase.shop.service.ShopOrderItemsService;
 
 import com.google.common.collect.Maps;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 订单表 管理控制器
@@ -64,6 +62,10 @@ public class ShopOrdersManagerController extends AbstractJsonEntityController<Sh
 	private ShopProductsService shopProductsService;
 	@Autowired
 	private ShopCouponService shopCouponService;
+	@Autowired
+	private ShopTeamService shopTeamService;
+	@Autowired
+	private ShopUsersService shopUsersService;
 
 	@Override
 	public JsonListResult<ShopOrders> listJson(HttpServletRequest request, HttpServletResponse response) {
@@ -73,6 +75,41 @@ public class ShopOrdersManagerController extends AbstractJsonEntityController<Sh
 			result.appendData(this.referenceData(request));
 			PageInfo<ShopOrders> pageInfo = this.doList(request, response);
 			result.setTotal(pageInfo.getTotalCount());
+			List<ShopOrders> orders = pageInfo.getPageResults();
+			Set<Long> userIds = orders.stream()
+					.map(ShopOrders::getUserId)
+					.filter(Objects::nonNull)
+					.collect(Collectors.toSet());
+			Map<Long, ShopUsers> userMap = shopUsersService.getAll()
+					.stream()
+					.filter(u -> userIds.contains(u.getId()))
+					.collect(Collectors.toMap(
+							ShopUsers::getId,
+							Function.identity(),
+							(a, b) -> a
+					));
+			Set<Long> teamIds = userMap.values().stream()
+					.map(ShopUsers::getTeamId)
+					.filter(Objects::nonNull)
+					.collect(Collectors.toSet());
+			Map<Long, String> teamMap = shopTeamService.getAll()
+					.stream()
+					.filter(t -> teamIds.contains(t.getId()))
+					.collect(Collectors.toMap(
+							ShopTeam::getId,
+							ShopTeam::getTeamName,
+							(a, b) -> a
+					));
+			orders.forEach(order -> {
+				ShopUsers user = userMap.get(order.getUserId());
+				if (user == null) {
+					order.setTeamName("admin");
+				} else {
+					order.setTeamName(
+							teamMap.getOrDefault(user.getTeamId(), "admin")
+					);
+				}
+			});
 			result.setRows(pageInfo.getPageResults());
 			result.setHasNext(pageInfo.hasNext());
 			result.setPageNo(pageInfo.getCurrentPage());
@@ -124,6 +161,7 @@ public class ShopOrdersManagerController extends AbstractJsonEntityController<Sh
 	protected void referenceData(HttpServletRequest request, Map<String, Object> model) {
 		List<ShopCoupon> couponList = shopCouponService.getAll();
 //		Map<Long, String> couponMap = couponList.stream().collect(Collectors.toMap(ShopCoupon::getId,ShopCoupon::getCode));
+
 		model.put("couponList", couponList);
 		super.referenceData(request, model);
 	}
@@ -205,4 +243,172 @@ public class ShopOrdersManagerController extends AbstractJsonEntityController<Sh
 //		return "manage/shop/shopOrdersShow";
 //	}
 
+
+
+	/**
+	 * 根据日期范围获取订单统计数据（用于AJAX动态加载）
+	 * @param startDate 开始日期，格式：yyyy-MM-dd，如果为空则默认为最近7天的开始日期
+	 * @param endDate 结束日期，格式：yyyy-MM-dd，如果为空则默认为今天
+	 * @return 包含订单统计数据和趋势数据的Map
+	 */
+	@RequestMapping(value = "/orderStats")
+	@ResponseBody
+	public Map<String, Object> getOrderStatsByDateRange(
+			@RequestParam(required = false) String startDate,
+			@RequestParam(required = false) String endDate) {
+
+		Map<String, Object> result = new HashMap<>();
+
+		try {
+			// 解析日期参数，如果没有则使用默认值（最近7天）
+			LocalDate start;
+			LocalDate end;
+
+			if (startDate != null && !startDate.isEmpty()) {
+				start = LocalDate.parse(startDate);
+			} else {
+				start = LocalDate.now().minusDays(6);
+			}
+
+			if (endDate != null && !endDate.isEmpty()) {
+				end = LocalDate.parse(endDate);
+			} else {
+				end = LocalDate.now();
+			}
+
+			// 验证日期范围
+			if (start.isAfter(end)) {
+				result.put("error", "开始日期不能晚于结束日期");
+				return result;
+			}
+
+			// 限制最大查询范围为90天，避免性能问题
+			long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(start, end);
+			if (daysBetween > 90) {
+				result.put("error", "日期范围不能超过90天");
+				return result;
+			}
+
+			LocalDateTime startDateTime = start.atStartOfDay();
+			LocalDateTime endDateTime = end.plusDays(1).atStartOfDay();
+
+			// 获取该日期范围内的所有订单
+			List<ShopOrders> allOrders = shopOrdersService.getAll();
+			// 排除状态为PENDING、CANCELLED和FAILED的订单
+			List<ShopOrders> ordersInRange = allOrders.stream()
+					.filter(o -> {
+						if (o.getCreateTime() == null) return false;
+						LocalDateTime createTime = o.getCreateTime().toInstant()
+								.atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+						// 排除取消、待付款和失败的订单
+						boolean isValidStatus = o.getStatus() != null 
+								&& !"PENDING".equalsIgnoreCase(o.getStatus())
+								&& !"CANCELLED".equalsIgnoreCase(o.getStatus())
+								&& !"FAILED".equalsIgnoreCase(o.getStatus());
+						return createTime.isAfter(startDateTime) && createTime.isBefore(endDateTime) && isValidStatus;
+					})
+					.collect(Collectors.toList());
+
+			// 计算该范围内的总订单数和总销售额（已排除无效状态订单）
+			long totalOrderCount = ordersInRange.size();
+			BigDecimal totalSalesAmount = ordersInRange.stream()
+					.map(ShopOrders::getTotalPrice)
+					.filter(price -> price != null)
+					.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+			// 计算趋势数据（按天统计）
+			List<Map<String, Object>> trendData = new ArrayList<>();
+			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+			LocalDate currentDate = start;
+			while (!currentDate.isAfter(end)) {
+				LocalDateTime dayStart = currentDate.atStartOfDay();
+				LocalDateTime dayEnd = currentDate.plusDays(1).atStartOfDay();
+
+				long dayOrderCount = ordersInRange.stream()
+						.filter(o -> {
+							LocalDateTime createTime = o.getCreateTime().toInstant()
+									.atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+							// 注意：ordersInRange已经过滤了无效状态，这里只需要过滤日期
+							return createTime.isAfter(dayStart) && createTime.isBefore(dayEnd);
+						})
+						.count();
+
+				BigDecimal daySalesAmount = ordersInRange.stream()
+						.filter(o -> {
+							LocalDateTime createTime = o.getCreateTime().toInstant()
+									.atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+							// 注意：ordersInRange已经过滤了无效状态，这里只需要过滤日期
+							return createTime.isAfter(dayStart) && createTime.isBefore(dayEnd);
+						})
+						.map(ShopOrders::getTotalPrice)
+						.filter(price -> price != null)
+						.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+				Map<String, Object> dayData = new HashMap<>();
+				dayData.put("date", currentDate.format(dateFormatter));
+				dayData.put("orderCount", dayOrderCount);
+				dayData.put("salesAmount", daySalesAmount);
+				trendData.add(dayData);
+
+				currentDate = currentDate.plusDays(1);
+			}
+
+			// 计算同比数据（与上一相同时间段对比）
+			long daysBetweenPeriods = java.time.temporal.ChronoUnit.DAYS.between(start, end);
+			LocalDate lastPeriodStart = start.minusDays(daysBetweenPeriods + 1);
+			LocalDate lastPeriodEnd = start.minusDays(1);
+
+			LocalDateTime lastPeriodStartDateTime = lastPeriodStart.atStartOfDay();
+			LocalDateTime lastPeriodEndDateTime = lastPeriodEnd.plusDays(1).atStartOfDay();
+
+			List<ShopOrders> lastPeriodOrders = allOrders.stream()
+					.filter(o -> {
+						if (o.getCreateTime() == null) return false;
+						LocalDateTime createTime = o.getCreateTime().toInstant()
+								.atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+						// 排除取消、待付款和失败的订单
+						boolean isValidStatus = o.getStatus() != null 
+								&& !"PENDING".equalsIgnoreCase(o.getStatus())
+								&& !"CANCELLED".equalsIgnoreCase(o.getStatus())
+								&& !"FAILED".equalsIgnoreCase(o.getStatus());
+						return createTime.isAfter(lastPeriodStartDateTime) && createTime.isBefore(lastPeriodEndDateTime) && isValidStatus;
+					})
+					.collect(Collectors.toList());
+
+			long lastPeriodOrderCount = lastPeriodOrders.size();
+			BigDecimal lastPeriodSalesAmount = lastPeriodOrders.stream()
+					.map(ShopOrders::getTotalPrice)
+					.filter(price -> price != null)
+					.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+			// 计算同比百分比
+			double orderCompare = lastPeriodOrderCount > 0 ?
+					((totalOrderCount - lastPeriodOrderCount) * 100.0 / lastPeriodOrderCount) : 0.0;
+			double salesCompare = lastPeriodSalesAmount.compareTo(BigDecimal.ZERO) > 0 ?
+					totalSalesAmount.subtract(lastPeriodSalesAmount)
+							.divide(lastPeriodSalesAmount, 4, BigDecimal.ROUND_HALF_UP)
+							.multiply(new BigDecimal("100")).doubleValue() : 0.0;
+
+			// 构建返回数据
+			Map<String, Object> orderStats = new HashMap<>();
+			orderStats.put("totalOrderCount", totalOrderCount);
+			orderStats.put("totalSalesAmount", totalSalesAmount);
+			orderStats.put("orderCompare", orderCompare);
+			orderStats.put("salesCompare", salesCompare);
+			orderStats.put("startDate", start.format(dateFormatter));
+			orderStats.put("endDate", end.format(dateFormatter));
+
+			result.put("orderStats", orderStats);
+			result.put("trendData", trendData);
+			result.put("success", true);
+
+		} catch (Exception e) {
+			log.error("获取订单统计数据失败", e);
+			result.put("error", "获取数据失败：" + e.getMessage());
+			result.put("success", false);
+		}
+
+		return result;
+	}
 }

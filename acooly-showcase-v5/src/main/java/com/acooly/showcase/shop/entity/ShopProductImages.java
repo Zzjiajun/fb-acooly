@@ -59,11 +59,22 @@ public class ShopProductImages extends AbstractEntity {
      */
     @ExportColumn(header = "是否为主图", order = 4)
     private Integer isPrimary;
+    @Size(max = 500)
+    private String webpUrl;  // WebP格式路径
 
-    /**
-     * 创建时间
-     */
-    @ExportColumn(header = "创建时间", order = 5)
-    private Date createdAt;
+    @Size(max = 500)
+    private String thumbWebpUrl;  // 缩略图WebP路径
 
+    // 【新增】元数据字段
+    private Long fileSize;  // 原图大小（字节）
+    private Long webpSize;  // WebP大小（字节）
+    private Long thumbSize;  // 缩略图大小（字节）
+
+    private Integer width;  // 原图宽度
+    private Integer height;  // 原图高度
+    private Integer thumbWidth;  // 缩略图宽度
+    private Integer thumbHeight;  // 缩略图高度
+
+    @Size(max = 10)
+    private String format;  // 原始格式（jpg/png/gif）
 }
