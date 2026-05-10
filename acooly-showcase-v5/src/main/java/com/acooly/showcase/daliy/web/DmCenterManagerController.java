@@ -119,6 +119,12 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 		Map<String, String> mapName = query3.stream().collect(Collectors.toMap(User::getUsername, User::getRealName));
 
 		model.put("mapName", mapName);
+		// 像素类型选项
+		Map<String, String> pixelTypeMap = Maps.newLinkedHashMap();
+		pixelTypeMap.put("FB", "Facebook");
+		pixelTypeMap.put("TK", "TikTok");
+		pixelTypeMap.put("GOOGLE", "Google Ads");
+		model.put("pixelTypeMap", pixelTypeMap);
 		List<DmShow> showList = dmShowService.getAll();
 		Map<String, String> collected = showList.stream().collect(Collectors.toMap(user -> user.getRegion() + "  :  " + user.getSerialNumber(), DmShow::getDomain));
 		model.put("collected" ,collected);
@@ -143,12 +149,21 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 	@Override
 	@Async
 	protected DmCenter onSave(HttpServletRequest request, HttpServletResponse response, Model model, DmCenter entity, boolean isCreate) throws Exception {
-		List<String> list = Arrays.asList(entity.getPixel().split("\n"));
 		User principal = (User) SecurityUtils.getSubject().getPrincipal();
 		String str=entity.getDomain() + "/" + entity.getSecondaryDomain();
 		entity.setUserName(principal.getUsername());
 		entity.setClicksNumber(0);
 		entity.setVisitsNumber(0);
+
+		boolean isGooglePixel = "GOOGLE".equals(entity.getPixelType());
+		List<String> list;
+		if (isGooglePixel) {
+			// Google 像素：不需要像素 ID 列表，清空 pixel 字段
+			entity.setPixel("");
+			list = new ArrayList<>();
+		} else {
+			list = Arrays.asList(entity.getPixel().split("\n"));
+		}
 
 		//保存时
 		if (isCreate){
@@ -174,8 +189,10 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 			}
 			//落地页
 			if (entity.getDisplayOption()==1){
+				if (!isGooglePixel) {
+					Preconditions.checkNotNull(entity.getPixel(), "像素Id不能为空");
+				}
 				Preconditions.checkNotNull(entity.getSerialNumber(), "落地页模版不能为空");
-				Preconditions.checkNotNull(entity.getPixel(), "像素Id不能为空");
 				//先把落地页文件复制过去  先清空
 				boolean b = RemoteFileOperationsUtil.copyFiles("/www/wwwroot/" + entity.getSerialNumber(), "/www/wwwroot/" + str);
 				if (!b){
@@ -185,23 +202,31 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 
 
 
-				//保存像素id
-				Map<String, Object> map2 = Maps.newHashMap();
-				map2.put("EQ_domain",str);
-				List<DmPixel> query3 = dmPixelService.query(map2, null);
-				if (!query3.isEmpty()){
-					query3.forEach(s->{
-						dmDomainService.removeById(s.getId());
-					});
+				// 注入 Google 像素脚本
+				if (isGooglePixel) {
+					RemoteFileOperationsUtil.injectGooglePixelScript("/www/wwwroot/" + str,
+							entity.getGoogleAwId(), entity.getGoogleConversionId());
 				}
-				LinkedList<DmPixel> dmPixelList = new LinkedList<>();
-				list.forEach(s->{
-					DmPixel dmPixel = new DmPixel();
-					dmPixel.setPixelId(s);
-					dmPixel.setDomain(str);
-					dmPixelList.add(dmPixel);
-				});
-				dmPixelService.saves(dmPixelList);
+
+				//保存像素id (仅 FB/TK)
+				if (!isGooglePixel) {
+					Map<String, Object> map2 = Maps.newHashMap();
+					map2.put("EQ_domain",str);
+					List<DmPixel> query3 = dmPixelService.query(map2, null);
+					if (!query3.isEmpty()){
+						query3.forEach(s->{
+							dmDomainService.removeById(s.getId());
+						});
+					}
+					LinkedList<DmPixel> dmPixelList = new LinkedList<>();
+					list.forEach(s->{
+						DmPixel dmPixel = new DmPixel();
+						dmPixel.setPixelId(s);
+						dmPixel.setDomain(str);
+						dmPixelList.add(dmPixel);
+					});
+					dmPixelService.saves(dmPixelList);
+				}
 			}else {
 				boolean b=RemoteFileOperationsUtil.copyFiles("/www/wwwroot/projectgame.top/03","/www/wwwroot/" + str);
 				if (!b){
@@ -355,6 +380,12 @@ public class DmCenterManagerController extends AbstractJsonEntityController<DmCe
 
 
 
+
+		// Google 像素：注入 gtag 脚本到服务器 HTML (落地页模式)
+		if (isGooglePixel && entity.getDisplayOption() != null && entity.getDisplayOption() == 1) {
+			RemoteFileOperationsUtil.injectGooglePixelScript("/www/wwwroot/" + str,
+					entity.getGoogleAwId(), entity.getGoogleConversionId());
+		}
 
 		return super.onSave(request, response, model, entity, isCreate);
 	}

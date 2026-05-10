@@ -49,6 +49,7 @@
                 <th field="userName" formatter="contentFormatter">用户名</th>
                 <th field="region" formatter="contentFormatter">地区</th>
                 <th field="displayOption" formatter="displayOptionFunction">广告类型</th>
+				<th field="pixelType" formatter="pixelTypeFormatter">像素类型</th>
                 <th field="pixel" formatter="contentFormatter">像素Id</th>
                 <th field="link" >链接地址</th>
                 <th field="domain" formatter="domainFunction">访问域名</th>
@@ -94,7 +95,14 @@
 
 
 
-        function displayOptionFunction (value){
+        function pixelTypeFormatter(value) {
+			if (value === 'FB') return '<span class="btn btn-outline-primary btn-xs">Facebook</span>';
+			if (value === 'TK') return '<span class="btn btn-outline-dark btn-xs">TikTok</span>';
+			if (value === 'GOOGLE') return '<span class="btn btn-outline-success btn-xs">Google Ads</span>';
+			return value || 'FB';
+		}
+
+		function displayOptionFunction (value){
             if (value=='1'){
                 return '<span class="btn btn-success" >落地页</span>'
             }else {

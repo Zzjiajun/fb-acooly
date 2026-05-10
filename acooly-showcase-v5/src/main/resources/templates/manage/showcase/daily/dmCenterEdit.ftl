@@ -69,9 +69,32 @@
 
 
 				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">像素类型</label>
+					<div id="pixelType" class="icheck-primary d-inline col-sm-9">
+						<#list pixelTypeMap as k,v >
+							<input type="radio" name="pixelType" value="${k}" id="pixelType_${k}"> ${v}
+						</#list>
+					</div>
+				</div>
+
+				<div class="form-group row" id="pixelIdRow">
 					<label class="col-sm-3 col-form-label">像素代码</label>
 					<div id="pixelId" class="col-sm-9">
-						<textarea rows="3"   id="inputTextArea"  cols="40" oninput="formatInput()"  placeholder="请输入像素代码..." name="pixel" class="easyui-validatebox form-control" ></textarea>
+						<textarea rows="3" id="inputTextArea" cols="40" oninput="formatInput()" placeholder="请输入像素代码..." name="pixel" class="easyui-validatebox form-control" ></textarea>
+					</div>
+				</div>
+
+				<div class="form-group row" id="googleAwIdRow" style="display:none;">
+					<label class="col-sm-3 col-form-label">Google AW ID</label>
+					<div class="col-sm-9">
+						<input type="text" id="googleAwIdInput" placeholder="请输入 Google AW ID，如 AW-17637822321" name="googleAwId" class="easyui-validatebox form-control" />
+					</div>
+				</div>
+
+				<div class="form-group row" id="googleConversionIdRow" style="display:none;">
+					<label class="col-sm-3 col-form-label">Google Conversion ID</label>
+					<div class="col-sm-9">
+						<input type="text" id="googleConversionIdInput" placeholder="请输入 Google Conversion ID，如 JT3WCMXP46YcEPGer9pB" name="googleConversionId" class="easyui-validatebox form-control" />
 					</div>
 				</div>
 
@@ -106,6 +129,49 @@
 		</@jodd.form>
 	</form>
 	<script>
+
+		// pixel type toggle
+		function togglePixelFields() {
+			var selectedType = $('input[name="pixelType"]:checked').val();
+			if (selectedType === 'GOOGLE') {
+				$('#pixelIdRow').hide();
+				$('#googleAwIdRow').show();
+				$('#googleConversionIdRow').show();
+				$('#googleAwIdInput').attr('required', true);
+				$('#googleConversionIdInput').attr('required', true);
+				$('#inputTextArea').attr('required', false);
+				$('#inputTextArea').val('');
+			} else {
+				$('#pixelIdRow').show();
+				$('#googleAwIdRow').hide();
+				$('#googleConversionIdRow').hide();
+				$('#googleAwIdInput').attr('required', false);
+				$('#googleConversionIdInput').attr('required', false);
+				$('#googleAwIdInput').val('');
+				$('#googleConversionIdInput').val('');
+			}
+		}
+
+		$('input[name="pixelType"]').change(function() {
+			togglePixelFields();
+		});
+
+		$(function() {
+			var existingType = '${dmCenter.pixelType!"FB"}';
+			if (existingType) {
+				$('#pixelType_' + existingType).prop('checked', true);
+			} else {
+				$('#pixelType_FB').prop('checked', true);
+			}
+			togglePixelFields();
+
+			<#if dmCenter.googleAwId??>
+				$('#googleAwIdInput').val('${dmCenter.googleAwId}');
+			</#if>
+			<#if dmCenter.googleConversionId??>
+				$('#googleConversionIdInput').val('${dmCenter.googleConversionId}');
+			</#if>
+		});
 
 		function showLink2(url, width, height) {
 

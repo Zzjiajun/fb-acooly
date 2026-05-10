@@ -97,4 +97,24 @@ public class DmCenter extends AbstractEntity {
     private Integer displayOption;
 
     private Integer diversion;
+
+    /**
+     * 像素类型: FB/TK/GOOGLE
+     */
+    @ExportColumn(header = "像素类型", order = 10)
+    private String pixelType;
+
+    /**
+     * Google Ads AW ID
+     */
+    @Size(max = 64)
+    @ExportColumn(header = "Google AW ID", order = 11)
+    private String googleAwId;
+
+    /**
+     * Google Ads Conversion ID
+     */
+    @Size(max = 64)
+    @ExportColumn(header = "Google Conversion ID", order = 12)
+    private String googleConversionId;
 }

@@ -104,6 +104,51 @@ public class RemoteFileOperationsUtil {
         session.disconnect();
     }
 
+    /**
+     * 向远程服务器 HTML 文件注入 Google Ads gtag 像素脚本
+     *
+     * @param directoryPath 目标目录路径 (如 /www/wwwroot/domain/secondaryDomain)
+     * @param awId          Google Ads AW ID (如 AW-17637822321)
+     * @param conversionId  Google Ads Conversion ID (如 JT3WCMXP46YcEPGer9pB)
+     * @return 是否注入成功
+     */
+    public static boolean injectGooglePixelScript(String directoryPath, String awId, String conversionId) {
+        try {
+            String htmlPath = directoryPath + "/index.html";
+
+            // Step 1: 先移除 HTML 中已存在的 Google gtag 脚本（避免重复注入）
+            executeCommand("sed -i '/googletagmanager\\/gtag\\/js/d' " + htmlPath);
+            executeCommand("sed -i '/function gtag_report_conversion/,/<\\/script>/d' " + htmlPath);
+
+            // Step 2: 在 </head> 之前插入 gtag 脚本
+            // 使用 sed 的 i 命令逐行插入，避免复杂的转义
+            executeCommand(
+                "sed -i 's|</head>|" +
+                "<script async src=\"https://www.googletagmanager.com/gtag/js?id=" + awId + "\"></script>\\n" +
+                "</head>|' " + htmlPath
+            );
+            executeCommand(
+                "sed -i 's|</head>|" +
+                "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}" +
+                "gtag(\"js\",new Date());gtag(\"config\",\"" + awId + "\");</script>\\n" +
+                "</head>|' " + htmlPath
+            );
+            executeCommand(
+                "sed -i 's|</head>|" +
+                "<script>function gtag_report_conversion(url){var callback=function(){" +
+                "if(typeof url!=\"undefined\"){window.location=url;}};if(typeof window.gtag===\"function\"){" +
+                "gtag(\"event\",\"conversion\",{send_to:\"" + awId + "/" + conversionId + "\"," +
+                "event_callback:callback});}return false;}</script>\\n" +
+                "</head>|' " + htmlPath
+            );
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
         copyFiles("/www/wwwroot/projectgame.top/in01","/www/wwwroot/jdxcn.top/1");
     }
